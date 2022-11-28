@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 
 int parse_str(const char *str);
@@ -17,25 +18,25 @@ enum e_State
 int parse_str(const char *str)
 {
 	int i = 0;
+	int len_return = 0;
+	int len_text = 0;
+	char *text;
 
 	enum e_State state = STATE_TEXT;
 	print_parse_str(state);
 	while (str[i])
 	{
-
-		// text
+// text
 		if (state == STATE_TEXT)
 		{
 			if (str[i] == '%')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_FORMAT;
 				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
-				print_parse_str(state);
+				len_text++;
 			}
 			i++;
 			continue ;
@@ -250,13 +251,11 @@ int parse_str(const char *str)
 		{
 			if (str[i] == '%')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_FORMAT;
 				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TEXT;
 				print_parse_str(state);
 			}
@@ -270,19 +269,17 @@ int parse_str(const char *str)
 int print_parse_str(int state_number)
 {
 	if (state_number == STATE_TEXT)
-		printf("text:\n");
+		printf("text: ");
 	else if (state_number == STATE_FORMAT)
 		printf("format:\n");
 	else if (state_number == STATE_FLAG)
-		printf("flag:\n");
+		printf("	flag: ");
 	else if (state_number == STATE_WIDTH)
-		printf("width:\n");
-	else if (state_number == STATE_UNDEF_PRECISION)
-		printf("undef_precision\n");
+		printf("	width: ");
 	else if (state_number == STATE_PRECISION)
-		printf("precision:\n");
+		printf("	precision: ");
 	else if (state_number == STATE_TYPE)
-		printf("type:\n");
+		printf("type: ");
 	return (0);
 }
 
@@ -297,51 +294,3 @@ int main(void)
 	parse_str("hello world %-022dsmafl");
 	return (0);
 }
-
-/*
-@startuml
-state text
-state format
-state flag
-state width
-state precision
-state type
-state undef_precision
-
-text --> format: %
-text --> text: char (except %)
-
-format --> flag: flags
-format --> width: integer != 0
-format --> undef_precision: dot
-format --> type: types
-format --> text: char (rest)
-
-flag --> format: %
-flag --> flag: flags
-flag --> width: integer != 0
-flag --> undef_precision: dot
-flag --> type: types
-flag --> text: char (rest)
-
-width --> format: %
-width --> undef_precision: dot
-width --> type: types
-width --> text: char (rest)
-width --> width: 0-9
-
-undef_precision --> format: %
-undef_precision --> type: types
-undef_precision --> text: char (rest)
-undef_precision --> precision: '-'
-undef_precision --> precision: 0-9
-
-precision --> precision: 0-9
-precision --> format: %
-precision --> type: types
-precision --> text: char (rest)
-
-type --> format: %
-type --> text: char (rest)
-@enduml
-*/

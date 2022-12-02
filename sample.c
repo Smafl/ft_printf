@@ -14,14 +14,17 @@ enum e_State
 int parse_str(const char *str)
 {
 	int i = 0;
-	int len_text = 0;
+	int len = 0;
+	int ii = 0;
+	int width;
+	char *width_start;
 
 	enum e_State state = STATE_TEXT;
 	enum e_State new_state = state;
 	while (str[i])
 	{
 // text
-		while (state == STATE_TEXT)
+		if (state == STATE_TEXT)
 		{
 			if (str[i] == '%')
 			{
@@ -29,19 +32,22 @@ int parse_str(const char *str)
 			}
 			else
 			{
-				len_text++;
+				len++;
 			}
 			i++;
 		}
 		if (state != new_state)
 		{
 			print_parse_str(state);
-			while (len_text != 0)
+			while (len != ii)
 			{
-				
-				len_text--;
+				printf("%c", str[ii]);
+				ii++;
 			}
 			printf("\n");
+			len = 0;
+			ii = 0;
+			state = new_state;
 		}
 
 // format
@@ -57,6 +63,10 @@ int parse_str(const char *str)
 			}
 			i++;
 		}
+		if (state != new_state)
+		{
+			
+		}
 
 // width
 		if (state == STATE_WIDTH)
@@ -65,12 +75,15 @@ int parse_str(const char *str)
 			{
 				new_state = STATE_FORMAT;
 			}
+			else if (str[i] >= '1' && str[i] <= '9')
+			{
+				len++;
+			}
 			else
 			{
 				new_state = STATE_TEXT;
 			}
 			i++;
-			continue ;
 		}
 	}
 	return 0;
@@ -81,7 +94,7 @@ int print_parse_str(int state_number)
 	if (state_number == STATE_TEXT)
 		printf("text: ");
 	else if (state_number == STATE_FORMAT)
-		printf("format:\n");
+		printf("format:");
 	else if (state_number == STATE_WIDTH)
 		printf("	width: ");
 	return (0);

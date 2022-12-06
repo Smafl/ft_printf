@@ -18,238 +18,199 @@ enum e_State
 int parse_str(const char *str)
 {
 	int i = 0;
-	int len_return = 0;
-	int len_text = 0;
-	char *text;
+	int len = 0;
+	const char *start = str;
+	const char *text;
 
 	enum e_State state = STATE_TEXT;
-	print_parse_str(state);
-	while (str[i])
+	enum e_State new_state = state;
+	while (*str)
 	{
 // text
 		if (state == STATE_TEXT)
 		{
-			if (str[i] == '%')
+			if (*str == '%')
 			{
-				state = STATE_FORMAT;
-				print_parse_str(state);
+				new_state = STATE_FORMAT;
+				text = str - len;
+
 			}
 			else
 			{
-				len_text++;
+				len++;
 			}
-			i++;
-			continue ;
+			str++;
+		}
+		if (state != new_state)
+		{
+			print_parse_str(state);
+			while (len != 0)
+			{
+				printf();
+				len--;
+			}
+			printf("\n");
+			state = new_state;
 		}
 
 // format
 		if (state == STATE_FORMAT)
 		{
-			if (str[i] == '-' || str[i] == '0')
+			if (*str == '-' || *str == '0')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_FLAG;
-				print_parse_str(state);
 			}
-			else if (str[i] == '#' || str[i] == ' ' || str[i] == '+')
+			else if (*str == '#' || *str == ' ' || *str == '+')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_FLAG;
-				print_parse_str(state);
 			}
-			else if (str[i] >= '1' && str[i] <= '9')
+			else if (*str >= '1' && *str <= '9')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_WIDTH;
-				print_parse_str(state);
+				len++;
 			}
-			else if (str[i] == '.')
+			else if (*str == '.')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_UNDEF_PRECISION;
-				print_parse_str(state);
 			}
-			else if (str[i] == 'c' || str[i] == 's'
-					|| str[i] == 'p' || str[i] == 'd'
-					|| str[i] == 'i' || str[i] == 'u'
-					|| str[i] == 'x' || str[i] == 'X')
+			else if (*str == 'c' || *str == 's'
+					|| *str == 'p' || *str == 'd'
+					|| *str == 'i' || *str == 'u'
+					|| *str == 'x' || *str == 'X')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TYPE;
-				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TEXT;
-				print_parse_str(state);
 			}
-			i++;
+			str++;
 			continue ;
 		}
 
 // flag
 		if (state == STATE_FLAG)
 		{
-			if (str[i] == '-' || str[i] == '0')
+			if (*str == '-' || *str == '0')
 			{
-				printf("%c\n", str[i]);
-				print_parse_str(state);
+				// printf("%c\n", *str);
 			}
-			else if (str[i] == '#' || str[i] == ' ' || str[i] == '+')
+			else if (*str == '#' || *str == ' ' || *str == '+')
 			{
-				printf("%c\n", str[i]);
-				print_parse_str(state);
+				// printf("%c\n", *str);
 			}
-			else if (str[i] >= '1' && str[i] <= '9')
+			else if (*str >= '1' && *str <= '9')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_WIDTH;
-				print_parse_str(state);
 			}
-			else if (str[i] == '.')
+			else if (*str == '.')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_UNDEF_PRECISION;
-				print_parse_str(state);
 			}
-			else if (str[i] == 'c' || str[i] == 's'
-					|| str[i] == 'p' || str[i] == 'd'
-					|| str[i] == 'i' || str[i] == 'u'
-					|| str[i] == 'x' || str[i] == 'X')
+			else if (*str == 'c' || *str == 's'
+					|| *str == 'p' || *str == 'd'
+					|| *str == 'i' || *str == 'u'
+					|| *str == 'x' || *str == 'X')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TYPE;
-				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TEXT;
-				print_parse_str(state);
 			}
-			i++;
+			str++;
 			continue ;
 		}
 
 // width
 		if (state == STATE_WIDTH)
 		{
-			if (str[i] == '%')
+			if (*str == '%')
 			{
-				printf("%c\n", str[i]);
-				state = STATE_FORMAT;
-				print_parse_str(state);
+				new_state = STATE_FORMAT;
 			}
-			else if (str[i] >= '0' && str[i] <= '9')
+			else if (*str >= '0' && *str <= '9')
 			{
-				printf("%c\n", str[i]);
-				state = STATE_WIDTH;
-				print_parse_str(state);
+				len++;
 			}
-			else if (str[i] == '.')
+			else if (*str == '.')
 			{
-				printf("%c\n", str[i]);
-				state = STATE_UNDEF_PRECISION;
-				print_parse_str(state);
+				new_state = STATE_UNDEF_PRECISION;
 			}
-			else if (str[i] == 'c' || str[i] == 's'
-					|| str[i] == 'p' || str[i] == 'd'
-					|| str[i] == 'i' || str[i] == 'u'
-					|| str[i] == 'x' || str[i] == 'X')
+			else if (*str == 'c' || *str == 's'
+					|| *str == 'p' || *str == 'd'
+					|| *str == 'i' || *str == 'u'
+					|| *str == 'x' || *str == 'X')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TYPE;
-				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
-				state = STATE_TEXT;
-				print_parse_str(state);
+				new_state = STATE_TEXT;
 			}
-			i++;
-			continue ;
+			str++;
 		}
 
 // undef_precision
 		if (state == STATE_UNDEF_PRECISION)
 		{
-			if (str[i] == '%')
+			if (*str == '%')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_FORMAT;
-				print_parse_str(state);
 			}
-			else if (str[i] == '-')
+			else if (*str == '-')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_PRECISION;
-				print_parse_str(state);
 			}
-			else if (str[i] >= '0' && str[i] <= '9')
+			else if (*str >= '0' && *str <= '9')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_PRECISION;
-				print_parse_str(state);
 			}
-			else if (str[i] == 'c' || str[i] == 's'
-					|| str[i] == 'p' || str[i] == 'd'
-					|| str[i] == 'i' || str[i] == 'u'
-					|| str[i] == 'x' || str[i] == 'X')
+			else if (*str == 'c' || *str == 's'
+					|| *str == 'p' || *str == 'd'
+					|| *str == 'i' || *str == 'u'
+					|| *str == 'x' || *str == 'X')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TYPE;
-				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TEXT;
-				print_parse_str(state);
 			}
-			i++;
+			str++;
 			continue ;
 		}
 
 // precision
 		if (state == STATE_PRECISION)
 		{
-			if (str[i] == '%')
+			if (*str == '%')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_FORMAT;
-				print_parse_str(state);
 			}
-			else if (str[i] >= '0' && str[i] <= '9')
+			else if (*str >= '0' && *str <= '9')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_PRECISION;
-				print_parse_str(state);
 			}
-			else if (str[i] == 'c' || str[i] == 's'
-					|| str[i] == 'p' || str[i] == 'd'
-					|| str[i] == 'i' || str[i] == 'u'
-					|| str[i] == 'x' || str[i] == 'X')
+			else if (*str == 'c' || *str == 's'
+					|| *str == 'p' || *str == 'd'
+					|| *str == 'i' || *str == 'u'
+					|| *str == 'x' || *str == 'X')
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TYPE;
-				print_parse_str(state);
 			}
 			else
 			{
-				printf("%c\n", str[i]);
 				state = STATE_TEXT;
-				print_parse_str(state);
 			}
-			i++;
+			str++;
 			continue ;
 		}
 
 // type
 		if (state == STATE_TYPE)
 		{
-			if (str[i] == '%')
+			if (*str == '%')
 			{
 				state = STATE_FORMAT;
 				print_parse_str(state);
@@ -259,7 +220,7 @@ int parse_str(const char *str)
 				state = STATE_TEXT;
 				print_parse_str(state);
 			}
-			i++;
+			str++;
 			continue ;
 		}
 	}
@@ -291,6 +252,6 @@ int main(void)
 	// parse_str("% -s");
 	// parse_str("a%10dx");
 	// parse_str("d%0.-");
-	parse_str("hello world %-022dsmafl");
+	parse_str("hello%22dsmafl");
 	return (0);
 }

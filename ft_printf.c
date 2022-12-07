@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 int parse_str(const char *str);
-int print_parse_str(int state_number);
+int print_parse_str(int state, int len, const char *start);
 
 enum e_State
 {
@@ -12,235 +12,223 @@ enum e_State
 	STATE_WIDTH,
 	STATE_UNDEF_PRECISION,
 	STATE_PRECISION,
-	STATE_TYPE
+	STATE_TYPE,
+	STATE_END
 };
 
 int parse_str(const char *str)
 {
-	int i = 0;
-	int len = 0;
+	int len;
 	const char *start = str;
-	const char *text;
 
 	enum e_State state = STATE_TEXT;
 	enum e_State new_state = state;
-	while (*str)
+	while (state != STATE_END)
 	{
 // text
 		if (state == STATE_TEXT)
 		{
 			if (*str == '%')
-			{
 				new_state = STATE_FORMAT;
-				text = str - len;
-
-			}
-			else
+			// print state
+			if (state != new_state)
 			{
-				len++;
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
 		}
-		if (state != new_state)
-		{
-			print_parse_str(state);
-			while (len != 0)
-			{
-				printf();
-				len--;
-			}
-			printf("\n");
-			state = new_state;
-		}
-
 // format
 		if (state == STATE_FORMAT)
 		{
 			if (*str == '-' || *str == '0')
-			{
-				state = STATE_FLAG;
-			}
+				new_state = STATE_FLAG;
 			else if (*str == '#' || *str == ' ' || *str == '+')
-			{
-				state = STATE_FLAG;
-			}
+				new_state = STATE_FLAG;
 			else if (*str >= '1' && *str <= '9')
-			{
-				state = STATE_WIDTH;
-				len++;
-			}
+				new_state = STATE_WIDTH;
 			else if (*str == '.')
-			{
-				state = STATE_UNDEF_PRECISION;
-			}
+				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
 					|| *str == 'x' || *str == 'X')
-			{
-				state = STATE_TYPE;
-			}
+				new_state = STATE_TYPE;
 			else
+				new_state = STATE_TEXT;
+			// print state
+			if (state != new_state)
 			{
-				state = STATE_TEXT;
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
-			continue ;
 		}
 
 // flag
 		if (state == STATE_FLAG)
 		{
 			if (*str == '-' || *str == '0')
-			{
-				// printf("%c\n", *str);
-			}
+				new_state = STATE_FLAG;
 			else if (*str == '#' || *str == ' ' || *str == '+')
-			{
-				// printf("%c\n", *str);
-			}
+				new_state = STATE_FLAG;
 			else if (*str >= '1' && *str <= '9')
-			{
-				state = STATE_WIDTH;
-			}
+				new_state = STATE_WIDTH;
 			else if (*str == '.')
-			{
-				state = STATE_UNDEF_PRECISION;
-			}
+				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
 					|| *str == 'x' || *str == 'X')
-			{
-				state = STATE_TYPE;
-			}
+				new_state = STATE_TYPE;
 			else
+				new_state = STATE_TEXT;
+			// print state
+			if (state != new_state)
 			{
-				state = STATE_TEXT;
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
-			continue ;
 		}
 
 // width
 		if (state == STATE_WIDTH)
 		{
 			if (*str == '%')
-			{
 				new_state = STATE_FORMAT;
-			}
 			else if (*str >= '0' && *str <= '9')
-			{
-				len++;
-			}
+				new_state = STATE_WIDTH;
 			else if (*str == '.')
-			{
 				new_state = STATE_UNDEF_PRECISION;
-			}
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
 					|| *str == 'x' || *str == 'X')
-			{
 				state = STATE_TYPE;
-			}
 			else
-			{
 				new_state = STATE_TEXT;
+			// print state
+			if (state != new_state)
+			{
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
 		}
 
 // undef_precision
 		if (state == STATE_UNDEF_PRECISION)
 		{
 			if (*str == '%')
-			{
-				state = STATE_FORMAT;
-			}
+				new_state = STATE_FORMAT;
 			else if (*str == '-')
-			{
-				state = STATE_PRECISION;
-			}
+				new_state = STATE_PRECISION;
 			else if (*str >= '0' && *str <= '9')
-			{
-				state = STATE_PRECISION;
-			}
+				new_state = STATE_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
 					|| *str == 'x' || *str == 'X')
-			{
-				state = STATE_TYPE;
-			}
+				new_state = STATE_TYPE;
 			else
+				new_state = STATE_TEXT;
+			// print state
+			if (state != new_state)
 			{
-				state = STATE_TEXT;
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
-			continue ;
 		}
 
 // precision
 		if (state == STATE_PRECISION)
 		{
 			if (*str == '%')
-			{
-				state = STATE_FORMAT;
-			}
+				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-			{
-				state = STATE_PRECISION;
-			}
+				new_state = STATE_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
 					|| *str == 'x' || *str == 'X')
-			{
-				state = STATE_TYPE;
-			}
+				new_state = STATE_TYPE;
 			else
+				new_state = STATE_TEXT;
+			// print state
+			if (state != new_state)
 			{
-				state = STATE_TEXT;
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
-			continue ;
 		}
 
 // type
 		if (state == STATE_TYPE)
 		{
 			if (*str == '%')
-			{
-				state = STATE_FORMAT;
-				print_parse_str(state);
-			}
+				new_state = STATE_FORMAT;
 			else
+				new_state = STATE_TEXT;
+			// print state
+			if (state != new_state)
 			{
-				state = STATE_TEXT;
-				print_parse_str(state);
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
 			}
-			str++;
-			continue ;
 		}
+
+// end
+		if (*str == '\0')
+		{
+			new_state = STATE_END;
+			// print state
+			if (state != new_state)
+			{
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+				str++;
+			}
+		}
+		str++;
 	}
 	return (0);
 }
 
-int print_parse_str(int state_number)
+int print_parse_str(int state, int len, const char *start)
 {
-	if (state_number == STATE_TEXT)
-		printf("text: ");
-	else if (state_number == STATE_FORMAT)
+	if (state == STATE_TEXT)
+		printf("text: %.*s\n", len, start);
+	else if (state == STATE_FORMAT)
 		printf("format:\n");
-	else if (state_number == STATE_FLAG)
-		printf("	flag: ");
-	else if (state_number == STATE_WIDTH)
-		printf("	width: ");
-	else if (state_number == STATE_PRECISION)
-		printf("	precision: ");
-	else if (state_number == STATE_TYPE)
-		printf("type: ");
+	else if (state == STATE_FLAG)
+		printf("	flag: %.*s\n", len, start);
+	else if (state == STATE_WIDTH)
+		printf("	width: %.*s\n", len, start);
+	else if (state == STATE_PRECISION)
+		printf("	precision: %.*s\n", len, start);
+	else if (state == STATE_TYPE)
+		printf("type: %.*s\n", len, start);
+	// printf("len: %d\n", len);
 	return (0);
 }
 
@@ -252,6 +240,7 @@ int main(void)
 	// parse_str("% -s");
 	// parse_str("a%10dx");
 	// parse_str("d%0.-");
-	parse_str("hello%22dsmafl");
+	parse_str("hello%22d");
+	// parse_str("hello%12.12");
 	return (0);
 }

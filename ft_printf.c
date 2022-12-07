@@ -30,18 +30,9 @@ int parse_str(const char *str)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 // format
-		if (state == STATE_FORMAT)
+		else if (state == STATE_FORMAT)
 		{
 			if (*str == '-' || *str == '0')
 				new_state = STATE_FLAG;
@@ -58,24 +49,15 @@ int parse_str(const char *str)
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 
 // flag
-		if (state == STATE_FLAG)
+		else if (state == STATE_FLAG)
 		{
 			if (*str == '-' || *str == '0')
-				new_state = STATE_FLAG;
+				state = STATE_FLAG;
 			else if (*str == '#' || *str == ' ' || *str == '+')
-				new_state = STATE_FLAG;
+				state = STATE_FLAG;
 			else if (*str >= '1' && *str <= '9')
 				new_state = STATE_WIDTH;
 			else if (*str == '.')
@@ -87,24 +69,15 @@ int parse_str(const char *str)
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 
 // width
-		if (state == STATE_WIDTH)
+		else if (state == STATE_WIDTH)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-				new_state = STATE_WIDTH;
+				state = STATE_WIDTH;
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
@@ -114,19 +87,10 @@ int parse_str(const char *str)
 				state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 
 // undef_precision
-		if (state == STATE_UNDEF_PRECISION)
+		else if (state == STATE_UNDEF_PRECISION)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
@@ -141,24 +105,15 @@ int parse_str(const char *str)
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 
 // precision
-		if (state == STATE_PRECISION)
+		else if (state == STATE_PRECISION)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-				new_state = STATE_PRECISION;
+				state = STATE_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
@@ -166,48 +121,27 @@ int parse_str(const char *str)
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 
 // type
-		if (state == STATE_TYPE)
+		else if (state == STATE_TYPE)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else
 				new_state = STATE_TEXT;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
 		}
 
 // end
 		if (*str == '\0')
-		{
 			new_state = STATE_END;
-			// print state
-			if (state != new_state)
-			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
-				state = new_state;
-				str++;
-			}
+// print state
+		if (state != new_state)
+		{
+			len = str - start;
+			print_parse_str(state, len, start);
+			start = str;
+			state = new_state;
 		}
 		str++;
 	}
@@ -240,7 +174,7 @@ int main(void)
 	// parse_str("% -s");
 	// parse_str("a%10dx");
 	// parse_str("d%0.-");
-	parse_str("hello%22d");
+	parse_str("h%22d");
 	// parse_str("hello%12.12");
 	return (0);
 }

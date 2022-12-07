@@ -3,6 +3,7 @@
 
 int parse_str(const char *str);
 int print_parse_str(int state, int len, const char *start);
+int	ft_atoi(const char *str);
 
 enum e_State
 {
@@ -76,8 +77,8 @@ int parse_str(const char *str)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
-			else if (*str >= '0' && *str <= '9')
-				state = STATE_WIDTH;
+			// else if (*str >= '0' && *str <= '9')
+			// 	new_state = STATE_WIDTH;
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
@@ -112,8 +113,8 @@ int parse_str(const char *str)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
-			else if (*str >= '0' && *str <= '9')
-				state = STATE_PRECISION;
+			// else if (*str >= '0' && *str <= '9')
+			// 	state = STATE_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
@@ -157,13 +158,42 @@ int print_parse_str(int state, int len, const char *start)
 	else if (state == STATE_FLAG)
 		printf("	flag: %.*s\n", len, start);
 	else if (state == STATE_WIDTH)
-		printf("	width: %.*s\n", len, start);
+		printf("	width: %d\n", ft_atoi(start));
 	else if (state == STATE_PRECISION)
-		printf("	precision: %.*s\n", len, start);
+		printf("	precision: %d\n", ft_atoi(++start));
 	else if (state == STATE_TYPE)
 		printf("type: %.*s\n", len, start);
 	// printf("len: %d\n", len);
 	return (0);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	sign;
+	int	result;
+
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (((str[i] >= '\t' && str[i] <= '\r') || str[i] == ' '))
+	{
+		i++;
+	}
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+		{
+			sign = sign * -1;
+		}
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = (sign * (str[i] - '0') + (result * 10));
+		i++;
+	}
+	return (result);
 }
 
 int main(void)
@@ -174,7 +204,7 @@ int main(void)
 	// parse_str("% -s");
 	// parse_str("a%10dx");
 	// parse_str("d%0.-");
-	parse_str("h%22d");
-	// parse_str("hello%12.12");
+	// parse_str("h%22dsmafl");
+	parse_str("hello%12.12");
 	return (0);
 }

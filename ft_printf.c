@@ -2,20 +2,20 @@
 #include <stdio.h>
 
 int parse_str(const char *str);
-int print_parse_str(int state, int len, const char *start);
+int print_parse_str(int state, int len, const char *text_start);
 int print_parse_nbr(int state, int nbr);
 int	ft_atoi(const char *str);
 
 enum e_State
 {
-	STATE_TEXT,
-	STATE_FORMAT,
-	STATE_FLAG,
-	STATE_WIDTH,
-	STATE_UNDEF_PRECISION,
-	STATE_PRECISION,
-	STATE_TYPE,
-	STATE_END
+	STATE_TEXT, // 0
+	STATE_FORMAT, // 1
+	STATE_FLAG, // 2
+	STATE_WIDTH, // 3
+	STATE_UNDEF_PRECISION, // 4
+	STATE_PRECISION, // 5
+	STATE_TYPE, // 6
+	STATE_END // 7
 };
 
 int parse_str(const char *str)
@@ -23,17 +23,22 @@ int parse_str(const char *str)
 	int len;
 	int width;
 	int precision;
-	const char *start = str;
+	const char *text_start = str;
 
 	enum e_State state = STATE_TEXT;
 	enum e_State new_state = state;
 	while (state != STATE_END)
 	{
+		// printf("begin while state: %d\n", state);
+		// printf("char: %c\n", *str);
+		// printf("text start: %s\n", text_start);
 // text
 		if (state == STATE_TEXT)
 		{
 			if (*str == '%')
+			{
 				new_state = STATE_FORMAT;
+			}
 		}
 
 // format
@@ -95,7 +100,7 @@ int parse_str(const char *str)
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
 					|| *str == 'x' || *str == 'X')
-				state = STATE_TYPE;
+				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
 		}
@@ -154,27 +159,27 @@ int parse_str(const char *str)
 // end
 		if (*str == '\0')
 			new_state = STATE_END;
-
+		// printf("new state: %d\n", new_state);
 // print state
 		if (state != new_state)
 		{
 			if (state == STATE_WIDTH)
 			{
 				print_parse_nbr(state, width);
-				start = str;
+				text_start = str;
 				state = new_state;
 			}
 			else if (state == STATE_PRECISION)
 			{
 				print_parse_nbr(state, precision);
-				start = str;
+				text_start = str;
 				state = new_state;
 			}
 			else
 			{
-				len = str - start;
-				print_parse_str(state, len, start);
-				start = str;
+				len = str - text_start;
+				print_parse_str(state, len, text_start);
+				text_start = str;
 				state = new_state;
 			}
 		}
@@ -183,16 +188,16 @@ int parse_str(const char *str)
 	return (0);
 }
 
-int print_parse_str(int state, int len, const char *start)
+int print_parse_str(int state, int len, const char *text_start)
 {
 	if (state == STATE_TEXT)
-		printf("text: %.*s\n", len, start);
+		printf("text: %.*s\n", len, text_start);
 	else if (state == STATE_FORMAT)
-		return (0);
+		printf("format:\n");
 	else if (state == STATE_FLAG)
-		printf("flag: %.*s\n", len, start);
+		printf("	flag: %.*s\n", len, text_start);
 	else if (state == STATE_TYPE)
-		printf("type: %.*s\n", len, start);
+		printf("	type: %.*s\n", len, text_start);
 	else if (state == STATE_UNDEF_PRECISION)
 		return (0);
 	return (0);
@@ -201,9 +206,9 @@ int print_parse_str(int state, int len, const char *start)
 int print_parse_nbr(int state, int nbr)
 {
 	if (state == STATE_WIDTH)
-		printf("width: %d\n", nbr);
+		printf("	width: %d\n", nbr);
 	else if (state == STATE_PRECISION)
-		printf("precision: %d\n", nbr);
+		printf("	precision: %d\n", nbr);
 	return (0);
 }
 
@@ -230,12 +235,13 @@ int	ft_atoi(const char *str)
 int main(void)
 {
 	// parse_str("%.15d color %s");
+	parse_str("hell%-0%0-% %+%#%0%-");
 	// parse_str("dd%c");
-	// parse_str("%.5-8d");
-	// parse_str("% -s");
+	// parse_str("%.5-8d"); // - (remove text at first line)
+	// parse_str("% -s"); // - (remove text at first line)
 	// parse_str("a%10dx");
-	// parse_str("d%0.-");
-	parse_str("hello%22dsmafl"); // -
-	// parse_str("h%5.12"); // +
+	// parse_str("d%0.-"); // - (flags)
+	// parse_str("hello%25dsmafl");
+	// parse_str("h%5.12");
 	return (0);
 }

@@ -3,6 +3,7 @@
 
 int parse_str(const char *str);
 int print_parse_str(int state, int len, const char *start);
+int print_parse_nbr(int state, int nbr);
 int	ft_atoi(const char *str);
 
 enum e_State
@@ -20,6 +21,8 @@ enum e_State
 int parse_str(const char *str)
 {
 	int len;
+	int width;
+	int precision;
 	const char *start = str;
 
 	enum e_State state = STATE_TEXT;
@@ -32,6 +35,7 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 		}
+
 // format
 		else if (state == STATE_FORMAT)
 		{
@@ -40,7 +44,10 @@ int parse_str(const char *str)
 			else if (*str == '#' || *str == ' ' || *str == '+')
 				new_state = STATE_FLAG;
 			else if (*str >= '1' && *str <= '9')
+			{
+				width = ft_atoi(str);
 				new_state = STATE_WIDTH;
+			}
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
@@ -60,7 +67,10 @@ int parse_str(const char *str)
 			else if (*str == '#' || *str == ' ' || *str == '+')
 				state = STATE_FLAG;
 			else if (*str >= '1' && *str <= '9')
+			{
+				width = ft_atoi(str);
 				new_state = STATE_WIDTH;
+			}
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
@@ -77,8 +87,8 @@ int parse_str(const char *str)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
-			// else if (*str >= '0' && *str <= '9')
-			// 	new_state = STATE_WIDTH;
+			else if (*str >= '0' && *str <= '9')
+				state = STATE_WIDTH;
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
 			else if (*str == 'c' || *str == 's'
@@ -96,9 +106,17 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str == '-')
+			{
+				precision = ft_atoi(str);
 				new_state = STATE_PRECISION;
+			}
+
 			else if (*str >= '0' && *str <= '9')
+			{
+				precision = ft_atoi(str);
 				new_state = STATE_PRECISION;
+			}
+
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
@@ -113,8 +131,8 @@ int parse_str(const char *str)
 		{
 			if (*str == '%')
 				new_state = STATE_FORMAT;
-			// else if (*str >= '0' && *str <= '9')
-			// 	state = STATE_PRECISION;
+			else if (*str >= '0' && *str <= '9')
+				state = STATE_PRECISION;
 			else if (*str == 'c' || *str == 's'
 					|| *str == 'p' || *str == 'd'
 					|| *str == 'i' || *str == 'u'
@@ -136,13 +154,29 @@ int parse_str(const char *str)
 // end
 		if (*str == '\0')
 			new_state = STATE_END;
+
 // print state
 		if (state != new_state)
 		{
-			len = str - start;
-			print_parse_str(state, len, start);
-			start = str;
-			state = new_state;
+			if (state == STATE_WIDTH)
+			{
+				print_parse_nbr(state, width);
+				start = str;
+				state = new_state;
+			}
+			else if (state == STATE_PRECISION)
+			{
+				print_parse_nbr(state, precision);
+				start = str;
+				state = new_state;
+			}
+			else
+			{
+				len = str - start;
+				print_parse_str(state, len, start);
+				start = str;
+				state = new_state;
+			}
 		}
 		str++;
 	}
@@ -154,44 +188,41 @@ int print_parse_str(int state, int len, const char *start)
 	if (state == STATE_TEXT)
 		printf("text: %.*s\n", len, start);
 	else if (state == STATE_FORMAT)
-		printf("format:\n");
+		return (0);
 	else if (state == STATE_FLAG)
-		printf("	flag: %.*s\n", len, start);
-	else if (state == STATE_WIDTH)
-		printf("	width: %d\n", ft_atoi(start));
-	else if (state == STATE_PRECISION)
-		printf("	precision: %d\n", ft_atoi(++start));
+		printf("flag: %.*s\n", len, start);
 	else if (state == STATE_TYPE)
 		printf("type: %.*s\n", len, start);
-	// printf("len: %d\n", len);
+	else if (state == STATE_UNDEF_PRECISION)
+		return (0);
+	return (0);
+}
+
+int print_parse_nbr(int state, int nbr)
+{
+	if (state == STATE_WIDTH)
+		printf("width: %d\n", nbr);
+	else if (state == STATE_PRECISION)
+		printf("precision: %d\n", nbr);
 	return (0);
 }
 
 int	ft_atoi(const char *str)
 {
-	int	i;
 	int	sign;
 	int	result;
 
-	i = 0;
 	sign = 1;
 	result = 0;
-	while (((str[i] >= '\t' && str[i] <= '\r') || str[i] == ' '))
+	if (*str == '-')
 	{
-		i++;
+		sign = sign * -1;
+		str++;
 	}
-	if (str[i] == '+' || str[i] == '-')
+	while (*str >= '0' && *str <= '9')
 	{
-		if (str[i] == '-')
-		{
-			sign = sign * -1;
-		}
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = (sign * (str[i] - '0') + (result * 10));
-		i++;
+		result = (sign * (*str - '0') + (result * 10));
+		str++;
 	}
 	return (result);
 }
@@ -204,7 +235,7 @@ int main(void)
 	// parse_str("% -s");
 	// parse_str("a%10dx");
 	// parse_str("d%0.-");
-	// parse_str("h%22dsmafl");
-	parse_str("hello%12.12");
+	parse_str("hello%22dsmafl"); // -
+	// parse_str("h%5.12"); // +
 	return (0);
 }

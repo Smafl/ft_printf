@@ -3,12 +3,12 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-int parse_str(const char *str);
-void print_flags(int flag);
-int	ft_atoi(const char *str);
-bool is_type(char c);
-bool is_flag(char c);
-int get_flag(char c);
+static int parse_str(const char *str);
+static void print_flags(int flag);
+static int	ft_atoi(const char *str);
+static bool is_type(char c);
+static bool is_flag(char c);
+static int get_flag(char c);
 
 #define FLAG_MINUS (1 << 0)
 #define FLAG_ZERO (1 << 1)
@@ -16,7 +16,7 @@ int get_flag(char c);
 #define FLAG_SPACE (1 << 3)
 #define FLAG_PLUS (1 << 4)
 
-enum e_State
+enum e_state
 {
 	STATE_TEXT, // 0
 	STATE_FORMAT, // 1
@@ -28,7 +28,7 @@ enum e_State
 	STATE_END // 7
 };
 
-int parse_str(const char *str)
+static int parse_str(const char *str)
 {
 	int flag;
 	int width;
@@ -37,8 +37,8 @@ int parse_str(const char *str)
 	bool has_precision;
 	const char *text_start = str;
 
-	enum e_State state = STATE_TEXT;
-	enum e_State new_state = state;
+	enum e_state state = STATE_TEXT;
+	enum e_state new_state = state;
 	while (state != STATE_END)
 	{
 		// printf("begin while state: %d\n", state);
@@ -75,10 +75,7 @@ int parse_str(const char *str)
 		else if (state == STATE_FLAG)
 		{
 			if (is_flag(*str))
-			{
 				flag |= get_flag(*str);
-				new_state = STATE_FLAG;
-			}
 			else if (*str >= '1' && *str <= '9')
 				new_state = STATE_WIDTH;
 			else if (*str == '.')
@@ -95,7 +92,7 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-				new_state = STATE_WIDTH;
+				; // ok
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
 			else if (is_type(*str))
@@ -125,7 +122,7 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-				new_state = STATE_PRECISION;
+				;
 			else if (is_type(*str))
 				new_state = STATE_TYPE;
 			else
@@ -191,7 +188,7 @@ int parse_str(const char *str)
 	return (0);
 }
 
-void print_flags(int flag)
+static void print_flags(int flag)
 {
 	printf("\tflag: ");
 	if (flag & FLAG_MINUS) printf("minus ");
@@ -202,7 +199,7 @@ void print_flags(int flag)
 	printf("\n");
 }
 
-int	ft_atoi(const char *str)
+static int	ft_atoi(const char *str)
 {
 	int	sign;
 	int	result;
@@ -222,7 +219,7 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-bool is_type(char c)
+static bool is_type(char c)
 {
 	return (c == 'c' || c == 's'
 			|| c == 'p' || c == 'd'
@@ -231,12 +228,12 @@ bool is_type(char c)
 			|| c == '%');
 }
 
-bool is_flag(char c)
+static bool is_flag(char c)
 {
 	return (c == '-' || c == '0' || c == '#' || c == ' ' || c == '+');
 }
 
-int get_flag(char c)
+static int get_flag(char c)
 {
 	if (c == '-')
 		return (FLAG_MINUS);
@@ -265,19 +262,3 @@ int main(void)
 	parse_str("smafl%0-y123");
 	return (0);
 }
-
-/*
-text:
-format:
-   flag: minus, zero
-   type: %
-text: 0-
-format:
-   flag: space
-   type: %
-text: +
-format:
-   flag: hash
-   type: %
-text: 0%-
-*/

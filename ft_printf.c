@@ -2,13 +2,17 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <stdarg.h>
 
-static int parse_str(const char *str);
+int ft_printf(const char *str, ...);
 static void print_flags(int flag);
 static int	ft_atoi(const char *str);
 static bool is_type(char c);
 static bool is_flag(char c);
 static int get_flag(char c);
+static void print_s(const char *str);
+static void print_c(char c);
+static void print_p(void *p);
 
 #define FLAG_MINUS (1 << 0)
 #define FLAG_ZERO (1 << 1)
@@ -28,7 +32,7 @@ enum e_state
 	STATE_END // 7
 };
 
-static int parse_str(const char *str)
+int ft_printf(const char *str, ...)
 {
 	int flag;
 	int width;
@@ -36,6 +40,9 @@ static int parse_str(const char *str)
 	bool has_width;
 	bool has_precision;
 	const char *text_start = str;
+
+	va_list args;
+	va_start(args, str);
 
 	enum e_state state = STATE_TEXT;
 	enum e_state new_state = state;
@@ -170,22 +177,39 @@ static int parse_str(const char *str)
 			if (state == STATE_TEXT)
 			{
 				// write(1, text_start, str - text_start);
-				printf("text: %.*s\n", (int)(str - text_start), text_start);
+				printf("%.*s", (int)(str - text_start), text_start);
 			}
 			if (state == STATE_TYPE)
 			{
-				printf("format:\n");
-				if (flag) print_flags(flag);
-				if (has_width) printf("\twidth: %d\n", width);
-				if (has_precision) printf("\tprecision: %d\n", precision);
-				printf("\ttype: %c\n", str[-1]);
-
+				if (str[-1] == '%') printf("%%");
+				else if (str[-1] == 's')
+					print_s(va_arg(args, char *));
+				else if (str[-1] == 'c')
+					print_c(va_arg(args, int));
+				else if (str[-1] == 'd')
+					print_d(va_arg(args, int));
 			}
 			state = new_state;
 		}
 		str++;
 	}
+	va_end(args);
 	return (0);
+}
+
+static void print_s(const char *str)
+{
+	printf("%s", str);
+}
+
+static void print_c(char c)
+{
+	printf("%c", c);
+}
+
+static void print_p(void *p)
+{
+	
 }
 
 static void print_flags(int flag)
@@ -250,15 +274,16 @@ static int get_flag(char c)
 
 int main(void)
 {
-	// parse_str("%.15d color %s");
-	// parse_str("%-0%0-% %+%#%0%-");
-	// parse_str("dd%c");
-	// parse_str("%.5-8d");
-	// parse_str("% -s");
-	// parse_str("a%10dx");
-	// parse_str("d%0.-"); // - (flags)
-	// parse_str("hello%25dsmafl");
-	// parse_str("h%5.12");
-	parse_str("smafl%0-y123");
+	// ft_printf("%.15d color %s");
+	// ft_printf("%-0%0-% %+%#%0%-");
+	// ft_printf("dd%c");
+	// ft_printf("%.5-8d");
+	// ft_printf("% -s");
+	// ft_printf("a%10dx");
+	// ft_printf("d%0.-"); // - (flags)
+	// ft_printf("hello%25dsmafl");
+	// ft_printf("h%5.12");
+	ft_printf("%%");
+	ft_printf("smafl%d-ybg", 50);
 	return (0);
 }

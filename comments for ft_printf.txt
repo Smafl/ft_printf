@@ -1,4 +1,7 @@
 At first I made a state machine for this project. Here we can see the states and tranisitions between them:
+
+https://www.plantuml.com/plantuml/uml/XOz1QyCm38Nl_XNQeNGz67gTOQF_P9X4RGrkcjaAw_xzAkDE9cBknIZlAUzzEcJoYPPBDFU140XlLCUlnSTm39Zgzp7wKns_mqZdEiy9Xv33TNea_Cpui3x5v62mzaDY7Mn4vS71SFO9Nl4su4omsPc_NTuf0AwyUUKK7WTX8ZpTfPTtsAys6XG7uvLMDaExyZRH2YnXffrX07q9gugIt_y0nLHix2Wi4HLHILT88gi6iTgAgdOxv9QzVJDDhgfNPjEaFDMdDfe3jdRRinciQtQOEyHFU7bBvOcgVpZWD2wN-0i0
+
 @startuml
 state text
 state format
@@ -72,3 +75,5 @@ format:
 	type: d
 text: "smafl"
 
+Part 3.
+I modified my function that now it takes all args and printed it in rigth way.

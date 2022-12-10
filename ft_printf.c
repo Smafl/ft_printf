@@ -1,11 +1,14 @@
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
 
 int parse_str(const char *str);
-int print_str(int state, int len, const char *text_start);
-int print_nbr(int state, int nbr);
-int print_flag(int flag);
+void print_flags(int flag);
 int	ft_atoi(const char *str);
+bool is_type(char c);
+bool is_flag(char c);
+int get_flag(char c);
 
 #define FLAG_MINUS (1 << 0)
 #define FLAG_ZERO (1 << 1)
@@ -27,19 +30,20 @@ enum e_State
 
 int parse_str(const char *str)
 {
-	int len;
 	int flag;
 	int width;
 	int precision;
+	bool has_width;
+	bool has_precision;
 	const char *text_start = str;
 
 	enum e_State state = STATE_TEXT;
 	enum e_State new_state = state;
 	while (state != STATE_END)
 	{
-		printf("begin while state: %d\n", state);
-		printf("char: %c\n", *str);
-		printf("text start: %s\n", text_start);
+		// printf("begin while state: %d\n", state);
+		// printf("char: %c\n", *str);
+		// printf("text start: %s\n", text_start);
 // text
 		if (state == STATE_TEXT)
 		{
@@ -52,31 +56,16 @@ int parse_str(const char *str)
 // format
 		else if (state == STATE_FORMAT)
 		{
-			if (*str == '-' || *str == '0' || *str == '#' || *str == ' ' || *str == '+')
+			if (is_flag(*str))
 			{
-				if (*str == '-')
-					flag = FLAG_MINUS;
-				else if (*str == '0')
-					flag = FLAG_ZERO;
-				else if (*str == '#')
-					flag = FLAG_HASH;
-				else if (*str == ' ')
-					flag = FLAG_SPACE;
-				else if (*str == '+')
-					flag = FLAG_PLUS;
+				flag = get_flag(*str);
 				new_state = STATE_FLAG;
 			}
 			else if (*str >= '1' && *str <= '9')
-			{
-				width = ft_atoi(str);
 				new_state = STATE_WIDTH;
-			}
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
-			else if (*str == 'c' || *str == 's'
-					|| *str == 'p' || *str == 'd'
-					|| *str == 'i' || *str == 'u'
-					|| *str == 'x' || *str == 'X')
+			else if (is_type(*str))
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
@@ -85,31 +74,16 @@ int parse_str(const char *str)
 // flag
 		else if (state == STATE_FLAG)
 		{
-			if (*str == '-' || *str == '0' || *str == '#' || *str == ' ' || *str == '+')
+			if (is_flag(*str))
 			{
-				if (*str == '-')
-					flag = FLAG_MINUS;
-				else if (*str == '0')
-					flag = FLAG_ZERO;
-				else if (*str == '#')
-					flag = FLAG_HASH;
-				else if (*str == ' ')
-					flag = FLAG_SPACE;
-				else if (*str == '+')
-					flag = FLAG_PLUS;
+				flag |= get_flag(*str);
 				new_state = STATE_FLAG;
 			}
 			else if (*str >= '1' && *str <= '9')
-			{
-				width = ft_atoi(str);
 				new_state = STATE_WIDTH;
-			}
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
-			else if (*str == 'c' || *str == 's'
-					|| *str == 'p' || *str == 'd'
-					|| *str == 'i' || *str == 'u'
-					|| *str == 'x' || *str == 'X')
+			else if (is_type(*str))
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
@@ -121,13 +95,10 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-				state = STATE_WIDTH;
+				new_state = STATE_WIDTH;
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
-			else if (*str == 'c' || *str == 's'
-					|| *str == 'p' || *str == 'd'
-					|| *str == 'i' || *str == 'u'
-					|| *str == 'x' || *str == 'X')
+			else if (is_type(*str))
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
@@ -139,21 +110,10 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str == '-')
-			{
-				precision = ft_atoi(str);
 				new_state = STATE_PRECISION;
-			}
-
 			else if (*str >= '0' && *str <= '9')
-			{
-				precision = ft_atoi(str);
 				new_state = STATE_PRECISION;
-			}
-
-			else if (*str == 'c' || *str == 's'
-					|| *str == 'p' || *str == 'd'
-					|| *str == 'i' || *str == 'u'
-					|| *str == 'x' || *str == 'X')
+			else if (is_type(*str))
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
@@ -165,11 +125,8 @@ int parse_str(const char *str)
 			if (*str == '%')
 				new_state = STATE_FORMAT;
 			else if (*str >= '0' && *str <= '9')
-				state = STATE_PRECISION;
-			else if (*str == 'c' || *str == 's'
-					|| *str == 'p' || *str == 'd'
-					|| *str == 'i' || *str == 'u'
-					|| *str == 'x' || *str == 'X')
+				new_state = STATE_PRECISION;
+			else if (is_type(*str))
 				new_state = STATE_TYPE;
 			else
 				new_state = STATE_TEXT;
@@ -187,71 +144,62 @@ int parse_str(const char *str)
 // end
 		if (*str == '\0')
 			new_state = STATE_END;
-		printf("new state: %d\n", new_state);
+		// printf("new state: %d\n", new_state);
 // print state
 		if (state != new_state)
 		{
-			if (state == STATE_WIDTH)
+			if (new_state == STATE_WIDTH)
 			{
-				print_nbr(state, width);
-				text_start = str;
-				state = new_state;
+				width = ft_atoi(str);
+				has_width = true;
 			}
-			else if (state == STATE_PRECISION)
+			if (new_state == STATE_UNDEF_PRECISION)
 			{
-				print_nbr(state, precision);
-				text_start = str;
-				state = new_state;
+				precision = 0;
+				has_precision = true;
 			}
-			else if (state == STATE_FLAG)
+			if (new_state == STATE_PRECISION)
+				precision = ft_atoi(str);
+
+			if (new_state == STATE_FORMAT)
 			{
-				print_flag(flag);
-				text_start = str;
-				state = new_state;
+				has_precision = false;
+				has_width = false;
 			}
-			else
+			if (new_state == STATE_TEXT)
 			{
-				len = str - text_start;
-				print_str(state, len, text_start);
 				text_start = str;
-				state = new_state;
 			}
+			if (state == STATE_TEXT)
+			{
+				// write(1, text_start, str - text_start);
+				printf("text: %.*s\n", (int)(str - text_start), text_start);
+			}
+			if (state == STATE_TYPE)
+			{
+				printf("format:\n");
+				if (flag) print_flags(flag);
+				if (has_width) printf("\twidth: %d\n", width);
+				if (has_precision) printf("\tprecision: %d\n", precision);
+				printf("\ttype: %c\n", str[-1]);
+
+			}
+			state = new_state;
 		}
 		str++;
 	}
 	return (0);
 }
 
-int print_flag(int flag)
+void print_flags(int flag)
 {
-	if (flag & FLAG_MINUS) printf("	flag: minus\n");
-	if (flag & FLAG_ZERO) printf("	flag: zero\n");
-	if (flag & FLAG_HASH) printf("	flag: hash\n");
-	if (flag & FLAG_SPACE) printf("	flag: space\n");
-	if (flag & FLAG_PLUS) printf("	flag: plus\n");
-	return (0);
-}
-
-int print_str(int state, int len, const char *text_start)
-{
-	if (state == STATE_TEXT)
-		printf("text: %.*s\n", len, text_start);
-	else if (state == STATE_FORMAT)
-		printf("format:\n");
-	else if (state == STATE_TYPE)
-		printf("	type: %.*s\n", len, text_start);
-	else if (state == STATE_UNDEF_PRECISION)
-		return (0);
-	return (0);
-}
-
-int print_nbr(int state, int nbr)
-{
-	if (state == STATE_WIDTH)
-		printf("	width: %d\n", nbr);
-	else if (state == STATE_PRECISION)
-		printf("	precision: %d\n", nbr);
-	return (0);
+	printf("\tflag: ");
+	if (flag & FLAG_MINUS) printf("minus ");
+	if (flag & FLAG_ZERO) printf("zero ");
+	if (flag & FLAG_HASH) printf("hash ");
+	if (flag & FLAG_SPACE) printf("space ");
+	if (flag & FLAG_PLUS) printf("plus ");
+	printf("\n");
 }
 
 int	ft_atoi(const char *str)
@@ -274,36 +222,62 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
+bool is_type(char c)
+{
+	return (c == 'c' || c == 's'
+			|| c == 'p' || c == 'd'
+			|| c == 'i' || c == 'u'
+			|| c == 'x' || c == 'X'
+			|| c == '%');
+}
+
+bool is_flag(char c)
+{
+	return (c == '-' || c == '0' || c == '#' || c == ' ' || c == '+');
+}
+
+int get_flag(char c)
+{
+	if (c == '-')
+		return (FLAG_MINUS);
+	else if (c == '0')
+		return (FLAG_ZERO);
+	else if (c == '#')
+		return (FLAG_HASH);
+	else if (c == ' ')
+		return (FLAG_SPACE);
+	else if (c == '+')
+		return (FLAG_PLUS);
+	return (0);
+}
+
 int main(void)
 {
 	// parse_str("%.15d color %s");
-	parse_str("%-0%0-% %+%#%0%-");
+	// parse_str("%-0%0-% %+%#%0%-");
 	// parse_str("dd%c");
-	// parse_str("%.5-8d"); // - (remove text at first line)
-	// parse_str("% -s"); // - (remove text at first line)
+	// parse_str("%.5-8d");
+	// parse_str("% -s");
 	// parse_str("a%10dx");
 	// parse_str("d%0.-"); // - (flags)
 	// parse_str("hello%25dsmafl");
 	// parse_str("h%5.12");
+	parse_str("smafl%0-y123");
 	return (0);
 }
 
 /*
-text
-format
-flag minus
-flag zero
-format
-flag zero
-flag minus
-format
-flag space
-format
-flag plus
-format
-flag hash
-format
-flag zero
-format
-flag minus
+text:
+format:
+   flag: minus, zero
+   type: %
+text: 0-
+format:
+   flag: space
+   type: %
+text: +
+format:
+   flag: hash
+   type: %
+text: 0%-
 */

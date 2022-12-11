@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <limits.h>
 
 int ft_printf(const char *str, ...);
 static void print_flags(int flag);
@@ -12,7 +14,13 @@ static bool is_flag(char c);
 static int get_flag(char c);
 static void print_s(const char *str);
 static void print_c(char c);
-static void print_p(void *p);
+static char get_hex_lo_digit(int digit);
+static char get_hex_up_digit(int digit);
+static char	*ft_itoa(int n);
+static size_t	get_size(int n);
+static void print_usigned_dec(int nbr);
+static void print_usigned_hex(int nbr, const char up_lo);
+static void print_p(void *pnt);
 
 #define FLAG_MINUS (1 << 0)
 #define FLAG_ZERO (1 << 1)
@@ -149,6 +157,7 @@ int ft_printf(const char *str, ...)
 		if (*str == '\0')
 			new_state = STATE_END;
 		// printf("new state: %d\n", new_state);
+
 // print state
 		if (state != new_state)
 		{
@@ -176,18 +185,26 @@ int ft_printf(const char *str, ...)
 			}
 			if (state == STATE_TEXT)
 			{
-				// write(1, text_start, str - text_start);
-				printf("%.*s", (int)(str - text_start), text_start);
+				write(1, text_start, str - text_start);
+				// printf("%.*s", (int)(str - text_start), text_start);
 			}
 			if (state == STATE_TYPE)
 			{
-				if (str[-1] == '%') printf("%%");
+				if (str[-1] == '%')
+					write(1, "%", 1);
+					// printf("%%");
 				else if (str[-1] == 's')
 					print_s(va_arg(args, char *));
 				else if (str[-1] == 'c')
 					print_c(va_arg(args, int));
-				else if (str[-1] == 'd')
-					print_d(va_arg(args, int));
+				else if (str[-1] == 'd' || str[-1] == 'i')
+					print_s(ft_itoa(va_arg(args, int)));
+				else if (str[-1] == 'u')
+					print_usigned_dec(va_arg(args, int));
+				else if (str[-1] == 'x' || str[-1] == 'X')
+					print_usigned_hex(va_arg(args, int), str[-1]);
+				else if (str[-1] == 'p')
+					print_p(va_arg(args, void *));
 			}
 			state = new_state;
 		}
@@ -197,30 +214,153 @@ int ft_printf(const char *str, ...)
 	return (0);
 }
 
+static void print_p(void *pnt)
+{
+	;
+}
+
+static void print_usigned_hex(int nbr, const char up_lo)
+{
+	int size = (int)get_size(nbr);
+	char array[size];
+	int i;
+	int digit;
+	unsigned long ul_nbr;
+
+	i = size - 1;
+	ul_nbr = (unsigned long)nbr;
+	if (up_lo == 'x')
+	{
+		while (i != -1)
+		{
+			digit = ul_nbr % 16;
+			ul_nbr = ul_nbr / 16;
+			array[i] = get_hex_lo_digit(digit);
+			i--;
+		}
+	}
+	else if (up_lo == 'X')
+	{
+		while (i != -1)
+		{
+			digit = ul_nbr % 16;
+			ul_nbr = ul_nbr / 16;
+			array[i] = get_hex_up_digit(digit);
+			i--;
+		}
+	}
+	write(1, array, size);
+}
+
+static void print_usigned_dec(int nbr)
+{
+	char *str_nbr = ft_itoa(nbr);
+	while (*str_nbr)
+	{
+		if (*str_nbr != '-')
+			write(1, str_nbr, 1);
+		str_nbr++;
+	}
+}
+
 static void print_s(const char *str)
 {
-	printf("%s", str);
+	// size_t len = ft_strlen(str);
+	// write(1, str, len);
+	while (*str)
+		{
+			write(1, str, 1);
+			str++;
+		}
 }
 
 static void print_c(char c)
 {
-	printf("%c", c);
-}
-
-static void print_p(void *p)
-{
-	
+	write(1, &c, 1);
 }
 
 static void print_flags(int flag)
 {
-	printf("\tflag: ");
-	if (flag & FLAG_MINUS) printf("minus ");
-	if (flag & FLAG_ZERO) printf("zero ");
-	if (flag & FLAG_HASH) printf("hash ");
-	if (flag & FLAG_SPACE) printf("space ");
-	if (flag & FLAG_PLUS) printf("plus ");
-	printf("\n");
+	// printf("\tflag: ");
+	// if (flag & FLAG_MINUS) printf("minus ");
+	// if (flag & FLAG_ZERO) printf("zero ");
+	// if (flag & FLAG_HASH) printf("hash ");
+	// if (flag & FLAG_SPACE) printf("space ");
+	// if (flag & FLAG_PLUS) printf("plus ");
+	// printf("\n");
+	return ;
+}
+
+static size_t	get_size(int n)
+{
+	size_t	size;
+
+	size = 0;
+	if (n <= 0)
+		size = 1;
+	while (n)
+	{
+		n /= 10;
+		size++;
+	}
+	return (size);
+}
+
+static char	*ft_itoa(int n)
+{
+	char	*result;
+	int		size;
+	long	digit;
+
+	size = get_size(n);
+	result = malloc((size + 1) * sizeof(char));
+	if (!result)
+		return (NULL);
+	digit = (long)n;
+	if (n < 0)
+	{
+		digit *= -1;
+		*result = '-';
+	}
+	result[size--] = '\0';
+	while (digit >= 0)
+	{
+		result[size--] = (digit % 10) + '0';
+		digit /= 10;
+		if (digit == 0)
+			break ;
+	}
+	return (result);
+}
+
+static char	get_hex_lo_digit(int digit)
+{
+	char c;
+
+	if (digit < 10)
+	{
+		c = '0' + digit;
+	}
+	else
+	{
+		c = 'a' + digit - 10;
+	}
+	return c;
+}
+
+static char	get_hex_up_digit(int digit)
+{
+	char c;
+
+	if (digit < 10)
+	{
+		c = '0' + digit;
+	}
+	else
+	{
+		c = 'A' + digit - 10;
+	}
+	return c;
 }
 
 static int	ft_atoi(const char *str)
@@ -274,16 +414,14 @@ static int get_flag(char c)
 
 int main(void)
 {
-	// ft_printf("%.15d color %s");
-	// ft_printf("%-0%0-% %+%#%0%-");
-	// ft_printf("dd%c");
-	// ft_printf("%.5-8d");
-	// ft_printf("% -s");
-	// ft_printf("a%10dx");
-	// ft_printf("d%0.-"); // - (flags)
-	// ft_printf("hello%25dsmafl");
-	// ft_printf("h%5.12");
-	ft_printf("%%");
-	ft_printf("smafl%d-ybg", 50);
+	ft_printf("print %%\n");
+	ft_printf("print %s\n", "string");
+	ft_printf("print %char\n", 'c');
+	ft_printf("print d: %d\n", INT_MIN);
+	ft_printf("print i: %i\n", INT_MIN);
+	ft_printf("print u: %u\n", INT_MIN);
+	ft_printf("print x: %x\n", 376237); // 5bdad
+	ft_printf("print X: %X\n", 376237);
+	// ft_printf("print addr %p\n", &a);
 	return (0);
 }

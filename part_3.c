@@ -11,15 +11,17 @@ static void print_flags(int flag);
 static void print_s(const char *str);
 static void print_c(char c);
 static void print_unsigned_dec(int nbr);
-static void print_unsigned_hex(unsigned long nbr, const char type);
+static void print_unsigned_x_hex(int nbr);
+static void print_unsigned_X_hex(int nbr);
 static void print_p(void *pnt);
 static int	ft_atoi(const char *str);
-static char	*ft_itoa(int nbr);
+static char	*ft_itoa(int n);
 static bool is_type(char c);
 static bool is_flag(char c);
 static int get_flag(char c);
 static char get_hex_digit(int digit);
-static size_t get_size(unsigned long n);
+static size_t get_size(int n);
+static unsigned long get_ul_size(unsigned long n);
 static int	ft_toupper(int c);
 
 #define FLAG_MINUS (1 << 0)
@@ -192,7 +194,6 @@ int ft_printf(const char *str, ...)
 			{
 				if (str[-1] == '%')
 					write(1, "%", 1);
-					// printf("%%");
 				else if (str[-1] == 's')
 					print_s(va_arg(args, char *));
 				else if (str[-1] == 'c')
@@ -201,8 +202,12 @@ int ft_printf(const char *str, ...)
 					print_s(ft_itoa(va_arg(args, int)));
 				else if (str[-1] == 'u')
 					print_unsigned_dec(va_arg(args, int));
-				else if (str[-1] == 'x' || str[-1] == 'X' || str[-1] == 'p')
-					print_unsigned_hex((unsigned long)va_arg(args, int), str[-1]);
+				else if (str[-1] == 'x')
+					print_unsigned_x_hex(va_arg(args, int));
+				else if (str[-1] == 'X')
+					print_unsigned_X_hex(va_arg(args, int));
+				else if (str[-1] == 'p')
+					print_p(va_arg(args, void *));
 			}
 			state = new_state;
 		}
@@ -212,61 +217,76 @@ int ft_printf(const char *str, ...)
 	return (0);
 }
 
-static void print_unsigned_hex(unsigned long nbr, const char type)
+static void print_p(void *pnt)
 {
-	size_t size = get_size(nbr);
+	unsigned long size = get_ul_size((unsigned long)pnt);
 	char array[size];
 	int i;
 	int digit;
+	unsigned long temp;
 
 	i = size - 1;
-	if (type == 'x')
+	temp = (unsigned long)pnt;
+	while (i != -1)
 	{
-		while (i != -1)
-		{
-			digit = nbr % 16;
-			nbr = nbr / 16;
-			array[i] = get_hex_digit(digit);
-			i--;
-		}
+		digit = temp % 16;
+		temp = temp / 16;
+		array[i] = get_hex_digit(digit);
+		i--;
 	}
-	else if (type == 'X')
+	write(1, "0x", 2);
+	write(1, array, size);
+}
+
+static void print_unsigned_x_hex(int nbr)
+{
+	int size = (int)get_size(nbr);
+	char array[size];
+	int i;
+	int digit;
+	unsigned long ul_nbr;
+
+	i = size - 1;
+	ul_nbr = (unsigned long)nbr;
+	while (i != -1)
 	{
-		while (i != -1)
-		{
-			digit = nbr % 16;
-			nbr = nbr / 16;
-			array[i] = ft_toupper(get_hex_digit(digit));
-			i--;
-		}
-	}
-	else if (type == 'p')
-	{
-		while (i != -1)
-		{
-			digit = nbr % 16;
-			nbr = nbr / 16;
-			array[i] = get_hex_digit(digit);
-			i--;
-		}
-		write(1, "0x", 2);
+		digit = ul_nbr % 16;
+		ul_nbr = ul_nbr / 16;
+		array[i] = get_hex_digit(digit);
+		i--;
 	}
 	write(1, array, size);
 }
 
-static size_t	get_size(unsigned long n)
+static void print_unsigned_X_hex(int nbr)
 {
-	size_t	size;
+	int size = (int)get_size(nbr);
+	char array[size];
+	int i;
+	int digit;
+	unsigned long ul_nbr;
 
-	size = 0;
-	if (n <= 0)
-		size = 1;
-	while (n)
+	i = size - 1;
+	ul_nbr = (unsigned long)nbr;
+	while (i != -1)
 	{
-		n /= 10;
-		size++;
+		digit = ul_nbr % 16;
+		ul_nbr = ul_nbr / 16;
+		array[i] = ft_toupper(get_hex_digit(digit));
+		i--;
 	}
-	return (size);
+	write(1, array, size);
+}
+
+static int	ft_toupper(int c)
+{
+	if (c >= 'a' && c <= 'z')
+	{
+		c = c - ('a' - 'A');
+		return (c);
+	}
+	else
+		return (c);
 }
 
 static void print_unsigned_dec(int nbr)
@@ -306,6 +326,63 @@ static void print_flags(int flag)
 	return ;
 }
 
+static size_t	get_size(int n)
+{
+	size_t	size;
+
+	size = 0;
+	if (n <= 0)
+		size = 1;
+	while (n)
+	{
+		n /= 10;
+		size++;
+	}
+	return (size);
+}
+
+static unsigned long get_ul_size(unsigned long n)
+{
+	size_t	size;
+
+	size = 0;
+	if (n <= 0)
+		size = 1;
+	while (n)
+	{
+		n /= 10;
+		size++;
+	}
+	return (size);
+}
+
+static char	*ft_itoa(int n)
+{
+	char	*result;
+	int		size;
+	long	digit;
+
+	size = get_size(n);
+	result = malloc((size + 1) * sizeof(char));
+	if (!result)
+		return (NULL);
+	digit = (long)n;
+	if (n < 0)
+	{
+		digit *= -1;
+		*result = '-';
+	}
+	result[size--] = '\0';
+	while (digit >= 0)
+	{
+		result[size--] = (digit % 10) + '0';
+		digit /= 10;
+		if (digit == 0)
+			break ;
+	}
+	return (result);
+}
+
 static char	get_hex_digit(int digit)
 {
 	char c;
@@ -321,43 +398,6 @@ static char	get_hex_digit(int digit)
 	return c;
 }
 
-static int	ft_toupper(int c)
-{
-	if (c >= 'a' && c <= 'z')
-	{
-		c = c - ('a' - 'A');
-		return (c);
-	}
-	else
-		return (c);
-}
-
-static char	*ft_itoa(int nbr)
-{
-	char	*result;
-	size_t	size;
-	unsigned long	digit;
-
-	size = get_size((unsigned long)nbr);
-	result = malloc((size + 1) * sizeof(char));
-	if (!result)
-		return (NULL);
-	digit = (long)nbr;
-	if (nbr < 0)
-	{
-		digit *= -1;
-		*result = '-';
-	}
-	result[size--] = '\0';
-	while (digit >= 0)
-	{
-		result[size--] = (digit % 10) + '0';
-		digit /= 10;
-		if (digit == 0)
-			break ;
-	}
-	return (result);
-}
 
 static int	ft_atoi(const char *str)
 {
@@ -412,14 +452,15 @@ int main(void)
 {
 	int a = 10;
 
-	ft_printf("print %%: %%\n");
-	ft_printf("print s: %s\n", "string");
-	ft_printf("print c: %c\n", 'c');
+	ft_printf("print %%\n");
+	ft_printf("print %s\n", "string");
+	ft_printf("print %char\n", 'c');
 	ft_printf("print d: %d\n", INT_MIN);
 	ft_printf("print i: %i\n", INT_MIN);
 	ft_printf("print u: %u\n", INT_MIN);
 	ft_printf("print x: %x\n", 376237); // 5bdad
 	ft_printf("print X: %X\n", 376237);
 	ft_printf("print addr %p\n", &a);
+	ft_printf("print %c and %% and %p\n", 'r', &a);
 	return (0);
 }

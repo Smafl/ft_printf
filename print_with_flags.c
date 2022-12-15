@@ -7,13 +7,14 @@
 #include <limits.h>
 
 int ft_printf(const char *str, ...);
-static void print_flags(int flag);
-static void print_s(const char *str);
-static void print_c(char c);
+static void print_s(const char *str, int flag, int width, int precision);
+static void print_c(char c, int flag, int width, int precision);
 static void print_unsigned_dec(int nbr);
 static void print_unsigned_x_hex(int nbr);
 static void print_unsigned_X_hex(int nbr);
 static void print_p(void *pnt);
+static void print_zero(int width);
+static void print_space(int width);
 static int	ft_atoi(const char *str);
 static char	*ft_itoa(int n);
 static bool is_type(char c);
@@ -29,6 +30,11 @@ static int	ft_toupper(int c);
 #define FLAG_HASH (1 << 2)
 #define FLAG_SPACE (1 << 3)
 #define FLAG_PLUS (1 << 4)
+#define HAS_WIDTH (1 << 5)
+#define HAS_PRECISION (1 << 6)
+
+// replace bool to int flag
+// use struct
 
 enum e_state
 {
@@ -47,8 +53,6 @@ int ft_printf(const char *str, ...)
 	int flag;
 	int width;
 	int precision;
-	bool has_width;
-	bool has_precision;
 	const char *text_start = str;
 
 	va_list args;
@@ -163,19 +167,19 @@ int ft_printf(const char *str, ...)
 			if (new_state == STATE_WIDTH)
 			{
 				width = ft_atoi(str);
-				has_width = true;
+				flag |= HAS_WIDTH;
 			}
 			if (new_state == STATE_UNDEF_PRECISION)
 			{
 				precision = 0;
-				has_precision = true;
+				flag |= HAS_PRECISION;
 			}
 			if (new_state == STATE_PRECISION)
 				precision = ft_atoi(str);
 			if (new_state == STATE_FORMAT)
 			{
-				has_precision = false;
-				has_width = false;
+				flag &= ~HAS_WIDTH;
+				flag &= ~HAS_PRECISION;
 			}
 			if (new_state == STATE_TEXT)
 				text_start = str;
@@ -186,11 +190,11 @@ int ft_printf(const char *str, ...)
 				if (str[-1] == '%')
 					write(1, "%", 1);
 				else if (str[-1] == 's')
-					print_s(va_arg(args, char *));
+					print_s(va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
-					print_c(va_arg(args, int));
+					print_c(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'd' || str[-1] == 'i')
-					print_s(ft_itoa(va_arg(args, int)));
+					print_s(ft_itoa(va_arg(args, int)), flag, width, precision);
 				else if (str[-1] == 'u')
 					print_unsigned_dec(va_arg(args, int));
 				else if (str[-1] == 'x')
@@ -206,17 +210,6 @@ int ft_printf(const char *str, ...)
 	}
 	va_end(args);
 	return (0);
-}
-
-static void print_flags(int flag)
-{
-	// if (flag & FLAG_MINUS) printf("minus ");
-	// if (flag & FLAG_ZERO) printf("zero ");
-	// if (flag & FLAG_HASH) printf("hash ");
-	// if (flag & FLAG_SPACE) printf("space ");
-	// if (flag & FLAG_PLUS) printf("plus ");
-	// printf("\n");
-	return ;
 }
 
 static void print_p(void *pnt)
@@ -291,18 +284,55 @@ static void print_unsigned_dec(int nbr)
 	}
 }
 
-static void print_s(const char *str)
+static void print_s(const char *str, int flag, int width, int precision)
 {
+	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH))
+	{
+
+	}
 	while (*str)
+	{
+		write(1, str, 1);
+		str++;
+	}
+}
+
+static void print_c(char c, int flag, int width, int precision)
+{
+	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	{
+		print_zero(width - 1);
+		write(1, &c, 1);
+	}
+	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
+	{
+		write(1, &c, 1);
+		print_space(width - 1);
+	}
+	else if (flag & HAS_WIDTH)
+	{	print_space(width - 1);
+		write(1, &c, 1);
+	}
+	else
+		write(1, &c, 1);
+}
+
+static void print_zero(int width)
+{
+	while (width != 0)
 		{
-			write(1, str, 1);
-			str++;
+			write(1, "0", 1);
+			width--;
 		}
 }
 
-static void print_c(char c)
+static void print_space(int width)
 {
-	write(1, &c, 1);
+	while (width != 0)
+		{
+			write(1, " ", 1);
+			width--;
+		}
 }
 
 static int	ft_toupper(int c)
@@ -441,15 +471,27 @@ int main(void)
 {
 	int a = 10;
 
-	ft_printf("print %%: %%\n");
-	ft_printf("print s: %s\n", "string");
-	ft_printf("print c: %c\n", 'c');
-	ft_printf("print d: %d\n", INT_MIN);
-	ft_printf("print i: %i\n", INT_MIN);
-	ft_printf("print u: %u\n", INT_MIN);
-	ft_printf("print x: %x\n", 376237); // 5bdad
-	ft_printf("print X: %X\n", 376237);
-	ft_printf("print addr %p\n", &a);
-	ft_printf("print %c and %% and %p\n", 'r', &a);
+	// ft_printf("print %%: %%\n\n");
+
+	ft_printf("1 print s: %-.5s\n\n", "string");
+
+	printf("1 print s: %015s\n", "string");
+
+	// ft_printf("1 print c: %10c\n", 'c');
+	// ft_printf("2 print c: %010c\n", 'c');
+	// ft_printf("3 print c: %-10c\n", 'c');
+	// ft_printf("4 print c: %-010c\n\n", 'c');
+
+	// printf("1 print c: %10c\n", 'c');
+	// printf("2 print c: %010c\n", 'c');
+	// printf("3 print c: %-10c\n", 'c');
+	// printf("4 print c: %-010c\n", 'c');
+	// ft_printf("print d: %d\n", INT_MIN);
+	// ft_printf("print i: %i\n", INT_MIN);
+	// ft_printf("print u: %u\n", INT_MIN);
+	// ft_printf("print x: %x\n", 376237); // 5bdad
+	// ft_printf("print X: %X\n", 376237);
+	// ft_printf("print addr %p\n", &a);
+	// ft_printf("print %c and %% and %p\n", 'r', &a);
 	return (0);
 }

@@ -75,6 +75,7 @@ int ft_printf(const char *str, ...)
 		{
 			if (is_flag(*str))
 			{
+				// assign a new value to int flag
 				flag = get_flag(*str);
 				new_state = STATE_FLAG;
 			}
@@ -92,6 +93,7 @@ int ft_printf(const char *str, ...)
 		else if (state == STATE_FLAG)
 		{
 			if (is_flag(*str))
+				// add a new flag with bitwise OR operator
 				flag |= get_flag(*str);
 			else if (*str >= '1' && *str <= '9')
 				new_state = STATE_WIDTH;
@@ -175,10 +177,7 @@ int ft_printf(const char *str, ...)
 			if (new_state == STATE_PRECISION)
 				precision = ft_atoi(str);
 			if (new_state == STATE_FORMAT)
-			{
-				flag &= ~HAS_WIDTH;
-				flag &= ~HAS_PRECISION;
-			}
+				flag = 0;
 			if (new_state == STATE_TEXT)
 				text_start = str;
 			if (state == STATE_TEXT)
@@ -192,7 +191,7 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'c')
 					print_c(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'd' || str[-1] == 'i')
-					print_s(ft_itoa(va_arg(args, int)), flag, (width - precision), precision);
+					print_s(ft_itoa(va_arg(args, int)), flag, width, precision);
 				else if (str[-1] == 'u')
 					print_unsigned_dec(va_arg(args, int));
 				else if (str[-1] == 'x')
@@ -296,9 +295,10 @@ static void print_s(const char *str, int flag, int width, int precision)
 	// if (flag & HAS_PRECISION) printf("precision\n");
 	// if (flag & HAS_WIDTH) printf("width\n");
 
-	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION) && (flag & HAS_WIDTH))
+	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
+		&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
-		if (width > len) print_zero(width - len);
+		if (width > len) print_zero(width - precision);
 		while (precision != 0)
 		{
 			write(1, str, 1);
@@ -306,7 +306,7 @@ static void print_s(const char *str, int flag, int width, int precision)
 			precision--;
 		}
 	}
-	else if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH))
+	else if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
 		if (width > len) print_zero(width - len);
 		while (*str)
@@ -315,9 +315,19 @@ static void print_s(const char *str, int flag, int width, int precision)
 			str++;
 		}
 	}
+	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
+	{
+		while (precision != 0)
+		{
+			write(1, str, 1);
+			str++;
+			precision--;
+		}
+		if (width > len) print_space(width - precision);
+	}
 	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION))
 	{
-		if (width > len) print_space(width - len);
+		if (width > len) print_space(width - precision);
 		while (precision != 0)
 		{
 			write(1, str, 1);
@@ -541,9 +551,9 @@ int main(void)
 
 	// ft_printf("print %%: %%\n\n");
 
-	ft_printf("1 print s: %15s\n\n", "string");
+	// ft_printf("1 ft_print s: %-15.5s\n\n", "string");
 
-	// printf("1 print s: %15.5s\n", "string");
+	// printf("1 st_print s: %-15.5s\n", "string");
 
 	// ft_printf("1 print c: %10c\n", 'c');
 	// ft_printf("2 print c: %010c\n", 'c');
@@ -554,8 +564,12 @@ int main(void)
 	// printf("2 print c: %010c\n", 'c');
 	// printf("3 print c: %-10c\n", 'c');
 	// printf("4 print c: %-010c\n", 'c');
-	// ft_printf("print d: %d\n", INT_MIN);
-	// ft_printf("print i: %i\n", INT_MIN);
+
+	ft_printf("1 ft_print d: %d\n", INT_MIN);
+	ft_printf("2 ft_print i: %i\n", INT_MIN);
+
+	printf("1 st_print d: %d\n", INT_MIN);
+	printf("2 st_print i: %i\n", INT_MIN);
 	// ft_printf("print u: %u\n", INT_MIN);
 	// ft_printf("print x: %x\n", 376237); // 5bdad
 	// ft_printf("print X: %X\n", 376237);

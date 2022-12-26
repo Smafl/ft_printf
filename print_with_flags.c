@@ -10,9 +10,9 @@ int ft_printf(const char *str, ...);
 static void print_s(const char *str, int flag, int width, int precision);
 static void print_c(char c, int flag, int width, int precision);
 static void print_unsigned_dec(int nbr);
-static void print_unsigned_x_hex(int nbr);
+static int print_unsigned_x_hex(int nbr, int flag, int width, int precision);
 static void print_unsigned_X_hex(int nbr);
-static void print_p(void *pnt);
+static void print_p(void *pnt, int flag, int width, int precision);
 static int	ft_strlen(const char *str);
 static void print_zero(int width);
 static void print_space(int width);
@@ -196,11 +196,11 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'u')
 					print_unsigned_dec(va_arg(args, int));
 				else if (str[-1] == 'x')
-					print_unsigned_x_hex(va_arg(args, int));
+					print_unsigned_x_hex(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'X')
 					print_unsigned_X_hex(va_arg(args, int));
 				else if (str[-1] == 'p')
-					print_p(va_arg(args, void *));
+					print_p(va_arg(args, void *), flag, width, precision);
 			}
 			state = new_state;
 		}
@@ -210,7 +210,7 @@ int ft_printf(const char *str, ...)
 	return (0);
 }
 
-static void print_p(void *pnt)
+static void print_p(void *pnt, int flag, int width, int precision)
 {
 	unsigned long size = get_ul_size((unsigned long)pnt);
 	char array[size];
@@ -227,28 +227,94 @@ static void print_p(void *pnt)
 		array[i] = get_hex_digit(digit);
 		i--;
 	}
-	write(1, "0x", 2);
-	write(1, array, size);
+	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	{
+		print_zero(width - 1);
+		write(1, "0x", 2);
+		write(1, array, size);
+	}
+	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
+	{
+		write(1, "0x", 2);
+		write(1, array, size);
+		print_space(width - 1);
+	}
+	else if (flag & HAS_WIDTH)
+	{	
+		print_space(width - 1);
+		write(1, "0x", 2);
+		write(1, array, size);
+	}
+	else
+	{
+		write(1, "0x", 2);
+		write(1, array, size);
+	}
 }
 
-static void print_unsigned_x_hex(int nbr)
+static int print_unsigned_x_hex(int nbr, int flag, int width, int precision)
 {
-	int size = (int)get_size(nbr);
-	char array[size];
+	int size;
+	char *array;
 	int i;
 	int digit;
 	unsigned long ul_nbr;
 
+	size = (int)get_size(nbr) + 2 * ((flag & FLAG_HASH) != 0);
 	i = size - 1;
 	ul_nbr = (unsigned long)nbr;
+	array = malloc(sizeof(char) * size);
+	if (array == NULL)
+		return (0);
 	while (i != -1)
 	{
 		digit = ul_nbr % 16;
 		ul_nbr = ul_nbr / 16;
 		array[i] = get_hex_digit(digit);
 		i--;
+		if (flag & FLAG_HASH && i == 1)
+		{
+			array[0] = '0';
+			array[1] = 'x';
+		}
+		printf("%d\n", i);
 	}
+	// if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
+	// 	&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	// {
+
+	// }
+	// else if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	// {
+
+	// }
+	// else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
+	// {
+
+	// }
+	// else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION))
+	// {
+
+	// }
+	// else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	// {
+
+	// }
+	// else if (flag & HAS_WIDTH)
+	// {
+
+	// }
+	// else if (flag & HAS_PRECISION)
+	// {
+
+	// }
+	// else
+	// {
+	// 	write(1, array, size);
+	// }
 	write(1, array, size);
+	free(array);
+	return (0);
 }
 
 static void print_unsigned_X_hex(int nbr)
@@ -316,6 +382,8 @@ static void print_s(const char *str, int flag, int width, int precision)
 			str++;
 		}
 	}
+// 	else func() 
+// func() :if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
 	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
 	{
 		while (precision != 0)
@@ -555,8 +623,8 @@ static int get_flag(char c)
 	return (0);
 }
 
-int main(void)
-{
+int checker(void){
+
 	int a = 10;
 
 	// ft_printf("print %%: %%\n\n");
@@ -571,11 +639,6 @@ int main(void)
 	// ft_printf("3 print c: %-10c\n", 'c');
 	// ft_printf("4 print c: %-010c\n\n", 'c');
 
-
-	ft_printf ("%s %d", "hello", 12);
-
-	
-
 	// printf("1 print c: %10c\n", 'c');
 	// printf("2 print c: %010c\n", 'c');
 	// printf("3 print c: %-10c\n", 'c');
@@ -587,9 +650,17 @@ int main(void)
 	// printf("1 st_print d: %-20d\n", INT_MIN);
 	// printf("2 st_print i: %-20i\n", INT_MIN);
 	// ft_printf("print u: %u\n", INT_MIN);
-	// ft_printf("print x: %x\n", 376237); // 5bdad
+	ft_printf("print x: %#x\n", 376237); // 5bdad
+	printf("standart print x: %#x\n", 376237); // 5bdad
 	// ft_printf("print X: %X\n", 376237);
-	// ft_printf("print addr %p\n", &a);
+	// ft_printf("print addr [%-50p]\n", &a);
+
 	// ft_printf("print %c and %% and %p\n", 'r', &a);
 	return (0);
+}
+
+int main()
+{
+	checker();
+	// system("leaks a.out");
 }

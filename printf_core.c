@@ -23,7 +23,8 @@ static char get_hex_digit(int digit);
 static size_t get_size(int n);
 static unsigned long get_ul_size(unsigned long n);
 static int	ft_toupper(int c);
-char *printf_core(char type, va_list args, size_t *out_len);
+static int	ft_strlen(const char *str);
+static char *printf_core(char type, va_list args, size_t *out_len);
 
 #define FLAG_MINUS (1 << 0)
 #define FLAG_ZERO (1 << 1)
@@ -51,6 +52,7 @@ int ft_printf(const char *str, ...)
 	int width;
 	int precision;
 	size_t out_len;
+	char *print_text;
 	const char *text_start = str;
 
 	va_list args;
@@ -188,8 +190,7 @@ int ft_printf(const char *str, ...)
 					flag &= ~FLAG_ZERO;
 				if ((flag & FLAG_PLUS) && (flag & FLAG_SPACE))
 					flag &= ~FLAG_SPACE;
-				if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION) && (flag & HAS_WIDTH))
-					printf_core(str[-1], args, &out_len);
+				printf_core(str[-1], args, &out_len);
 			}
 			state = new_state;
 		}
@@ -199,9 +200,33 @@ int ft_printf(const char *str, ...)
 	return (0);
 }
 
-char *printf_core(char type, va_list args, size_t *out_len)
+static char *printf_core(char type, va_list args, size_t *out_len)
 {
-	;
+	if (type == '%')
+	{
+		*out_len = 1;
+		return ("pass");
+	}
+	else if (type == 's')
+	{
+		*out_len = ft_strlen(va_arg(args, char *));
+	}
+	else if (type == 'c')
+	{
+		*out_len = 1;
+	}
+	else if (type == 'd' || type == 'i')
+	{
+		*out_len = ft_strlen(ft_itoa(va_arg(args, int)));
+	}
+	else if (type == 'u')
+	{
+		;
+	}
+	return (0);
+	// else if (type == 'x')
+	// else if (type == 'X')
+	// else if (type == 'p')
 }
 
 static void print_p(void *pnt)

@@ -215,7 +215,7 @@ static void print_flags(int flag)
 	// if (flag & FLAG_HASH) printf("hash ");
 	// if (flag & FLAG_SPACE) printf("space ");
 	// if (flag & FLAG_PLUS) printf("plus ");
-	// printf("\n");
+	printf("\n");
 	return ;
 }
 

@@ -242,7 +242,7 @@ static void print_p(void *pnt)
 
 static void print_unsigned_x_hex(int nbr)
 {
-	int size = (int)get_size(nbr);
+	int size = (unsigned long)get_ul_size(nbr);
 	char array[size];
 	int i;
 	int digit;
@@ -340,7 +340,7 @@ static unsigned long get_ul_size(unsigned long n)
 		size = 1;
 	while (n)
 	{
-		n /= 10;
+		n /= 16;
 		size++;
 	}
 	return (size);
@@ -441,15 +441,17 @@ int main(void)
 {
 	int a = 10;
 
-	ft_printf("print %%: %%\n");
-	ft_printf("print s: %s\n", "string");
-	ft_printf("print c: %c\n", 'c');
-	ft_printf("print d: %d\n", INT_MIN);
-	ft_printf("print i: %i\n", INT_MIN);
-	ft_printf("print u: %u\n", INT_MIN);
-	ft_printf("print x: %x\n", 376237); // 5bdad
-	ft_printf("print X: %X\n", 376237);
-	ft_printf("print addr %p\n", &a);
-	ft_printf("print %c and %% and %p\n", 'r', &a);
+	// ft_printf("print %%: %%\n");
+	// ft_printf("print s: %s\n", "string");
+	// ft_printf("print c: %c\n", 'c');
+	// ft_printf("print d: %d\n", INT_MIN);
+	// ft_printf("print i: %i\n", INT_MIN);
+	// ft_printf("print u: %u\n", INT_MIN);
+	ft_printf("ft print x: %x\n", 376237); // 5bdad
+	printf("st print x: %x\n", 376237); // 5bdad
+	// ft_printf("print X: %X\n", 376237);
+	// ft_printf("ft print addr %p\n", &a);
+	// printf("st print addr %p\n", &a);
+	// ft_printf("print %c and %% and %p\n", 'r', &a);
 	return (0);
 }

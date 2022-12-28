@@ -31,9 +31,11 @@ enum e_state
 
 int ft_printf(const char *str, ...);
 
+// print_c_str.c
 static void print_s(const char *str, int flag, int width, int precision);
 static void print_c(char c, int flag, int width, int precision);
 
+// print_dec_hex_p.c
 static void print_unsigned_dec(int nbr);
 static int print_unsigned_x_hex(int nbr, int flag, int width, int precision);
 static void print_unsigned_X_hex(int nbr);

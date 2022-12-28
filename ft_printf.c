@@ -1,11 +1,41 @@
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <limits.h>
+
+// print_c_str.c
+static void print_s(const char *str, int flag, int width, int precision);
+static void print_c(char c, int flag, int width, int precision);
+
+// print_dec_hex_p.c
+static void print_unsigned_dec(int nbr);
+static int print_unsigned_x_hex(int nbr, int flag, int width, int precision);
+static void print_unsigned_X_hex(int nbr);
+static int print_p(void *pnt, int flag, int width, int precision);
+
+// print_zero_space.c
+static void print_zero(int width);
+static void print_space(int width);
+
+// libft.c
+static int	ft_atoi(const char *str);
+static char	*ft_itoa(int n);
+static int	ft_toupper(int c);
+static int	ft_strlen(const char *str);
+
+// get.c
+static char get_hex_digit(int digit);
+static size_t get_size(int n);
+static size_t get_size_t(size_t n);
+
+// is_type_flag.c
+static bool is_type(char c);
+static bool is_flag(char c);
+static int get_flag(char c);
 
 int ft_printf(const char *str, ...)
 {
@@ -176,278 +206,11 @@ int ft_printf(const char *str, ...)
 сразу убрать флаг 0, если - и 0
 считать возвращаемое значение (кол-во печатаемых символов)
 */
-static int print_p(void *pnt, int flag, int width, int precision)
-{
-	size_t size;
-	char *array;
-	int i;
-	int digit;
-	int len;
-	size_t temp;
-
-	size = get_size_t((size_t)pnt);
-	i = size - 1;
-	temp = (size_t)pnt;
-	array = malloc(sizeof(char) * size);
-	if (array == NULL)
-		return (0);
-	while (i != -1)
-	{
-		digit = temp % 16;
-		temp = temp / 16;
-		array[i] = get_hex_digit(digit);
-		i--;
-	}
-	len = ft_strlen(array);
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		write(1, "0x", 2);
-		if (width > (len + 2))
-			print_zero(width - len - 2);
-		write(1, array, len);
-	}
-	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
-	{
-		write(1, "0x", 2);
-		write(1, array, len);
-		if (width > (len + 2))
-			print_space(width - len - 2);
-	}
-	else if (flag & HAS_WIDTH)
-	{	
-		if (width > (len + 2))
-			print_space(width - len - 2);
-		write(1, "0x", 2);
-		write(1, array, len);
-	}
-	else
-	{
-		write(1, "0x", 2);
-		write(1, array, len);
-	}
-	free(array);
-	return (0);
-}
-
-static int print_unsigned_x_hex(int nbr, int flag, int width, int precision)
-{
-	size_t size;
-	char *array;
-	int i;
-	int digit;
-	int len;
-	size_t ul_nbr;
-
-	size = get_size_t((size_t)nbr);
-	i = size - 1;
-	ul_nbr = (size_t)nbr;
-	array = malloc(sizeof(char) * size);
-	if (array == NULL)
-		return (0);
-	while (i != -1)
-	{
-		digit = ul_nbr % 16;
-		ul_nbr = ul_nbr / 16;
-		array[i] = get_hex_digit(digit);
-		i--;
-	}
-	len = ft_strlen(array);
-	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
-		&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (flag & FLAG_HASH)
-			write(1, "0x", 2);
-		if (width > (len + 2))
-			print_zero(width - len - 2);
-		write(1, array, size);
-	}
-	else if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (flag & FLAG_HASH)
-			write(1, "0x", 2);
-		if (width > (len + 2))
-			print_zero(width - len - 2);
-		write(1, array, len);
-	}
-	// else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
-	// {
-
-	// }
-	// else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION))
-	// {
-
-	// }
-	// else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
-	// {
-
-	// }
-	// else if (flag & HAS_WIDTH)
-	// {
-
-	// }
-	// else if (flag & HAS_PRECISION)
-	// {
-
-	// }
-	else
-	{
-		if (flag & FLAG_HASH)
-			write(1, "0x", 2);
-		write(1, array, size);
-	}
-	// write(1, array, size);
-	free(array);
-	return (0);
-}
-
-static void print_unsigned_X_hex(int nbr)
-{
-	int size = (int)get_size(nbr);
-	char array[size];
-	int i;
-	int digit;
-	unsigned long ul_nbr;
-
-	i = size - 1;
-	ul_nbr = (unsigned long)nbr;
-	while (i != -1)
-	{
-		digit = ul_nbr % 16;
-		ul_nbr = ul_nbr / 16;
-		array[i] = ft_toupper(get_hex_digit(digit));
-		i--;
-	}
-	write(1, array, size);
-}
-
-static void print_unsigned_dec(int nbr)
-{
-	char *str_nbr = ft_itoa(nbr);
-	while (*str_nbr)
-	{
-		if (*str_nbr != '-')
-			write(1, str_nbr, 1);
-		str_nbr++;
-	}
-}
-
-static void print_s(const char *str, int flag, int width, int precision)
-{
-	int len;
-
-	len = ft_strlen(str);
-
-	// if (flag & FLAG_MINUS) printf("minus\n");
-	// if (flag & FLAG_HASH) printf("hash\n");
-	// if (flag & FLAG_ZERO) printf("zero\n");
-	// if (flag & FLAG_SPACE) printf("space\n");
-	// if (flag & FLAG_PLUS) printf("plus\n");
-	// if (flag & HAS_PRECISION) printf("precision\n");
-	// if (flag & HAS_WIDTH) printf("width\n");
-
-	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
-		&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (width > len) print_zero(width - precision);
-		while (precision != 0)
-		{
-			write(1, str, 1);
-			str++;
-			precision--;
-		}
-	}
-	else if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (width > len) print_zero(width - len);
-		while (*str)
-		{
-			write(1, str, 1);
-			str++;
-		}
-	}
-// 	else func() 
-// func() :if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
-	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
-	{
-		while (precision != 0)
-		{
-			write(1, str, 1);
-			str++;
-			precision--;
-		}
-		if (width > len) print_space(width - precision);
-	}
-	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION))
-	{
-		if (width > len) print_space(width - precision);
-		while (precision != 0)
-		{
-			write(1, str, 1);
-			str++;
-			precision--;
-		}
-	}
-	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
-	{
-		while (*str)
-		{
-			write(1, str, 1);
-			str++;
-		}
-		if (width > len) print_space(width - len);
-	}
-	else if (flag & HAS_WIDTH)
-	{
-		if (width > len) print_space(width - len);
-		while (*str)
-		{
-			write(1, str, 1);
-			str++;
-		}
-	}
-	else if (flag & HAS_PRECISION)
-	{
-		while (precision != 0)
-		{
-			write(1, str, 1);
-			str++;
-			precision--;
-		}
-	}
-	else
-	{
-		while (*str)
-		{
-			write(1, str, 1);
-			str++;
-		}
-	}
-}
-
-static void print_c(char c, int flag, int width, int precision)
-{
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		print_zero(width - 1);
-		write(1, &c, 1);
-	}
-	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
-	{
-		write(1, &c, 1);
-		print_space(width - 1);
-	}
-	else if (flag & HAS_WIDTH)
-	{	print_space(width - 1);
-		write(1, &c, 1);
-	}
-	else
-		write(1, &c, 1);
-}
 
 int checker(void)
 {
 
-	int a = 10;
+	// int a = 10;
 
 	// ft_printf("print %%: %%\n\n");
 	// printf("print %%: %10%\n");

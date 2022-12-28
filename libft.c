@@ -1,5 +1,5 @@
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static int	ft_atoi(const char *str)
 {

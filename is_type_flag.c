@@ -1,5 +1,5 @@
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static bool is_type(char c)
 {

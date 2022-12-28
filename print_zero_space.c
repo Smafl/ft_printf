@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-static void print_zero(int width)
+void print_zero(int width)
 {
 	while (width != 0)
 		{
@@ -10,7 +10,7 @@ static void print_zero(int width)
 		}
 }
 
-static void print_space(int width)
+void print_space(int width)
 {
 	while (width != 0)
 		{

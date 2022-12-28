@@ -1,12 +1,12 @@
 
 NAME = libftprintf.a
 SRC = ft_printf.c\
-		get.c\
-		is_type_flag.c\
-		libft.c\
-		print_c_str.c\
-		print_dec_hex_p.c\
-		print_zero_space.c
+get.c\
+is_type_flag.c\
+libft.c\
+print_c_str.c\
+print_dec_hex_p.c\
+print_zero_space.c
 OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 
@@ -21,7 +21,9 @@ fclean:
 re: fclean all
 
 $(NAME): $(OBJ)
-	ar -rcs $(NAME)
+	ar -rcs $(NAME) $(OBJ)
+
+bonus: re
 
 # all - compile starter (execute other rules)
 

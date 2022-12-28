@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-static int print_p(void *pnt, int flag, int width, int precision)
+int print_p(void *pnt, int flag, int width, int precision)
 {
 	size_t size;
 	char *array;
@@ -50,11 +50,12 @@ static int print_p(void *pnt, int flag, int width, int precision)
 		write(1, "0x", 2);
 		write(1, array, len);
 	}
+	precision = 0;
 	free(array);
 	return (0);
 }
 
-static int print_unsigned_x_hex(int nbr, int flag, int width, int precision)
+int print_unsigned_x_hex(int nbr, int flag, int width)
 {
 	size_t size;
 	char *array;
@@ -77,16 +78,7 @@ static int print_unsigned_x_hex(int nbr, int flag, int width, int precision)
 		i--;
 	}
 	len = ft_strlen(array);
-	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
-		&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (flag & FLAG_HASH)
-			write(1, "0x", 2);
-		if (width > (len + 2))
-			print_zero(width - len - 2);
-		write(1, array, size);
-	}
-	else if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
 		if (flag & FLAG_HASH)
 			write(1, "0x", 2);
@@ -94,26 +86,22 @@ static int print_unsigned_x_hex(int nbr, int flag, int width, int precision)
 			print_zero(width - len - 2);
 		write(1, array, len);
 	}
-	// else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
-	// {
-
-	// }
-	// else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION))
-	// {
-
-	// }
-	// else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
-	// {
-
-	// }
-	// else if (flag & HAS_WIDTH)
-	// {
-
-	// }
-	// else if (flag & HAS_PRECISION)
-	// {
-
-	// }
+	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	{
+		if (flag & FLAG_HASH)
+			write(1, "0x", 2);
+		write(1, array, len);
+		if (width > (len + 2))
+			print_space(width - len - 2);
+	}
+	else if (flag & HAS_WIDTH)
+	{
+		if (width > (len + 2))
+			print_space(width - len - 2);
+		if (flag & FLAG_HASH)
+			write(1, "0x", 2);
+		write(1, array, len);
+	}
 	else
 	{
 		if (flag & FLAG_HASH)
@@ -125,7 +113,7 @@ static int print_unsigned_x_hex(int nbr, int flag, int width, int precision)
 	return (0);
 }
 
-static void print_unsigned_X_hex(int nbr)
+void print_unsigned_X_hex(int nbr)
 {
 	int size = (int)get_size(nbr);
 	char array[size];
@@ -145,7 +133,7 @@ static void print_unsigned_X_hex(int nbr)
 	write(1, array, size);
 }
 
-static void print_unsigned_dec(int nbr)
+void print_unsigned_dec(int nbr)
 {
 	char *str_nbr = ft_itoa(nbr);
 	while (*str_nbr)

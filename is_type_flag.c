@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-static bool is_type(char c)
+bool is_type(char c)
 {
 	return (c == 'c' || c == 's'
 			|| c == 'p' || c == 'd'
@@ -10,12 +10,12 @@ static bool is_type(char c)
 			|| c == '%');
 }
 
-static bool is_flag(char c)
+bool is_flag(char c)
 {
 	return (c == '-' || c == '0' || c == '#' || c == ' ' || c == '+');
 }
 
-static int get_flag(char c)
+int get_flag(char c)
 {
 	if (c == '-')
 		return (FLAG_MINUS);

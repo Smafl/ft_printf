@@ -1,19 +1,11 @@
 
 #include "ft_printf.h"
 
-static void print_s(const char *str, int flag, int width, int precision)
+void print_s(const char *str, int flag, int width, int precision)
 {
 	int len;
 
 	len = ft_strlen(str);
-
-	// if (flag & FLAG_MINUS) printf("minus\n");
-	// if (flag & FLAG_HASH) printf("hash\n");
-	// if (flag & FLAG_ZERO) printf("zero\n");
-	// if (flag & FLAG_SPACE) printf("space\n");
-	// if (flag & FLAG_PLUS) printf("plus\n");
-	// if (flag & HAS_PRECISION) printf("precision\n");
-	// if (flag & HAS_WIDTH) printf("width\n");
 
 	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
 		&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
@@ -94,7 +86,7 @@ static void print_s(const char *str, int flag, int width, int precision)
 	}
 }
 
-static void print_c(char c, int flag, int width, int precision)
+void print_c(char c, int flag, int width)
 {
 	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{

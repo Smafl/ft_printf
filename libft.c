@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-static int	ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	int	sign;
 	int	result;
@@ -21,7 +21,7 @@ static int	ft_atoi(const char *str)
 	return (result);
 }
 
-static char	*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char	*result;
 	int		size;
@@ -48,7 +48,7 @@ static char	*ft_itoa(int n)
 	return (result);
 }
 
-static int	ft_toupper(int c)
+int	ft_toupper(int c)
 {
 	if (c >= 'a' && c <= 'z')
 	{
@@ -59,7 +59,7 @@ static int	ft_toupper(int c)
 		return (c);
 }
 
-static int	ft_strlen(const char *str)
+int	ft_strlen(const char *str)
 {
 	int	i;
 

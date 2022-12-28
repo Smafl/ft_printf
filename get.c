@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-static size_t	get_size(int n)
+size_t	get_size(int n)
 {
 	size_t	size;
 
@@ -16,7 +16,7 @@ static size_t	get_size(int n)
 	return (size);
 }
 
-static size_t get_size_t(size_t n)
+size_t get_size_t(size_t n)
 {
 	size_t	size;
 
@@ -31,7 +31,7 @@ static size_t get_size_t(size_t n)
 	return (size);
 }
 
-static char	get_hex_digit(int digit)
+char	get_hex_digit(int digit)
 {
 	char c;
 

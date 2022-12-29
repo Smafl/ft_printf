@@ -21,18 +21,25 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int n, int flag)
 {
 	char	*result;
 	int		size;
 	long	digit;
 
-	size = get_size_dec(n);
+	size = get_size_dec(n, flag);
 	result = malloc((size + 1) * sizeof(char));
 	if (!result)
 		return (NULL);
 	digit = (long)n;
-	if (n < 0)
+	if (n >= 0)
+	{
+		if ((flag & FLAG_SPACE) && !(flag & FLAG_PLUS))
+			*result = ' ';
+		else if (flag & FLAG_PLUS)
+			*result = '+';
+	}
+	else if (n < 0)
 	{
 		digit *= -1;
 		*result = '-';

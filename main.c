@@ -24,12 +24,23 @@ int checker(void)
 	// printf("3 print c: %-10c\n", 'c');
 	// printf("4 print c: %-010c\n", 'c');
 
-	ft_printf("ft print d: %d\n", INT_MIN);
-	ft_printf("ft print i: %i\n", INT_MIN);
-	ft_printf("ft print u: %u\n", INT_MIN);
-	printf("st print d: %d\n", INT_MIN);
-	printf("st print i: %i\n", INT_MIN);
-	printf("st print u: %u\n", INT_MIN);
+	ft_printf("ft print d: % d\n", INT_MIN);
+	ft_printf("ft print i: % i\n", INT_MIN);
+	ft_printf("ft print 0: [% i] [%+i]\n", 0, 0);
+	printf("st print 0: [% i] [%+i]\n", 0, 0);
+	printf("st print d: % d\n", INT_MIN);
+	printf("st print i: % i\n", INT_MIN);
+	// ft_printf("ft print u: [%13.3u]\n", INT_MIN);
+	// ft_printf("ft print u: [%3.13u]\n", INT_MIN);
+	// ft_printf("ft print u: [%13.13u]\n", INT_MIN);
+	// ft_printf("ft print u: [%-13.3u]\n", INT_MIN);
+	// ft_printf("ft print u: [%-3.13u]\n\n", INT_MIN);
+
+	// printf("st print u: [%13.3u]\n", INT_MIN);
+	// printf("st print u: [%3.13u]\n", INT_MIN);
+	// printf("st print u: [%13.13u]\n", INT_MIN);
+	// printf("ft print u: [%-13.3u]\n", INT_MIN);
+	// printf("ft print u: [%-3.13u]\n\n", INT_MIN);
 
 	// ft_printf("ft print x: [%#-15x]\n", -376237); // 5bdad
 	// printf("st print x: [%#-15x]\n", -376237); // 5bdad
@@ -47,7 +58,7 @@ int checker(void)
 int main()
 {
 	checker();
-	system("leaks a.out");
+	// system("leaks a.out");
 	return (0);
 }
 

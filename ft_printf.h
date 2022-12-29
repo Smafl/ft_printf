@@ -36,10 +36,11 @@ void	print_s(const char *str, int flag, int width, int precision);
 void	print_c(char c, int flag, int width);
 
 // print_dec_hex_p.c
-void	print_unsigned_dec(int nbr);
+int		print_dec_int(int nbr, int flag, int width, int precision);
+int		print_unsigned_dec(unsigned long nbr, int flag, int width, int precision);
 int		print_unsigned_x_hex(unsigned long nbr, int flag, int width);
 int		print_unsigned_X_hex(unsigned long nbr, int flag, int width);
-int		print_p(void *pnt, int flag, int width, int precision);
+int		print_p(void *pnt, int flag, int width);
 
 // print_zero_space.c
 void	print_zero(int width);
@@ -47,13 +48,14 @@ void	print_space(int width);
 
 // libft.c
 int		ft_atoi(const char *str);
-char	*ft_itoa(int n);
+char	*ft_itoa(int n, int flag);
 int		ft_toupper(int c);
 int		ft_strlen(const char *str);
 
 // get.c
 char	get_hex_digit(int digit);
-int		get_size_dec(int n);
+int		get_size_dec(int n, int flag);
+int		get_size_unsigned_dec(unsigned long n);
 int		get_size_hex(long long n);
 
 // is_type_flag.c

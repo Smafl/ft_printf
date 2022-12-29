@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-int print_p(void *pnt, int flag, int width, int precision)
+int	print_p(void *pnt, int flag, int width)
 {
 	int size;
 	char *array;
@@ -50,12 +50,11 @@ int print_p(void *pnt, int flag, int width, int precision)
 		write(1, "0x", 2);
 		write(1, array, len);
 	}
-	precision = 0;
 	free(array);
 	return (0);
 }
 
-int print_unsigned_x_hex(unsigned long nbr, int flag, int width)
+int	print_unsigned_x_hex(unsigned long nbr, int flag, int width)
 {
 	int size;
 	char *array;
@@ -134,7 +133,7 @@ int print_unsigned_x_hex(unsigned long nbr, int flag, int width)
 	return (0);
 }
 
-int print_unsigned_X_hex(unsigned long nbr, int flag, int width)
+int	print_unsigned_X_hex(unsigned long nbr, int flag, int width)
 {
 	int size;
 	char *array;
@@ -213,14 +212,93 @@ int print_unsigned_X_hex(unsigned long nbr, int flag, int width)
 	return (0);
 }
 
-void print_unsigned_dec(int nbr)
+int	print_unsigned_dec(unsigned long nbr, int flag, int width, int precision)
 {
-	char *str_nbr = ft_itoa(nbr);
-	while (*str_nbr)
+	int size;
+	char *array;
+	int i;
+	int digit;
+	int len;
+	unsigned long ul_nbr;
+
+	size = get_size_unsigned_dec(nbr);
+	i = size - 1;
+	ul_nbr = nbr;
+	array = malloc(sizeof(char) * (size + 1));
+	if (array == NULL)
+		return (0);
+	while (i != -1)
 	{
-		if (*str_nbr != '-')
-			write(1, str_nbr, 1);
-		str_nbr++;
+		digit = ul_nbr % 10;
+		ul_nbr = ul_nbr / 10;
+		array[i] = get_hex_digit(digit);
+		i--;
 	}
-	// free(str_nbr);
+	len = ft_strlen(array);
+	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	{
+		if (width > len) print_zero(width - len);
+		write(1, array, len);
+	}
+	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	{
+		if (precision >= width)
+		{
+			if (precision > len) print_zero(precision - len);
+			write(1, array, len);
+		}
+		else
+		{
+			write(1, array, len);
+			if (width > len) print_space(width - len);
+		}
+	}
+	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	{
+		write(1, array, len);
+		if (width > len) print_space(width - len);
+	}
+	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH))
+	{
+		if (precision >= width)
+		{
+			if (precision > len) print_zero(precision - len);
+		}
+		else
+		{
+			if (width > len) print_space(width - len);
+		}
+		write(1, array, len);
+	}
+	else if (flag & HAS_WIDTH)
+	{
+		if (width > len) print_space(width - len);
+		write(1, array, len);
+	}
+	else
+	{
+		write(1, array, len);
+	}
+	free(array);
+	return (0);
+}
+
+int print_dec_int(int nbr, int flag, int width, int precision)
+{
+	int size;
+	char *array;
+	int i;
+	int digit;
+	int len;
+
+	size = get_size_dec(nbr, flag);
+	i = size - 1;
+	array = malloc(sizeof(char) * (size + 1));
+	if (array == NULL)
+		return (0);
+	array = ft_itoa(nbr, flag);
+	len = ft_strlen(array);
+	write(1, array, len);
+	free(array);
+	return (0);
 }

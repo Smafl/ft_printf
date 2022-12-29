@@ -37,8 +37,8 @@ void	print_c(char c, int flag, int width);
 
 // print_dec_hex_p.c
 void	print_unsigned_dec(int nbr);
-int		print_unsigned_x_hex(int nbr, int flag, int width);
-void	print_unsigned_X_hex(int nbr);
+int		print_unsigned_x_hex(unsigned long nbr, int flag, int width);
+int		print_unsigned_X_hex(unsigned long nbr, int flag, int width);
 int		print_p(void *pnt, int flag, int width, int precision);
 
 // print_zero_space.c
@@ -53,8 +53,8 @@ int		ft_strlen(const char *str);
 
 // get.c
 char	get_hex_digit(int digit);
-size_t	get_size(int n);
-size_t	get_size_t(size_t n);
+int		get_size_dec(int n);
+int		get_size_hex(long long n);
 
 // is_type_flag.c
 bool	is_type(char c);

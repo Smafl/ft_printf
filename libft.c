@@ -27,7 +27,7 @@ char	*ft_itoa(int n)
 	int		size;
 	long	digit;
 
-	size = get_size(n);
+	size = get_size_dec(n);
 	result = malloc((size + 1) * sizeof(char));
 	if (!result)
 		return (NULL);

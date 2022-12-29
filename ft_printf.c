@@ -145,7 +145,6 @@ int ft_printf(const char *str, ...)
 				write(1, text_start, str - text_start);
 			if (state == STATE_TYPE)
 			{
-				// char *printf_core(char type, va_list args, size_t *out_len);
 				if (str[-1] == '%')
 					write(1, "%", 1);
 				else if (str[-1] == 's')
@@ -157,9 +156,9 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'u')
 					print_unsigned_dec(va_arg(args, int));
 				else if (str[-1] == 'x')
-					print_unsigned_x_hex(va_arg(args, int), flag, width);
+					print_unsigned_x_hex(va_arg(args, unsigned long), flag, width);
 				else if (str[-1] == 'X')
-					print_unsigned_X_hex(va_arg(args, int));
+					print_unsigned_X_hex(va_arg(args, unsigned long), flag, width);
 				else if (str[-1] == 'p')
 					print_p(va_arg(args, void *), flag, width, precision);
 			}

@@ -1,9 +1,9 @@
 
 #include "ft_printf.h"
 
-size_t	get_size(int n)
+int	get_size_dec(int n)
 {
-	size_t	size;
+	int	size;
 
 	size = 0;
 	if (n <= 0)
@@ -16,9 +16,9 @@ size_t	get_size(int n)
 	return (size);
 }
 
-size_t get_size_t(size_t n)
+int get_size_hex(long long n)
 {
-	size_t	size;
+	int	size;
 
 	size = 0;
 	if (n <= 0)

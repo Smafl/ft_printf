@@ -48,15 +48,16 @@ void	print_space(int width);
 
 // libft.c
 int		ft_atoi(const char *str);
-char	*ft_itoa(int n, int flag);
+char	*ft_itoa(int n);
 int		ft_toupper(int c);
 int		ft_strlen(const char *str);
 
 // get.c
 char	get_hex_digit(int digit);
-int		get_size_dec(int n, int flag);
+int		get_size_dec(int n);
 int		get_size_unsigned_dec(unsigned long n);
 int		get_size_hex(long long n);
+void	get_sign(int nbr, int flag);
 
 // is_type_flag.c
 bool	is_type(char c);

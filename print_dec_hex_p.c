@@ -291,14 +291,65 @@ int print_dec_int(int nbr, int flag, int width, int precision)
 	int digit;
 	int len;
 
-	size = get_size_dec(nbr, flag);
+	size = get_size_dec(nbr);
 	i = size - 1;
 	array = malloc(sizeof(char) * (size + 1));
 	if (array == NULL)
 		return (0);
-	array = ft_itoa(nbr, flag);
+	array = ft_itoa(nbr);
 	len = ft_strlen(array);
-	write(1, array, len);
+	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	{
+		get_sign(nbr, flag);
+		if (width > (len + 1)) print_zero(width - len - 1);
+		write(1, array, len);
+	}
+	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	{
+		if (precision >= width)
+		{
+			get_sign(nbr, flag);
+			if (precision > (len + 1)) print_zero(precision - len - 1);
+			write(1, array, len);
+		}
+		else
+		{
+			get_sign(nbr, flag);
+			write(1, array, len);
+			if (width > (len + 1)) print_space(width - len - 1);
+		}
+	}
+	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	{
+		write(1, array, len);
+		if (width > len) print_space(width - len);
+	}
+	//
+	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH))
+	{
+		if (precision >= width)
+		{
+			get_sign(nbr, flag);
+			if (precision > (len + 1)) print_zero(precision - len - 1);
+		}
+		else
+		{
+			if (width > len) print_space(width - len);
+		}
+		write(1, array, len);
+	}
+	//
+	else if (flag & HAS_WIDTH)
+	{
+		if (width > (len + 1)) print_space(width - len - 1);
+		get_sign(nbr, flag);
+		write(1, array, len);
+	}
+	else
+	{
+		get_sign(nbr, flag);
+		write(1, array, len);
+	}
 	free(array);
 	return (0);
 }

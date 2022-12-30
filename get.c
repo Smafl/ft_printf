@@ -1,14 +1,12 @@
 
 #include "ft_printf.h"
 
-int		get_size_dec(int n, int flag)
+int		get_size_dec(int n)
 {
 	int	size;
 
 	size = 0;
-	if ((flag & FLAG_PLUS) || (flag & FLAG_SPACE))
-		size = 1;
-	else if (n <= 0)
+	if (n == 0)
 		size = 1;
 	while (n)
 	{
@@ -61,4 +59,17 @@ char	get_hex_digit(int digit)
 		c = 'a' + digit - 10;
 	}
 	return (c);
+}
+
+void	get_sign(int nbr, int flag)
+{
+	if (nbr >= 0)
+	{	
+		if ((flag & FLAG_SPACE) && !(flag & FLAG_PLUS))
+			write(1, " ", 1);
+		else if (flag & FLAG_PLUS)
+			write(1, "+", 1);
+	}
+	else if (nbr < 0)
+		write(1, "-", 1);
 }

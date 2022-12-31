@@ -13,6 +13,7 @@ int		get_size_dec(int n)
 		n /= 10;
 		size++;
 	}
+	// printf("size %d\n", size);
 	return (size);
 }
 
@@ -44,32 +45,4 @@ int		get_size_hex(long long n)
 		size++;
 	}
 	return (size);
-}
-
-char	get_hex_digit(int digit)
-{
-	char c;
-
-	if (digit < 10)
-	{
-		c = '0' + digit;
-	}
-	else
-	{
-		c = 'a' + digit - 10;
-	}
-	return (c);
-}
-
-void	get_sign(int nbr, int flag)
-{
-	if (nbr >= 0)
-	{	
-		if ((flag & FLAG_SPACE) && !(flag & FLAG_PLUS))
-			write(1, " ", 1);
-		else if (flag & FLAG_PLUS)
-			write(1, "+", 1);
-	}
-	else if (nbr < 0)
-		write(1, "-", 1);
 }

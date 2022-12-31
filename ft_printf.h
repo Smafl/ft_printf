@@ -32,8 +32,8 @@ enum e_state
 int		ft_printf(const char *str, ...);
 
 // print_c_str.c
-void	print_s(const char *str, int flag, int width, int precision);
-void	print_c(char c, int flag, int width);
+int		print_str(const char *str, int flag, int width, int precision);
+int		print_c(char c, int flag, int width);
 
 // print_dec_hex_p.c
 int		print_dec_int(int nbr, int flag, int width, int precision);
@@ -43,8 +43,8 @@ int		print_unsigned_X_hex(unsigned long nbr, int flag, int width);
 int		print_p(void *pnt, int flag, int width);
 
 // print_zero_space.c
-void	print_zero(int width);
-void	print_space(int width);
+int		print_zero(int width);
+int		print_space(int width);
 
 // libft.c
 int		ft_atoi(const char *str);
@@ -52,12 +52,15 @@ char	*ft_itoa(int n);
 int		ft_toupper(int c);
 int		ft_strlen(const char *str);
 
-// get.c
+// get_char_int.c
 char	get_hex_digit(int digit);
+char	get_sign(int nbr, int flag, int *has_sign);
+int		get_zero_space_len(int flag, int len, int width, int precision);
+
+// get_size.c
 int		get_size_dec(int n);
 int		get_size_unsigned_dec(unsigned long n);
 int		get_size_hex(long long n);
-void	get_sign(int nbr, int flag);
 
 // is_type_flag.c
 bool	is_type(char c);

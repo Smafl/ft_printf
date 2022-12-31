@@ -286,68 +286,76 @@ int	print_unsigned_dec(unsigned long nbr, int flag, int width, int precision)
 int print_dec_int(int nbr, int flag, int width, int precision)
 {
 	int size;
-	char *array;
-	int i;
-	int digit;
 	int len;
+	int has_sign;
+	int zero_space_len;
+	char sign;
+	char *array;
 
 	size = get_size_dec(nbr);
-	i = size - 1;
 	array = malloc(sizeof(char) * (size + 1));
 	if (array == NULL)
 		return (0);
 	array = ft_itoa(nbr);
 	len = ft_strlen(array);
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+
+	sign = get_sign(nbr, flag, &has_sign);
+	// printf("%c, %d\n", sign, has_sign);
+
+
+	 if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
-		get_sign(nbr, flag);
-		if (width > (len + 1)) print_zero(width - len - 1);
+		zero_space_len = get_zero_space_len(flag, (len), width, precision);
+		write(1, &sign, 1);
+		print_zero(zero_space_len);
 		write(1, array, len);
 	}
 	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH) && (flag & FLAG_MINUS))
 	{
 		if (precision >= width)
 		{
-			get_sign(nbr, flag);
-			if (precision > (len + 1)) print_zero(precision - len - 1);
+			write(1, &sign, 1);
+			print_zero(zero_space_len);
 			write(1, array, len);
 		}
 		else
 		{
-			get_sign(nbr, flag);
+			write(1, &sign, 1);
 			write(1, array, len);
-			if (width > (len + 1)) print_space(width - len - 1);
+			print_space(zero_space_len);
 		}
 	}
 	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
 	{
 		write(1, array, len);
-		if (width > len) print_space(width - len);
+		print_space(zero_space_len);
 	}
-	//
 	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH))
 	{
 		if (precision >= width)
 		{
-			get_sign(nbr, flag);
-			if (precision > (len + 1)) print_zero(precision - len - 1);
+			zero_space_len = get_zero_space_len(flag, (len), width, precision);
+			write(1, &sign, 1);
+			print_zero(zero_space_len);
 		}
 		else
 		{
-			if (width > len) print_space(width - len);
+			zero_space_len = get_zero_space_len(flag, (len + has_sign), width, precision);
+			print_space(zero_space_len);
+			write(1, &sign, 1);
 		}
 		write(1, array, len);
 	}
 	//
 	else if (flag & HAS_WIDTH)
 	{
-		if (width > (len + 1)) print_space(width - len - 1);
-		get_sign(nbr, flag);
+		print_space(zero_space_len);
+		write(1, &sign, 1);
 		write(1, array, len);
 	}
 	else
 	{
-		get_sign(nbr, flag);
+		write(1, &sign, 1);
 		write(1, array, len);
 	}
 	free(array);

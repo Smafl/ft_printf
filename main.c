@@ -14,26 +14,30 @@ int checker(void)
 
 	// printf("1 st_print s: %-15.5s\n", "string");
 
-	// ft_printf("1 print c: %.0c\n", 'c');
+	ft_printf("1 print c: %.0c\n", 'c');
 	// ft_printf("2 print c: %010c\n", 'c');
 	// ft_printf("3 print c: %-10c\n", 'c');
 	// ft_printf("4 print c: %-010c\n\n", 'c');
 
-	// printf("1 print c: %.0c\n", 'c');
+	printf("1 print c: %.0c\n", 'c');
 	// printf("2 print c: %010c\n", 'c');
 	// printf("3 print c: %-10c\n", 'c');
 	// printf("4 print c: %-010c\n", 'c');
 
-	ft_printf("ft print d: [% 15.30d]\n", INT_MIN);
-	ft_printf("ft print i: [% 15.30i]\n", INT_MIN);
-	ft_printf("ft print d: [% 15.30d]\n", INT_MAX);
-	ft_printf("ft print i: [% 15.30i]\n\n", INT_MAX);
+	// ft_printf("%05d\n", 123);
+	// printf("%05d\n", 123);
+
+	// ft_printf("ft print d: [% 12.30d]\n", INT_MIN);
+	// ft_printf("ft print i: [% 12.30i]\n", INT_MIN);
+	// ft_printf("ft print d: [% 12.30d]\n", INT_MAX);
+	// ft_printf("ft print i: [% 12.30i]\n\n", INT_MAX);
 	// ft_printf("ft print 0: [% i] [%+i]\n", 0, 0);
 	// printf("st print 0: [% i] [%+i]\n", 0, 0);
-	printf("st print d: [% 15.30d]\n", INT_MIN);
-	printf("st print i: [% 15.30i]\n", INT_MIN);
-	printf("st print d: [% 15.30d]\n", INT_MAX);
-	printf("st print i: [% 15.30i]\n", INT_MAX);
+	// printf("st print d: [% 12.30d]\n", INT_MIN);
+	// printf("st print i: [% 12.30i]\n", INT_MIN);
+	// printf("st print d: [% 12.30d]\n", INT_MAX);
+	// printf("st print i: [% 12.30i]\n", INT_MAX);
+
 	// ft_printf("ft print u: [%13.3u]\n", INT_MIN);
 	// ft_printf("ft print u: [%3.13u]\n", INT_MIN);
 	// ft_printf("ft print u: [%13.13u]\n", INT_MIN);

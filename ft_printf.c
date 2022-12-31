@@ -12,11 +12,15 @@ int ft_printf(const char *str, ...)
 	int flag;
 	int width;
 	int precision;
+	int printf_len;
 	const char *text_start = str;
 
 	va_list args;
 	va_start(args, str);
 
+	width = 0;
+	precision = 0;
+	printf_len = 0;
 	enum e_state state = STATE_TEXT;
 	enum e_state new_state = state;
 	while (state != STATE_END)
@@ -146,9 +150,12 @@ int ft_printf(const char *str, ...)
 			if (state == STATE_TYPE)
 			{
 				if (str[-1] == '%')
+				{
 					write(1, "%", 1);
+					printf_len += 1;
+				}
 				else if (str[-1] == 's')
-					print_s(va_arg(args, char *), flag, width, precision);
+					print_str(va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
 					print_c(va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')
@@ -167,7 +174,8 @@ int ft_printf(const char *str, ...)
 		str++;
 	}
 	va_end(args);
-	return (0);
+	printf("printf len %d\n", printf_len);
+	return (printf_len);
 }
 
 /*

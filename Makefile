@@ -1,7 +1,8 @@
-
+CC = cc
 NAME = libftprintf.a
 SRC = ft_printf.c\
-get.c\
+get_char_int.c\
+get_size.c\
 is_type_flag.c\
 libft.c\
 print_c_str.c\

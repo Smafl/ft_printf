@@ -10,16 +10,19 @@ int checker(void)
 	// ft_printf("print %%: %%\n\n");
 	// printf("print %%: %10%\n");
 
-	// ft_printf("1 ft_print s: %-15.5s\n\n", "string");
+	// ft_printf(" ft_print s: %-15.5s\n\n", "string");
+	// ft_printf("%s\n", "hi\n");
+	// printf("%d\n", printf("hi\t"));
 
 	// printf("1 st_print s: %-15.5s\n", "string");
+	// printf("st return %d\n", printf("hi\n"));
 
-	ft_printf("1 print c: %.0c\n", 'c');
+	// ft_printf("1 print c: %.0c\n", 'c');
 	// ft_printf("2 print c: %010c\n", 'c');
 	// ft_printf("3 print c: %-10c\n", 'c');
 	// ft_printf("4 print c: %-010c\n\n", 'c');
 
-	printf("1 print c: %.0c\n", 'c');
+	// printf("1 print c: %.0c\n", 'c');
 	// printf("2 print c: %010c\n", 'c');
 	// printf("3 print c: %-10c\n", 'c');
 	// printf("4 print c: %-010c\n", 'c');
@@ -53,13 +56,52 @@ int checker(void)
 	// ft_printf("ft print x: [%#-15x]\n", -376237); // 5bdad
 	// printf("st print x: [%#-15x]\n", -376237); // 5bdad
 
-	// ft_printf("ft print X: [%#-8.3X]\n", -376237);
+	// ft_printf("ft print X: [%#-8.3X]\n", -376237); // ?
 	// printf("st print X: [%#-8.3X]\n", -376237);
 
-	// ft_printf("ft print addr [%-30p]\n", &a);
+	// ft_printf("ft print addr [%-30p]\n", &a); // ?
 	// printf("st print addr [%-30p]\n", &a);
 
 	// ft_printf("print %c and %% and %p\n", 'r', &a);
+
+	// paco
+	// ft_printf("\001\002\007\v\010\f\r\n");
+	// ft_printf(" %%");
+	// printf("\nreturn %d\n", ft_printf(" %%"));
+	// ft_printf("%%c");
+	// ft_printf(" %c", 'x');
+	// ft_printf("%c ", 'x');
+	// ft_printf("%cc%cc%c", 'a', '\t', 'b');
+	// ft_printf("%cs%cs%c", 'c', 'b', 'a');
+	// ft_printf("%s", (char *)NULL);
+	// printf("%s", (char *)NULL);
+	// ft_printf(" NULL %s NULL ", NULL);
+	// printf(" NULL %s NULL ", NULL);
+
+	// ft_printf("%%%%%%%%%\n");
+	// printf("%%%%%%%%%\n");
+	// printf("return ft %d\n", ft_printf("%%%%%%%%%\n"));
+	// printf("return st %d\n", printf("%%%%%%%%%\n"));
+
+	// ft_printf("%p", "");
+	// printf("\n");
+	// printf("%p", "");
+	// ft_printf("%p", NULL);
+	// printf("%p", NULL);
+
+	ft_printf("ft %p\n", (void *)-14523);
+	printf("st %p\n", (void *)-14523);
+
+/*
+Error in test 1: ft_printf("%p", ""): returned: 12, but expected: 11
+Error in test 1: ft_printf("%p", ""): different memory
+
+Error in test 2: ft_printf("%p", NULL): returned: 6, but expected: 3
+Error in test 2: ft_printf("%p", NULL): different memory
+
+Error in test 3: ft_printf("%p", (void *)-14523): returned: 8, but expected: 18
+Error in test 3: ft_printf("%p", (void *)-14523): different memory
+*/
 	return (0);
 }
 

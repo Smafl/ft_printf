@@ -79,3 +79,4 @@ text: "smafl"
 
 Part 3.
 I modified my function that now it takes all args and printed it in rigth way.
+And in this part I divide it for difference files for more comfortable work.

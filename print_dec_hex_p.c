@@ -9,12 +9,12 @@ int	print_p(void *pnt, int flag, int width)
 	int digit;
 	int len;
 	int printf_len;
-	unsigned long temp;
+	unsigned long long temp;
 
 	printf_len = 0;
-	size = get_size_hex((unsigned long)pnt);
+	size = get_size_hex_ull((unsigned long long)pnt);
 	i = size - 1;
-	temp = (unsigned long)pnt;
+	temp = (unsigned long long)pnt;
 	array = malloc(sizeof(char) * (size + 1));
 	if (array == NULL)
 		return (0);
@@ -63,7 +63,7 @@ int	print_p(void *pnt, int flag, int width)
 	return (printf_len);
 }
 
-int	print_unsigned_x_hex(unsigned long nbr, int flag, int width)
+int	print_unsigned_x_hex(unsigned int nbr, int flag, int width)
 {
 	int size;
 	char *array;
@@ -73,8 +73,10 @@ int	print_unsigned_x_hex(unsigned long nbr, int flag, int width)
 	int printf_len;
 	unsigned long ul_nbr;
 
+	if (nbr == 0)
+		flag &= ~FLAG_HASH;
 	printf_len = 0;
-	size = get_size_hex(nbr);
+	size = get_size_hex_ll(nbr);
 	i = size - 1;
 	ul_nbr = nbr;
 	array = malloc(sizeof(char) * (size + 1));
@@ -154,7 +156,7 @@ int	print_unsigned_x_hex(unsigned long nbr, int flag, int width)
 	return (printf_len);
 }
 
-int	print_unsigned_X_hex(unsigned long nbr, int flag, int width)
+int	print_unsigned_X_hex(unsigned int nbr, int flag, int width)
 {
 	int size;
 	char *array;
@@ -164,8 +166,10 @@ int	print_unsigned_X_hex(unsigned long nbr, int flag, int width)
 	int printf_len;
 	unsigned long ul_nbr;
 
+	if (nbr == 0)
+		flag &= ~FLAG_HASH;
 	printf_len = 0;
-	size = get_size_hex(nbr);
+	size = get_size_hex_ll(nbr);
 	i = size - 1;
 	ul_nbr = nbr;
 	array = malloc(sizeof(char) * (size + 1));
@@ -235,7 +239,7 @@ int	print_unsigned_X_hex(unsigned long nbr, int flag, int width)
 	{
 		if (flag & FLAG_HASH)
 		{
-			write(1, "0x", 2);
+			write(1, "0X", 2);
 			printf_len += 2;
 		}
 		write(1, array, len);
@@ -245,7 +249,7 @@ int	print_unsigned_X_hex(unsigned long nbr, int flag, int width)
 	return (printf_len);
 }
 
-int	print_unsigned_dec(unsigned long nbr, int flag, int width, int precision)
+int	print_unsigned_dec(unsigned int nbr, int flag, int width, int precision)
 {
 	int size;
 	char *array;
@@ -346,47 +350,70 @@ int print_dec_int(int nbr, int flag, int width, int precision)
 	sign = get_sign(nbr, flag, &has_sign);
 	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
-		write(1, &sign, 1);
-		printf_len += print_zero(get_zero_space_len(flag, len, width, precision));
+		if (has_sign)
+		{
+			write(1, &sign, 1);
+			printf_len += 1;
+		}
+		printf_len += print_zero(get_zero_space_len(flag, (len + has_sign), width, precision));
 		write(1, array, len);
-		printf_len += len + 1;
+		printf_len += len;
 	}
 	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH) && (flag & FLAG_MINUS))
 	{
 		if (precision >= width)
 		{
-			write(1, &sign, 1);
-			printf_len += print_zero(get_zero_space_len(flag, len, width, precision));
+			if (has_sign)
+			{
+				write(1, &sign, 1);
+				printf_len += 1;
+			}
+			printf_len += print_zero(get_zero_space_len(flag, (len + has_sign), width, precision));
 			write(1, array, len);
-			printf_len += len + 1;
+			printf_len += len;
 		}
 		else
 		{
-			write(1, &sign, 1);
+			if (has_sign)
+			{
+				write(1, &sign, 1);
+				printf_len += 1;
+			}
 			write(1, array, len);
-			printf_len += len + 1;
-			printf_len += print_space(get_zero_space_len(flag, len, width, precision));
+			printf_len += len;
+			printf_len += print_space(get_zero_space_len(flag, (len + has_sign), width, precision));
 		}
 	}
 	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
 	{
+		if (has_sign)
+		{
+			write(1, &sign, 1);
+			printf_len += 1;
+		}
 		write(1, array, len);
 		printf_len += len;
-		printf_len += print_space(get_zero_space_len(flag, len, width, precision));
+		printf_len += print_space(get_zero_space_len(flag, (len + has_sign), width, precision));
 	}
 	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH))
 	{
 		if (precision >= width)
 		{
-			write(1, &sign, 1);
-			printf_len += 1;
-			printf_len += print_zero(get_zero_space_len(flag, len, width, precision));
+			if (has_sign)
+			{
+				write(1, &sign, 1);
+				printf_len += 1;
+			}
+			printf_len += print_zero(get_zero_space_len(flag, (len + has_sign), width, precision));
 		}
 		else
 		{
-			printf_len += print_space(get_zero_space_len(flag, len, width, precision));
-			write(1, &sign, 1);
-			printf_len += 1;
+			printf_len += print_space(get_zero_space_len(flag, (len + has_sign), width, precision));
+			if (has_sign)
+			{
+				write(1, &sign, 1);
+				printf_len += 1;
+			}
 		}
 		write(1, array, len);
 		printf_len += len;
@@ -394,16 +421,24 @@ int print_dec_int(int nbr, int flag, int width, int precision)
 	//
 	else if (flag & HAS_WIDTH)
 	{
-		printf_len += print_space(get_zero_space_len(flag, len, width, precision));
-		write(1, &sign, 1);
+		printf_len += print_space(get_zero_space_len(flag, (len + has_sign), width, precision));
+		if (has_sign)
+		{
+			write(1, &sign, 1);
+			printf_len += 1;
+		}
 		write(1, array, len);
-		printf_len += len + 1;
+		printf_len += len;
 	}
 	else
 	{
-		write(1, &sign, 1);
+		if (has_sign)
+		{
+			write(1, &sign, 1);
+			printf_len += 1;
+		}
 		write(1, array, len);
-		printf_len += len + 1;
+		printf_len += len;
 	}
 	free(array);
 	return (printf_len);

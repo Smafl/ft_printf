@@ -6,21 +6,20 @@ int print_str(const char *str, int flag, int width, int precision)
 	int len;
 	int printf_len;
 
+	printf_len = 0;
 	if (str == NULL)
 	{
 		write(1, "(null)", 6);
-		printf_len = 6;
+		printf_len += 6;
 		return (printf_len);
 	}
 	len = ft_strlen(str);
-	printf_len = 0;
-
 	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
 		&& (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
 		if (width > len)
 			printf_len += print_zero(width - precision);
-		while (precision != 0)
+		while (precision != 0 && (len > 0))
 		{
 			write(1, str, 1);
 			str++;
@@ -89,7 +88,7 @@ int print_str(const char *str, int flag, int width, int precision)
 	}
 	else if (flag & HAS_PRECISION)
 	{
-		while (precision != 0)
+		while (precision != 0 && (len > 0))
 		{
 			write(1, str, 1);
 			str++;

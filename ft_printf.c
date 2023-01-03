@@ -156,7 +156,6 @@ int ft_printf(const char *str, ...)
 			{
 				write(1, text_start, str - text_start);
 				printf_len += (str - text_start);
-				// printf("printf_len %d\n", printf_len);
 			}
 			if (state == STATE_TYPE)
 			{
@@ -164,7 +163,6 @@ int ft_printf(const char *str, ...)
 				{
 					write(1, "%", 1);
 					printf_len += 1;
-					// printf("printf_len %d\n", printf_len);
 				}
 				else if (str[-1] == 's')
 					printf_len += print_str(va_arg(args, char *), flag, width, precision);
@@ -173,11 +171,11 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'd' || str[-1] == 'i')
 					printf_len += print_dec_int(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'u')
-					printf_len += print_unsigned_dec(va_arg(args, unsigned long), flag, width, precision);
+					printf_len += print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
 				else if (str[-1] == 'x')
-					printf_len += print_unsigned_x_hex(va_arg(args, unsigned long), flag, width);
+					printf_len += print_unsigned_x_hex(va_arg(args, unsigned int), flag, width);
 				else if (str[-1] == 'X')
-					printf_len += print_unsigned_X_hex(va_arg(args, unsigned long), flag, width);
+					printf_len += print_unsigned_X_hex(va_arg(args, unsigned int), flag, width);
 				else if (str[-1] == 'p')
 					printf_len += print_p(va_arg(args, void *), flag, width);
 			}
@@ -186,7 +184,6 @@ int ft_printf(const char *str, ...)
 		str++;
 	}
 	va_end(args);
-	// printf("printf_len %d\n", printf_len);
 	return (printf_len);
 }
 

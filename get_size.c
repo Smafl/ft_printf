@@ -13,7 +13,6 @@ int		get_size_dec(int n)
 		n /= 10;
 		size++;
 	}
-	// printf("size %d\n", size);
 	return (size);
 }
 

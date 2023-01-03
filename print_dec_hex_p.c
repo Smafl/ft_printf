@@ -63,7 +63,7 @@ int	print_p(void *pnt, int flag, int width)
 	return (printf_len);
 }
 
-int	print_unsigned_x_hex(unsigned int nbr, int flag, int width)
+int	print_unsigned_x_hex(unsigned int nbr, int flag, int width, int precision)
 {
 	int size;
 	char *array;
@@ -125,6 +125,13 @@ int	print_unsigned_x_hex(unsigned int nbr, int flag, int width)
 				printf_len += print_space(width - len);
 		}
 	}
+	else if (flag & HAS_PRECISION)
+	{
+		if (precision > len)
+			printf_len += print_zero(precision - len);
+		write(1, array, len);
+		printf_len += len;
+	}
 	else if (flag & HAS_WIDTH)
 	{
 		if (flag & FLAG_HASH)
@@ -156,7 +163,7 @@ int	print_unsigned_x_hex(unsigned int nbr, int flag, int width)
 	return (printf_len);
 }
 
-int	print_unsigned_X_hex(unsigned int nbr, int flag, int width)
+int	print_unsigned_X_hex(unsigned int nbr, int flag, int width, int precision)
 {
 	int size;
 	char *array;
@@ -217,6 +224,13 @@ int	print_unsigned_X_hex(unsigned int nbr, int flag, int width)
 			if (width > (len))
 				printf_len += print_space(width - len);
 		}
+	}
+	else if (flag & HAS_PRECISION)
+	{
+		if (precision > len)
+			printf_len += print_zero(precision - len);
+		write(1, array, len);
+		printf_len += len;
 	}
 	else if (flag & HAS_WIDTH)
 	{
@@ -320,6 +334,13 @@ int	print_unsigned_dec(unsigned int nbr, int flag, int width, int precision)
 		write(1, array, len);
 		printf_len += len;
 	}
+	else if (flag & HAS_PRECISION)
+	{
+		if (precision > len)
+			printf_len += print_zero(precision - len);
+		write(1, array, len);
+		printf_len += len;
+	}
 	else if (flag & HAS_WIDTH)
 	{
 		if (width > len)
@@ -418,7 +439,18 @@ int print_dec_int(int nbr, int flag, int width, int precision)
 		write(1, array, len);
 		printf_len += len;
 	}
-	//
+	else if (flag & HAS_PRECISION)
+	{
+		if (has_sign)
+		{
+			write(1, &sign, 1);
+			printf_len += 1;
+		}
+		if (precision > len)
+			printf_len += print_zero(precision - len);
+		write(1, array, len);
+		printf_len += len;
+	}
 	else if (flag & HAS_WIDTH)
 	{
 		printf_len += print_space(get_zero_space_len(flag, (len + has_sign), width, precision));

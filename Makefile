@@ -16,15 +16,17 @@ all: $(NAME)
 clean:
 	rm -f $(OBJ)
 
-fclean:
+fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
 
+bonus: re
+
 $(NAME): $(OBJ)
 	ar -rcs $(NAME) $(OBJ)
 
-bonus: re
+.PHONY: all clean fclean re bonus
 
 # all - compile starter (execute other rules)
 

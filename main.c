@@ -4,8 +4,8 @@
 
 int checker(void)
 {
-	printf("ft rerurn %d\n", ft_printf(" %.1s %.2s %.3s %.4s ", " - ", "", "4", ""));
-	printf("st rerurn %d\n", printf(" %.1s %.2s %.3s %.4s ", " - ", "", "4", ""));
+	printf("ft rerurn %d\n", ft_printf("%23s", NULL));
+	printf("st rerurn %d\n", printf("%23s", NULL));
 	return (0);
 }
 

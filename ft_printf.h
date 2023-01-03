@@ -38,8 +38,8 @@ int		print_c(char c, int flag, int width);
 // print_dec_hex_p.c
 int		print_dec_int(int nbr, int flag, int width, int precision);
 int		print_unsigned_dec(unsigned int nbr, int flag, int width, int precision);
-int		print_unsigned_x_hex(unsigned int nbr, int flag, int width);
-int		print_unsigned_X_hex(unsigned int nbr, int flag, int width);
+int		print_unsigned_x_hex(unsigned int nbr, int flag, int width, int precision);
+int		print_unsigned_X_hex(unsigned int nbr, int flag, int width, int precision);
 int		print_p(void *pnt, int flag, int width);
 
 // print_zero_space.c

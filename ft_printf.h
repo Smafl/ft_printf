@@ -16,6 +16,9 @@
 # define FLAG_PLUS (1 << 4)
 # define HAS_WIDTH (1 << 5)
 # define HAS_PRECISION (1 << 6)
+# define TYPE_x (1 << 7)
+# define TYPE_X (1 << 8)
+# define TYPE_p (1 << 9)
 
 enum e_state
 {
@@ -42,9 +45,10 @@ int		print_unsigned_x_hex(unsigned int nbr, int flag, int width, int precision);
 int		print_unsigned_X_hex(unsigned int nbr, int flag, int width, int precision);
 int		print_p(void *pnt, int flag, int width);
 
-// print_zero_space.c
+// print_zero_space_0x.c
 int		print_zero(int width);
 int		print_space(int width);
+int 	print_0x(int flag);
 
 // libft.c
 int		ft_itoa(int n, char *result);
@@ -53,7 +57,7 @@ int		ft_toupper(int c);
 int		ft_strlen(const char *str);
 
 // get_char_int.c
-char	get_hex_digit(int digit);
+char	get_hex_digit(int digit, int flag);
 char	get_sign(int nbr, int flag, int *has_sign);
 int		get_zero_space_len(int flag, int len, int width, int precision);
 

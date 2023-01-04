@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-char	get_hex_digit(int digit)
+char	get_hex_digit(int digit, int flag)
 {
 	char c;
 
@@ -11,7 +11,10 @@ char	get_hex_digit(int digit)
 	}
 	else
 	{
-		c = 'a' + digit - 10;
+		if (flag & TYPE_x || flag & TYPE_p)
+			c = 'a' + digit - 10;
+		else
+			c = 'A' + digit - 10;
 	}
 	return (c);
 }

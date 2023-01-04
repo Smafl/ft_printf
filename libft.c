@@ -43,6 +43,7 @@ int ft_itoa(int n, char *result)
 	return (size);
 }
 
+// don't use now
 int	ft_toupper(int c)
 {
 	if (c >= 'a' && c <= 'z')

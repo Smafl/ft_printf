@@ -15,12 +15,6 @@ int ft_printf(const char *str, ...)
 	int printf_len;
 	const char *text_start;
 
-	// if (str == NULL)
-	// {
-	// 	write(1, "(null)", 6);
-	// 	printf_len = 6;
-	// 	return (printf_len);
-	// }
 	text_start = str;
 	va_list args;
 	va_start(args, str);
@@ -151,12 +145,23 @@ int ft_printf(const char *str, ...)
 					printf_len += print_dec_int(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'u')
 					printf_len += print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
-				else if (str[-1] == 'x')
-					printf_len += print_unsigned_x_hex(va_arg(args, unsigned int), flag, width, precision);
-				else if (str[-1] == 'X')
-					printf_len += print_unsigned_X_hex(va_arg(args, unsigned int), flag, width, precision);
+				// else if (str[-1] == 'x')
+				// 	printf_len += print_unsigned_x_hex(va_arg(args, unsigned int), flag, width, precision);
+				// else if (str[-1] == 'X')
+				// 	printf_len += print_unsigned_X_hex(va_arg(args, unsigned int), flag, width, precision);
+				else if (str[-1] == 'x' || str[-1] == 'X')
+				{
+					if (str[-1] == 'x')
+						flag |= TYPE_x;
+					if (str[-1] == 'X')
+						flag |= TYPE_X;
+						printf_len += print_unsigned_x_hex(va_arg(args, unsigned int), flag, width, precision);
+				}
 				else if (str[-1] == 'p')
+				{
+					flag |= TYPE_p;
 					printf_len += print_p(va_arg(args, void *), flag, width);
+				}
 			}
 			if (new_state == STATE_WIDTH)
 			{
@@ -191,4 +196,7 @@ int ft_printf(const char *str, ...)
 вынести в отдельную ф-ю заполнение массива
 сразу убрать флаг 0, если - и 0
 считать возвращаемое значение (кол-во печатаемых символов)
+
+вопрос про printf_len += write(1, array, size);
+если ф-я write фейлится, то возвращает -1? если я получаю оттуда -1, мой принт тоже должен остановится и вернуть -1
 */

@@ -28,3 +28,12 @@ int print_space(int width)
 		}
 	return (printf_len);
 }
+
+int print_0x(int flag)
+{
+	if (flag & TYPE_x || flag & TYPE_p)
+		write(1, "0x", 2);
+	else if (flag & TYPE_X)
+		write(1, "0X", 2);
+	return (2);
+}

@@ -88,16 +88,10 @@ int print_str(const char *str, int flag, int width, int precision)
 	}
 	else if (flag & HAS_PRECISION)
 	{
-		// precision = 1
-		// len = 3
 		if (precision >= len)
-		{
 			printf_len += write(1, str, len);
-		}
 		else
-		{
 			printf_len += write(1, str, precision);
-		}
 		// сделать ф-ю мин/макс
 	}
 	else

@@ -136,27 +136,6 @@ int ft_printf(const char *str, ...)
 // print state
 		if (state != new_state)
 		{
-			if (new_state == STATE_WIDTH)
-			{
-				width = ft_atoi(str);
-				flag |= HAS_WIDTH;
-			}
-			if (new_state == STATE_UNDEF_PRECISION)
-			{
-				precision = 0;
-				flag |= HAS_PRECISION;
-			}
-			if (new_state == STATE_PRECISION)
-				precision = ft_atoi(str);
-			if (new_state == STATE_FORMAT)
-				flag = 0;
-			if (new_state == STATE_TEXT)
-				text_start = str;
-			if (state == STATE_TEXT)
-			{
-				write(1, text_start, str - text_start);
-				printf_len += (str - text_start);
-			}
 			if (state == STATE_TYPE)
 			{
 				if (str[-1] == '%')
@@ -178,6 +157,27 @@ int ft_printf(const char *str, ...)
 					printf_len += print_unsigned_X_hex(va_arg(args, unsigned int), flag, width, precision);
 				else if (str[-1] == 'p')
 					printf_len += print_p(va_arg(args, void *), flag, width);
+			}
+			if (new_state == STATE_WIDTH)
+			{
+				width = ft_atoi(str);
+				flag |= HAS_WIDTH;
+			}
+			if (new_state == STATE_UNDEF_PRECISION)
+			{
+				precision = 0;
+				flag |= HAS_PRECISION;
+			}
+			if (new_state == STATE_PRECISION)
+				precision = ft_atoi(str);
+			if (new_state == STATE_FORMAT)
+				flag = 0;
+			if (new_state == STATE_TEXT)
+				text_start = str;
+			if (state == STATE_TEXT)
+			{
+				write(1, text_start, str - text_start);
+				printf_len += (str - text_start);
 			}
 			state = new_state;
 		}

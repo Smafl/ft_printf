@@ -21,28 +21,26 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-char	*ft_itoa(int n)
+int ft_itoa(int n, char *result)
 {
-	char	*result;
+	int i;
 	int		size;
 	long	digit;
 
 	size = get_size_dec(n);
-	result = malloc((size + 1) * sizeof(char));
-	if (!result)
-		return (NULL);
+	i = size;
 	digit = (long)n;
 	if (n < 0)
 		digit *= -1;
-	result[size--] = '\0';
+	result[i--] = '\0';
 	while (digit >= 0)
 	{
-		result[size--] = (digit % 10) + '0';
+		result[i--] = (digit % 10) + '0';
 		digit /= 10;
 		if (digit == 0)
 			break ;
 	}
-	return (result);
+	return (size);
 }
 
 int	ft_toupper(int c)

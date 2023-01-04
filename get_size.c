@@ -36,7 +36,7 @@ int		get_size_hex_ll(long long n)
 	int	size;
 
 	size = 0;
-	if (n <= 0)
+	if (n == 0)
 		size = 1;
 	while (n)
 	{

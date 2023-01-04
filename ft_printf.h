@@ -47,7 +47,7 @@ int		print_zero(int width);
 int		print_space(int width);
 
 // libft.c
-char	*ft_itoa(int n);
+int		ft_itoa(int n, char *result);
 int		ft_atoi(const char *str);
 int		ft_toupper(int c);
 int		ft_strlen(const char *str);

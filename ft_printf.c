@@ -145,23 +145,14 @@ int ft_printf(const char *str, ...)
 					printf_len += print_dec_int(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'u')
 					printf_len += print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
-				// else if (str[-1] == 'x')
-				// 	printf_len += print_unsigned_x_hex(va_arg(args, unsigned int), flag, width, precision);
-				// else if (str[-1] == 'X')
-				// 	printf_len += print_unsigned_X_hex(va_arg(args, unsigned int), flag, width, precision);
 				else if (str[-1] == 'x' || str[-1] == 'X')
 				{
-					if (str[-1] == 'x')
-						flag |= TYPE_x;
 					if (str[-1] == 'X')
-						flag |= TYPE_X;
-						printf_len += print_unsigned_x_hex(va_arg(args, unsigned int), flag, width, precision);
+						flag |= FLAG_UPPERCASE;
+					printf_len += print_unsigned_hex(va_arg(args, unsigned int), flag, width, precision);
 				}
 				else if (str[-1] == 'p')
-				{
-					flag |= TYPE_p;
 					printf_len += print_p(va_arg(args, void *), flag, width);
-				}
 			}
 			if (new_state == STATE_WIDTH)
 			{

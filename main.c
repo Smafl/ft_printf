@@ -1,4 +1,4 @@
-// 
+
 #include "ft_printf.h"
 #include <stdio.h>
 #include <limits.h>
@@ -12,9 +12,10 @@ int checker(void)
 	// ft_printf(" %p %p ", LONG_MIN, LONG_MAX);
 	// printf("\n");
 	// printf(" %p %p ", LONG_MIN, LONG_MAX);
-	ft_printf(" %#X %#X %#X %#X %#X %#X %#X", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42);
+	printf("ft return %d\n", ft_printf(" %04d ", 9));
 	printf("\n");
-	printf(" %#X %#X %#X %#X %#X %#X %#X", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42);
+	printf("st rerurn %d\n", printf(" %04d ", 9));
+	
 	return (0);
 }
 

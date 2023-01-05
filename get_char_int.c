@@ -11,10 +11,10 @@ char	get_hex_digit(int digit, int flag)
 	}
 	else
 	{
-		if (flag & TYPE_x || flag & TYPE_p)
-			c = 'a' + digit - 10;
-		else
+		if (flag & FLAG_UPPERCASE)
 			c = 'A' + digit - 10;
+		else
+			c = 'a' + digit - 10;
 	}
 	return (c);
 }
@@ -45,7 +45,6 @@ char	get_sign(int nbr, int flag, int *has_sign)
 
 int		get_zero_space_len(int flag, int len, int width, int precision)
 {
-	// printf("flag %d, len %d, width %d, precision %d\n", flag, len, width, precision);
 	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
 		if (width > len)

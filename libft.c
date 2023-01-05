@@ -43,18 +43,6 @@ int ft_itoa(int n, char *result)
 	return (size);
 }
 
-// don't use now
-int	ft_toupper(int c)
-{
-	if (c >= 'a' && c <= 'z')
-	{
-		c = c - ('a' - 'A');
-		return (c);
-	}
-	else
-		return (c);
-}
-
 int	ft_strlen(const char *str)
 {
 	int	i;

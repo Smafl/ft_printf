@@ -7,7 +7,7 @@ is_type_flag.c\
 libft.c\
 print_c_str.c\
 print_dec_hex_p.c\
-print_zero_space.c
+print_zero_space_prefix.c
 OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 

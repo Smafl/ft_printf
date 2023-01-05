@@ -108,24 +108,43 @@ int print_c(char c, int flag, int width)
 	printf_len = 0;
 	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
-		printf_len += print_zero(width - 1) + 1; // +1 for each write function
-		write(1, &c, 1);
+		if (print_zero(width - 1) == -1)
+			return (-1);
+		else
+			printf_len += width -1;
+		if (write(1, &c, 1) == -1)
+			return (-1);
+		else
+			printf_len += 1;
 	}
 	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
 	{
-		write(1, &c, 1);
-		printf_len += print_space(width - 1) + 1; // +1 for each write function
+		if (write(1, &c, 1) == -1)
+			return (-1);
+		else
+			printf_len += 1;
+		if (print_space(width - 1) == -1)
+			return (-1);
+		else
+			printf_len += width -1;
 	}
 	else if (flag & HAS_WIDTH)
 	{	
-		printf_len += print_space(width - 1) + 1; // +1 for each write function
-		write(1, &c, 1);
+		if (print_space(width - 1) == -1)
+			return (-1);
+		else
+			printf_len += width -1;
+		if (write(1, &c, 1) == -1)
+			return (-1);
+		else
+			printf_len += 1;
 	}
 	else
 	{
-		write(1, &c, 1);
-		// printf("return print_c_str.c line 129 %d\n", printf_len);
-		printf_len++;
+		if (write(1, &c, 1) == -1)
+			return (-1);
+		else
+			printf_len += 1;
 	}
 	return (printf_len);
 }

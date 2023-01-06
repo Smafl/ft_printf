@@ -13,6 +13,7 @@ int ft_printf(const char *str, ...)
 	int width;
 	int precision;
 	int printf_len;
+	int temp_return;
 	const char *text_start;
 
 	text_start = str;
@@ -22,6 +23,7 @@ int ft_printf(const char *str, ...)
 	width = 0;
 	precision = 0;
 	printf_len = 0;
+	temp_return = 0;
 	enum e_state state = STATE_TEXT;
 	enum e_state new_state = state;
 	while (state != STATE_END)
@@ -130,27 +132,38 @@ int ft_printf(const char *str, ...)
 			{
 				if (str[-1] == '%')
 				{
-					write(1, "%", 1);
-					printf_len += 1;
+					if (write(1, "%", 1) == -1)
+						return (-1);
+					else
+						printf_len += 1;
 				}
 				else if (str[-1] == 's')
-					printf_len += print_str(va_arg(args, char *), flag, width, precision);
+					temp_return = print_str(va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
-					printf_len += print_c(va_arg(args, int), flag, width);
+					temp_return = print_c(va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')
-					printf_len += print_dec_int(va_arg(args, int), flag, width, precision);
+					temp_return = print_dec_int(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'u')
-					printf_len += print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
+					temp_return = print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
 				else if (str[-1] == 'x' || str[-1] == 'X' || str[-1] == 'p')
 				{
 					if (str[-1] == 'X')
 						flag |= FLAG_UPPERCASE;
+					if (str[-1] == 'x' || str[-1] == 'X')
+						temp_return = print_unsigned_hex((unsigned long)(va_arg(args, unsigned int)), flag, width, precision);
 					if (str[-1] == 'p')
+					{
 						flag |= FLAG_POINTER;
-					printf_len += print_unsigned_hex(va_arg(args, unsigned long), flag, width, precision);
+						temp_return = print_unsigned_hex((unsigned long)(va_arg(args, void *)), flag, width, precision);
+					}
 				}
-				// else if (str[-1] == 'p')
-					// printf_len += print_p(va_arg(args, void *), flag, width);
+				if (temp_return == -1)
+					return (-1);
+				else
+				{
+					printf_len += temp_return;
+					temp_return = 0;
+				}
 			}
 			if (new_state == STATE_WIDTH)
 			{
@@ -170,8 +183,10 @@ int ft_printf(const char *str, ...)
 				text_start = str;
 			if (state == STATE_TEXT)
 			{
-				write(1, text_start, str - text_start);
-				printf_len += (str - text_start);
+				if (write(1, text_start, str - text_start) == -1)
+					return (-1);
+				else
+					printf_len += str - text_start;
 			}
 			state = new_state;
 		}

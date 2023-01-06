@@ -62,3 +62,10 @@ int		get_zero_space_len(int flag, int len, int width, int precision)
 	}
 	return (0);
 }
+
+int		get_max(int precision, int len)
+{
+	if (precision >= len)
+		return (len);
+	return (precision);
+}

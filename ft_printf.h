@@ -41,12 +41,12 @@ int		print_c(char c, int flag, int width);
 int		print_dec_int(int nbr, int flag, int width, int precision);
 int		print_unsigned_dec(unsigned int nbr, int flag, int width, int precision);
 int		print_unsigned_hex(unsigned long nbr, int flag, int width, int precision);
-int		print_p(void *pnt, int flag, int width);
 
-// print_zero_space_prefix.c
+// print_flag_null.c
 int		print_zero(int width);
 int		print_space(int width);
 int 	print_prefix(int flag);
+int		print_null(void);
 
 // libft.c
 int		ft_itoa(int n, char *result);
@@ -57,8 +57,9 @@ int		ft_strlen(const char *str);
 char	get_hex_digit(int digit, int flag);
 char	get_sign(int nbr, int flag, int *has_sign);
 int		get_zero_space_len(int flag, int len, int width, int precision);
+int		get_max(int precision, int len);
 
-// get_size.c
+// get_array_size.c
 int		get_size_dec(int n);
 int		get_size_unsigned_dec(unsigned long n);
 int		get_size_hex_ul(unsigned long n);

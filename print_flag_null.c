@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-int print_zero(int width)
+int		print_zero(int width)
 {
 	int printf_len;
 
@@ -19,7 +19,7 @@ int print_zero(int width)
 	return (printf_len);
 }
 
-int print_space(int width)
+int		print_space(int width)
 {
 	int printf_len;
 
@@ -37,7 +37,7 @@ int print_space(int width)
 	return (printf_len);
 }
 
-int print_prefix(int flag)
+int		print_prefix(int flag)
 {
 	if (flag & FLAG_UPPERCASE)
 	{
@@ -50,4 +50,11 @@ int print_prefix(int flag)
 			return (-1);
 	}
 	return (2);
+}
+
+int		print_null(void)
+{
+	if (write(1, "(null)", 6) == -1)
+		return (-1);
+	return (6);
 }

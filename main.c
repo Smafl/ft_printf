@@ -5,14 +5,9 @@
 
 int checker(void)
 {
-	// ft_printf("<%-10s>", (char *)NULL);
-	// printf("\n");
-	// printf("<%-10s>", (char *)NULL);
-
-	ft_printf(" %#x %#x %#x %#x %#x %#x %#x", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42);
-	printf(" %#x %#x %#x %#x %#x %#x %#x", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42);
-	ft_printf("ft [%#x]\n", LONG_MAX);
-	printf("st [%#x]\n", LONG_MAX);
+	printf("return %d\n", ft_printf("%5%"));
+	printf("\n");
+	printf("return %d\n", printf("%5%"));
 	return (0);
 }
 

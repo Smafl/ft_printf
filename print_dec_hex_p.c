@@ -1,59 +1,6 @@
 
 #include "ft_printf.h"
 
-int	print_p(void *pnt, int flag, int width)
-{
-	int size;
-	char array[16];
-	int i;
-	int digit;
-	int printf_len;
-	unsigned long long temp;
-
-	printf_len = 0;
-	size = get_size_hex_ul((unsigned long long)pnt);
-	i = size - 1;
-	temp = (unsigned long long)pnt;
-	while (i != -1)
-	{
-		digit = temp % 16;
-		temp = temp / 16;
-		array[i] = get_hex_digit(digit, flag);
-		i--;
-	}
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		printf_len += print_prefix(flag);
-		if (width > (size + 2))
-			printf_len += print_zero(width - size - 2);
-		write(1, array, size);
-		printf_len += size;
-	}
-	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
-	{
-		printf_len += print_prefix(flag);
-		write(1, array, size);
-		printf_len += size;
-		if (width > (size + 2))
-			printf_len += print_space(width - size - 2);
-	}
-	else if (flag & HAS_WIDTH)
-	{	
-		if (width > (size + 2))
-			printf_len += print_space(width - size - 2);
-		printf_len += print_prefix(flag);
-		write(1, array, size);
-		printf_len += size;
-	}
-	else
-	{
-		printf_len += print_prefix(flag);
-		write(1, array, size);
-		printf_len += size;
-	}
-	return (printf_len);
-}
-
 int	print_unsigned_hex(unsigned long nbr, int flag, int width, int precision)
 {
 	int size;
@@ -65,10 +12,10 @@ int	print_unsigned_hex(unsigned long nbr, int flag, int width, int precision)
 	if (nbr == 0 || (long)nbr == LONG_MIN)
 		flag &= ~FLAG_HASH;
 	printf_len = 0;
-	if (!(flag & FLAG_POINTER))
-		size = get_size_hex_uint((unsigned int)nbr);
-	else
+	if (flag & FLAG_POINTER)
 		size = get_size_hex_ul(nbr);
+	else
+		size = get_size_hex_uint((unsigned int)nbr);
 	i = size - 1;
 	while (i != -1)
 	{

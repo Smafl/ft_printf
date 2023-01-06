@@ -11,7 +11,7 @@ int	print_p(void *pnt, int flag, int width)
 	unsigned long long temp;
 
 	printf_len = 0;
-	size = get_size_hex_ull((unsigned long long)pnt);
+	size = get_size_hex_ul((unsigned long long)pnt);
 	i = size - 1;
 	temp = (unsigned long long)pnt;
 	while (i != -1)
@@ -62,13 +62,13 @@ int	print_unsigned_hex(unsigned long nbr, int flag, int width, int precision)
 	int digit;
 	int printf_len;
 
-	if (nbr == 0) // && !(flag & FLAG_POINTER)
+	if (nbr == 0 || (long)nbr == LONG_MIN)
 		flag &= ~FLAG_HASH;
 	printf_len = 0;
-	if (flag & FLAG_POINTER)
-		size = get_size_hex_ull(nbr);
+	if (!(flag & FLAG_POINTER))
+		size = get_size_hex_uint((unsigned int)nbr);
 	else
-		size = get_size_hex_ll((unsigned int)nbr);
+		size = get_size_hex_ul(nbr);
 	i = size - 1;
 	while (i != -1)
 	{

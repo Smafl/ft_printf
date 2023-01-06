@@ -9,32 +9,10 @@ int checker(void)
 	// printf("\n");
 	// printf("<%-10s>", (char *)NULL);
 
-	// ft_printf(" %p %p ", LONG_MIN, LONG_MAX);
-	// printf("\n");
-	// printf(" %p %p ", LONG_MIN, LONG_MAX);
-	printf("ft:\n");
-	ft_printf(" [%p]\n", -1);
-	ft_printf(" [%p]\n", 1);
-	ft_printf(" [%p]\n", 15);
-	ft_printf(" [%p]\n", 16);
-	ft_printf(" [%p]\n", 17);
-	ft_printf(" [%p] [%p]\n", LONG_MIN, LONG_MAX);
-	ft_printf(" [%p] [%p]\n", INT_MIN, INT_MAX);
-	ft_printf(" [%p] [%p]\n", ULONG_MAX, -ULONG_MAX);
-	ft_printf(" [%p] [%p]\n\n", 0, 0);
-	printf("st:\n");
-	printf(" [%p]\n", -1);
-	printf(" [%p]\n", 1);
-	printf(" [%p]\n", 15);
-	printf(" [%p]\n", 16);
-	printf(" [%p]\n", 17);
-	printf(" [%p] [%p]\n", LONG_MIN, LONG_MAX);
-	printf(" [%p] [%p]\n", INT_MIN, INT_MAX);
-	printf(" [%p] [%p]\n", ULONG_MAX, -ULONG_MAX);
-	printf(" [%p] [%p]\n", 0, 0);
-
-	ft_printf("ft %x\n", LONG_MIN);
-	printf("st %x\n", LONG_MIN);
+	ft_printf(" %#x %#x %#x %#x %#x %#x %#x", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42);
+	printf(" %#x %#x %#x %#x %#x %#x %#x", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42);
+	ft_printf("ft [%#x]\n", LONG_MAX);
+	printf("st [%#x]\n", LONG_MAX);
 	return (0);
 }
 

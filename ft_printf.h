@@ -61,8 +61,8 @@ int		get_zero_space_len(int flag, int len, int width, int precision);
 // get_size.c
 int		get_size_dec(int n);
 int		get_size_unsigned_dec(unsigned long n);
-int		get_size_hex_ll(long long n);
-int		get_size_hex_ull(unsigned long long n);
+int		get_size_hex_ul(unsigned long n);
+int		get_size_hex_uint(unsigned int n);
 
 // is_type_flag.c
 bool	is_type(char c);

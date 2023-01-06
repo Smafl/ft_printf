@@ -31,7 +31,7 @@ int		get_size_unsigned_dec(unsigned long n)
 	return (size);
 }
 
-int		get_size_hex_ll(long long n)
+int		get_size_hex_ul(unsigned long n)
 {
 	int	size;
 
@@ -46,7 +46,7 @@ int		get_size_hex_ll(long long n)
 	return (size);
 }
 
-int		get_size_hex_ull(unsigned long long n)
+int		get_size_hex_uint(unsigned int n)
 {
 	int	size;
 

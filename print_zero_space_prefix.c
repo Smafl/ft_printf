@@ -46,7 +46,7 @@ int print_prefix(int flag)
 	}
 	else
 	{
-		if (write(1, "0X", 2) == -1)
+		if (write(1, "0x", 2) == -1)
 			return (-1);
 	}
 	return (2);

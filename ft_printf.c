@@ -26,9 +26,6 @@ int ft_printf(const char *str, ...)
 	enum e_state new_state = state;
 	while (state != STATE_END)
 	{
-		// printf("begin while state: %d\n", state);
-		// printf("char: %c\n", *str);
-		// printf("text start: %s\n", text_start);
 // text
 		if (state == STATE_TEXT)
 		{
@@ -126,7 +123,6 @@ int ft_printf(const char *str, ...)
 // end
 		if (*str == '\0')
 			new_state = STATE_END;
-		// printf("new state: %d\n", new_state);
 // print state
 		if (state != new_state)
 		{
@@ -145,14 +141,16 @@ int ft_printf(const char *str, ...)
 					printf_len += print_dec_int(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'u')
 					printf_len += print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
-				else if (str[-1] == 'x' || str[-1] == 'X')
+				else if (str[-1] == 'x' || str[-1] == 'X' || str[-1] == 'p')
 				{
 					if (str[-1] == 'X')
 						flag |= FLAG_UPPERCASE;
-					printf_len += print_unsigned_hex(va_arg(args, unsigned int), flag, width, precision);
+					if (str[-1] == 'p')
+						flag |= FLAG_POINTER;
+					printf_len += print_unsigned_hex(va_arg(args, unsigned long), flag, width, precision);
 				}
-				else if (str[-1] == 'p')
-					printf_len += print_p(va_arg(args, void *), flag, width);
+				// else if (str[-1] == 'p')
+					// printf_len += print_p(va_arg(args, void *), flag, width);
 			}
 			if (new_state == STATE_WIDTH)
 			{
@@ -186,8 +184,4 @@ int ft_printf(const char *str, ...)
 /*
 вынести в отдельную ф-ю заполнение массива
 сразу убрать флаг 0, если - и 0
-считать возвращаемое значение (кол-во печатаемых символов)
-
-вопрос про printf_len += write(1, array, size);
-если ф-я write фейлится, то возвращает -1? если я получаю оттуда -1, мой принт тоже должен остановится и вернуть -1
 */

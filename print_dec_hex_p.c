@@ -54,7 +54,7 @@ int	print_p(void *pnt, int flag, int width)
 	return (printf_len);
 }
 
-int	print_unsigned_hex(unsigned int nbr, int flag, int width, int precision)
+int	print_unsigned_hex(unsigned long nbr, int flag, int width, int precision)
 {
 	int size;
 	char array[16];
@@ -62,10 +62,13 @@ int	print_unsigned_hex(unsigned int nbr, int flag, int width, int precision)
 	int digit;
 	int printf_len;
 
-	if (nbr == 0)
+	if (nbr == 0) // && !(flag & FLAG_POINTER)
 		flag &= ~FLAG_HASH;
 	printf_len = 0;
-	size = get_size_hex_ll(nbr);
+	if (flag & FLAG_POINTER)
+		size = get_size_hex_ull(nbr);
+	else
+		size = get_size_hex_ll((unsigned int)nbr);
 	i = size - 1;
 	while (i != -1)
 	{
@@ -76,7 +79,7 @@ int	print_unsigned_hex(unsigned int nbr, int flag, int width, int precision)
 	}
 	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
-		if (flag & FLAG_HASH)
+		if (flag & FLAG_HASH || flag & FLAG_POINTER)
 		{
 			if (width > (size + 2))
 			{
@@ -107,7 +110,7 @@ int	print_unsigned_hex(unsigned int nbr, int flag, int width, int precision)
 	}
 	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
 	{
-		if (flag & FLAG_HASH)
+		if (flag & FLAG_HASH || flag & FLAG_POINTER)
 		{
 			if (print_prefix(flag) == -1)
 				return (-1);
@@ -156,7 +159,7 @@ int	print_unsigned_hex(unsigned int nbr, int flag, int width, int precision)
 	}
 	else if (flag & HAS_WIDTH)
 	{
-		if (flag & FLAG_HASH)
+		if (flag & FLAG_HASH || flag & FLAG_POINTER)
 		{
 			if (width > (size + 2))
 			{
@@ -187,7 +190,7 @@ int	print_unsigned_hex(unsigned int nbr, int flag, int width, int precision)
 	}
 	else
 	{
-		if (flag & FLAG_HASH)
+		if (flag & FLAG_HASH || flag & FLAG_POINTER)
 		{
 			if (print_prefix(flag) == -1)
 				return (-1);

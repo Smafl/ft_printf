@@ -17,6 +17,7 @@
 # define HAS_WIDTH (1 << 5)
 # define HAS_PRECISION (1 << 6)
 # define FLAG_UPPERCASE (1 << 7)
+# define FLAG_POINTER (1 << 8)
 
 enum e_state
 {
@@ -39,7 +40,7 @@ int		print_c(char c, int flag, int width);
 // print_dec_hex_p.c
 int		print_dec_int(int nbr, int flag, int width, int precision);
 int		print_unsigned_dec(unsigned int nbr, int flag, int width, int precision);
-int		print_unsigned_hex(unsigned int nbr, int flag, int width, int precision);
+int		print_unsigned_hex(unsigned long nbr, int flag, int width, int precision);
 int		print_p(void *pnt, int flag, int width);
 
 // print_zero_space_prefix.c

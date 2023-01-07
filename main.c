@@ -8,10 +8,11 @@ int checker(void)
 	// printf("ft return %d\n", ft_printf("%7.7s%7.7s", "hello", "world"));
 	// printf("\n");
 	// printf("st return %d\n", printf("%7.7s%7.7s", "hello", "world"));
-	printf("\n");
+	// printf("\n");
 	ft_printf("[%7.7s] [%7.7s]", "hello", "world");
 	printf("\n");
 	printf("[%7.7s] [%7.7s]", "hello", "world");
+
 	return (0);
 }
 

@@ -42,11 +42,10 @@ int		print_dec_int(int nbr, int flag, int width, int precision);
 int		print_unsigned_dec(unsigned int nbr, int flag, int width, int precision);
 int		print_unsigned_hex(unsigned long nbr, int flag, int width, int precision);
 
-// print_flag_null.c
+// print_zero_space_prefix.c
 int		print_zero(int width);
 int		print_space(int width);
 int 	print_prefix(int flag);
-int		print_null(void);
 
 // libft.c
 int		ft_itoa(int n, char *result);

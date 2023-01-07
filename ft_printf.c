@@ -15,6 +15,7 @@ int ft_printf(const char *str, ...)
 	int printf_len;
 	int temp_return;
 	const char *text_start;
+	const char *args_str;
 
 	text_start = str;
 	va_list args;
@@ -126,17 +127,17 @@ int ft_printf(const char *str, ...)
 			{
 				if (str[-1] == '%')
 				{
-					// if (write(1, "%", 1) == -1)
-					// 	return (-1);
-					// else
-					// 	printf_len += 1;
-					// "%% hello"
-					// "%s hello", "% hello"
-					// "%s hello", "%"
 					temp_return = print_c('%', flag, width);
 				}
 				else if (str[-1] == 's')
-					temp_return = print_str(va_arg(args, char *), flag, width, precision);
+				{
+					args_str = va_arg(args, char *);
+					if (args_str == NULL)
+						temp_return = print_str("(null)", flag, width, precision);
+					else
+						temp_return = print_str(args_str, flag, width, precision);
+					// temp_return = print_str(va_arg(args, char *), flag, width, precision);
+				}
 				else if (str[-1] == 'c')
 					temp_return = print_c(va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')

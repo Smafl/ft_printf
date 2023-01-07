@@ -3,9 +3,10 @@
 
 int print_str(const char *str, int flag, int width, int precision)
 {
+	int i;
 	int len;
 	int printf_len;
-	// check null str
+
 	printf_len = 0;
 	len = ft_strlen(str);
 	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)
@@ -13,26 +14,25 @@ int print_str(const char *str, int flag, int width, int precision)
 	{
 		if (width > len)
 		{
-			if (print_zero(width - precision) == -1)
+			if (print_zero(width - len) == -1)
 				return (-1);
 			else
-				printf_len += width - precision;
-		}
-		if (str == NULL)
-		{
-			if (print_null() == -1)
+				printf_len += width - len;
+			if (write(1, str, len) == -1)
 				return (-1);
 			else
-				printf_len += 6;
+				printf_len += len;
 		}
 		else
 		{
 			while (precision != 0 && (len > 0))
 			{
-				write(1, str, 1);
+				if (write(1, str, 1) == -1)
+					return (-1);
+				else
+					printf_len++;
 				str++;
 				precision--;
-				printf_len++;
 			}
 		}
 	}
@@ -45,92 +45,82 @@ int print_str(const char *str, int flag, int width, int precision)
 			else
 				printf_len += width - len;
 		}
-		if (str == NULL)
-		{
-			if (print_null() == -1)
-				return (-1);
-			else
-				printf_len += 6;
-		}
+		if (write(1, str, len) == -1)
+			return (-1);
 		else
-		{
-			while (*str)
-			{
-				write(1, str, 1);
-				str++;
-				printf_len++;
-			}
-		}
+			printf_len += len;
 	}
 // 	else func() 
 // func() :if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
 	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION) && (flag & FLAG_MINUS))
 	{
-		if (str == NULL)
+		if (width > len && width > precision)
 		{
-			if (print_null() == -1)
+			i = len;
+			while (i != 0)
+			{
+				if (write(1, str, 1) == -1)
+					return (-1);
+				else
+					printf_len += 1;
+				i--;
+				str++;
+			}
+			if (print_space(width - len) == -1)
 				return (-1);
 			else
-				printf_len += 6;
+				printf_len += width - len;
 		}
 		else
 		{
-			while (precision != 0)
+			i = precision;
+			while (i != 0)
 			{
-				write(1, str, 1);
+				if (write(1, str, 1) == -1)
+					return (-1);
+				else
+					printf_len += 1;
+				i--;
 				str++;
-				precision--;
-				printf_len++;
 			}
+			if (print_space(width - precision) == -1)
+				return (-1);
+			else
+				printf_len += width - precision;
 		}
-		if (width > len)
-			printf_len += print_space(width - precision);
 	}
 	else if ((flag & HAS_WIDTH) && (flag & HAS_PRECISION))
 	{
-		if (width > len)
+		if (width > len && width > precision)
+		{
+			if (print_space(width - len) == -1)
+				return (-1);
+			else
+				printf_len += width - len;
+		}
+		else
 		{
 			if (print_space(width - precision) == -1)
 				return (-1);
 			else
 				printf_len += width - precision;
 		}
-		if (str == NULL)
+		while (precision != 0)
 		{
-			if (print_null() == -1)
+			if (write(1, str, 1) == -1)
 				return (-1);
 			else
-				printf_len += 6;
-		}
-		else
-		{
-			while (precision != 0)
-			{
-				write(1, str, 1);
-				str++;
-				precision--;
-				printf_len++;
-			}
+				printf_len += 1;
+			precision--;
+			str++;
 		}
 	}
 	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
 	{
-		if (str == NULL)
-		{
-			if (print_null() == -1)
-				return (-1);
-			else
-				printf_len += 6;
-		}
+		if (write(1, str, len) == -1)
+			return (-1);
 		else
-		{
-			while (*str)
-			{
-				write(1, str, 1);
-				str++;
-				printf_len++;
-			}
-		}
+			printf_len += len;
 		if (width > len)
 		{
 			if (print_space(width - len) == -1)
@@ -148,56 +138,24 @@ int print_str(const char *str, int flag, int width, int precision)
 			else
 				printf_len += width - len;
 		}
-		if (str == NULL)
-		{
-			if (print_null() == -1)
-				return (-1);
-			else
-				printf_len += 6;
-		}
+		if (write(1, str, len) == -1)
+			return (-1);
 		else
-		{
-			while (*str)
-			{
-				write(1, str, 1);
-				str++;
-				printf_len++;
-			}
-		}
+			printf_len += len;
 	}
 	else if (flag & HAS_PRECISION)
 	{
-		if (str == NULL)
-		{
-			if (print_null() == -1)
-				return (-1);
-			else
-				printf_len += 6;
-		}
+		if (write(1, str, get_max(precision, len)) == -1)
+			return (-1);
 		else
-		{
-			if (write(1, str, get_max(precision, len)) == -1)
-				return (-1);
-			else
-				printf_len += get_max(precision, len);
-		}
+			printf_len += get_max(precision, len);
 	}
 	else
 	{
-		if (str == NULL)
-		{
-			if (print_null() == -1)
-				return (-1);
-			else
-				printf_len += 6;
-		}
+		if (write(1, str, len) == -1)
+			return (-1);
 		else
-		{
-			if (write(1, str, len) == -1)
-				return (-1);
-			else
-				printf_len += len;
-		}
+			printf_len += len;
 	}
 	return (printf_len);
 }

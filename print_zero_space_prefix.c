@@ -51,10 +51,3 @@ int		print_prefix(int flag)
 	}
 	return (2);
 }
-
-int		print_null(void)
-{
-	if (write(1, "(null)", 6) == -1)
-		return (-1);
-	return (6);
-}

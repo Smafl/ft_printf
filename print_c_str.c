@@ -5,7 +5,7 @@ int print_str(const char *str, int flag, int width, int precision)
 {
 	int len;
 	int printf_len;
-
+	// check null str
 	printf_len = 0;
 	len = ft_strlen(str);
 	if ((flag & FLAG_ZERO) && (flag & HAS_PRECISION)

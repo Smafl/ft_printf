@@ -73,9 +73,7 @@ int ft_printf(const char *str, ...)
 // width
 		else if (state == STATE_WIDTH)
 		{
-			if (*str == '%')
-				new_state = STATE_FORMAT;
-			else if (*str >= '0' && *str <= '9')
+			if (*str >= '0' && *str <= '9')
 				; // ok
 			else if (*str == '.')
 				new_state = STATE_UNDEF_PRECISION;
@@ -88,9 +86,7 @@ int ft_printf(const char *str, ...)
 // undef_precision
 		else if (state == STATE_UNDEF_PRECISION)
 		{
-			if (*str == '%')
-				new_state = STATE_FORMAT;
-			else if (*str == '-')
+			if (*str == '-')
 				new_state = STATE_PRECISION;
 			else if (*str >= '0' && *str <= '9')
 				new_state = STATE_PRECISION;
@@ -100,12 +96,10 @@ int ft_printf(const char *str, ...)
 				new_state = STATE_TEXT;
 		}
 
-// precision
+// precision %23%%d
 		else if (state == STATE_PRECISION)
 		{
-			if (*str == '%')
-				new_state = STATE_FORMAT;
-			else if (*str >= '0' && *str <= '9')
+			if (*str >= '0' && *str <= '9')
 				; // ok
 			else if (is_type(*str))
 				new_state = STATE_TYPE;
@@ -132,10 +126,14 @@ int ft_printf(const char *str, ...)
 			{
 				if (str[-1] == '%')
 				{
-					if (write(1, "%", 1) == -1)
-						return (-1);
-					else
-						printf_len += 1;
+					// if (write(1, "%", 1) == -1)
+					// 	return (-1);
+					// else
+					// 	printf_len += 1;
+					// "%% hello"
+					// "%s hello", "% hello"
+					// "%s hello", "%"
+					temp_return = print_c('%', flag, width);
 				}
 				else if (str[-1] == 's')
 					temp_return = print_str(va_arg(args, char *), flag, width, precision);
@@ -150,11 +148,11 @@ int ft_printf(const char *str, ...)
 					if (str[-1] == 'X')
 						flag |= FLAG_UPPERCASE;
 					if (str[-1] == 'x' || str[-1] == 'X')
-						temp_return = print_unsigned_hex((unsigned long)(va_arg(args, unsigned int)), flag, width, precision);
+						temp_return = print_unsigned_hex((unsigned long)va_arg(args, unsigned int), flag, width, precision);
 					if (str[-1] == 'p')
 					{
 						flag |= FLAG_POINTER;
-						temp_return = print_unsigned_hex((unsigned long)(va_arg(args, void *)), flag, width, precision);
+						temp_return = print_unsigned_hex((unsigned long)va_arg(args, void *), flag, width, precision);
 					}
 				}
 				if (temp_return == -1)

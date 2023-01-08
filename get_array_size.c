@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-int		get_size_dec(int n)
+int		get_size_dec(long n)
 {
 	int	size;
 

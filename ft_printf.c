@@ -142,7 +142,7 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'd' || str[-1] == 'i')
 					temp_return = print_dec_int(va_arg(args, int), flag, width, precision);
 				else if (str[-1] == 'u')
-					temp_return = print_unsigned_dec(va_arg(args, unsigned int), flag, width, precision);
+					temp_return = print_dec_int(va_arg(args, unsigned int), flag & ~FLAG_PLUS & ~FLAG_SPACE, width, precision);
 				else if (str[-1] == 'x' || str[-1] == 'X' || str[-1] == 'p')
 				{
 					if (str[-1] == 'X')

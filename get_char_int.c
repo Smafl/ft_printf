@@ -19,7 +19,7 @@ char	get_hex_digit(int digit, int flag)
 	return (c);
 }
 
-char	get_sign(int nbr, int flag, int *has_sign)
+char	get_sign(long nbr, int flag, int *has_sign)
 {
 	if (nbr >= 0)
 	{	

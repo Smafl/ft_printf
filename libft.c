@@ -21,7 +21,7 @@ int		ft_atoi(const char *str)
 	return (result);
 }
 
-int		ft_itoa(int n, char *result)
+int		ft_itoa(long n, char *result)
 {
 	int i;
 	int		size;

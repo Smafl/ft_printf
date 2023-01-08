@@ -161,7 +161,7 @@ int print_dec_int(long nbr, int flag, int width, int precision, int base)
 	int fill_len;
 	int len_with_precision;
 	int printf_len;
-	char sign;
+	unsigned short sign;
 	char array[16];
 
 	if (flag & HAS_PRECISION)
@@ -170,9 +170,9 @@ int print_dec_int(long nbr, int flag, int width, int precision, int base)
 	if (nbr == 0 && (flag & HAS_PRECISION) && precision == 0)
 		len = 0;
 	else
-		len = ft_itoa(nbr, array);
+		len = ft_itoa(nbr, base, flag,  array);
 	len_with_precision = get_max(precision, len);
-	sign = get_sign(nbr, flag, &sign_len);
+	sign = get_sign(nbr, flag, base, &sign_len);
 	fill_len = get_max(width - sign_len - len_with_precision, 0);
 	if (flag & FLAG_ZERO && !(flag & FLAG_MINUS))
 	{

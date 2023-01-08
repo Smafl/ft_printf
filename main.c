@@ -5,9 +5,9 @@
 
 int checker(void)
 {
-	ft_printf(" %u ", -1);
+	ft_printf("%#x", 500000);
 	printf("\n");
-	printf(" %u ", -1);
+	printf("%#x", 500000);
 
 	return (0);
 }

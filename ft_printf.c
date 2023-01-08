@@ -140,19 +140,19 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'c')
 					temp_return = print_c(va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')
-					temp_return = print_dec_int(va_arg(args, int), flag, width, precision);
+					temp_return = print_dec_int(va_arg(args, int), flag, width, precision, 10);
 				else if (str[-1] == 'u')
-					temp_return = print_dec_int(va_arg(args, unsigned int), flag & ~FLAG_PLUS & ~FLAG_SPACE, width, precision);
+					temp_return = print_dec_int(va_arg(args, unsigned int), flag & ~FLAG_PLUS & ~FLAG_SPACE, width, precision, 10);
 				else if (str[-1] == 'x' || str[-1] == 'X' || str[-1] == 'p')
 				{
 					if (str[-1] == 'X')
 						flag |= FLAG_UPPERCASE;
 					if (str[-1] == 'x' || str[-1] == 'X')
-						temp_return = print_unsigned_hex((unsigned long)va_arg(args, unsigned int), flag, width, precision);
+						temp_return = print_dec_int((unsigned long)va_arg(args, unsigned int), flag, width, precision, 16);
 					if (str[-1] == 'p')
 					{
 						flag |= FLAG_POINTER;
-						temp_return = print_unsigned_hex((unsigned long)va_arg(args, void *), flag, width, precision);
+						temp_return = print_dec_int((unsigned long)va_arg(args, void *), flag, width, precision, 16);
 					}
 				}
 				if (temp_return == -1)

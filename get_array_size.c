@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-int		get_size_dec(long n)
+int		get_size_dec(long n, int base)
 {
 	int	size;
 
@@ -10,7 +10,7 @@ int		get_size_dec(long n)
 		size = 1;
 	while (n)
 	{
-		n /= 10;
+		n /= base;
 		size++;
 	}
 	return (size);

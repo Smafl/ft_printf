@@ -19,47 +19,43 @@ char	get_hex_digit(int digit, int flag)
 	return (c);
 }
 
-char	get_sign(long nbr, int flag, int *has_sign)
+unsigned short	get_sign(long nbr, int flag, int base, int *sign_len)
 {
-	if (nbr >= 0)
-	{	
-		if ((flag & FLAG_SPACE) && !(flag & FLAG_PLUS))
-		{
-			*has_sign = 1;
-			return (' ');
+	if (base == 10)
+	{
+		if (nbr >= 0)
+		{	
+			if ((flag & FLAG_SPACE) && !(flag & FLAG_PLUS))
+			{
+				*sign_len = 1;
+				return (' ');
+			}
+			else if (flag & FLAG_PLUS)
+			{
+				*sign_len = 1;
+				return ('+');
+			}
 		}
-		else if (flag & FLAG_PLUS)
+		else if (nbr < 0)
 		{
-			*has_sign = 1;
-			return ('+');
+			*sign_len = 1;
+			return ('-');
 		}
 	}
-	else if (nbr < 0)
+	else if (base == 16)
 	{
-		*has_sign = 1;
-		return ('-');
+		if (nbr == 0)
+			;
+		else if (flag & FLAG_HASH)
+		{
+			*sign_len = 2;
+			if (flag & FLAG_UPPERCASE)
+				return ((unsigned short)'X' << 8 | '0');
+			else
+				return ((unsigned short)'x' << 8 | '0');
+		}
 	}
-	*has_sign = 0;
-	return (0);
-}
-
-int		get_zero_len(int flag, int len, int width, int precision)
-{
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (width > len)
-			return (width - len);
-	}
-	else if (precision >= width)
-	{
-		if (precision > len)
-			return (precision - len);
-	}
-	else if (precision < width)
-	{
-		if (width > len)
-			return (width - len);
-	}
+	*sign_len = 0;
 	return (0);
 }
 

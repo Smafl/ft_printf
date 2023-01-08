@@ -47,19 +47,18 @@ int		print_space(int width);
 int 	print_prefix(int flag);
 
 // libft.c
-int		ft_itoa(long n, char *result);
+int		ft_itoa(long n, int base, int flag, char *result);
 int		ft_atoi(const char *str);
 int		ft_strlen(const char *str);
 int		ft_strnlen(const char *str, int max_len);
 
 // get_char_int.c
 char	get_hex_digit(int digit, int flag);
-char	get_sign(long nbr, int flag, int *has_sign);
-int		get_zero_len(int flag, int len, int width, int precision);
+unsigned short	get_sign(long nbr, int flag, int base,  int *has_sign);
 int		get_max(int precision, int len);
 
 // get_array_size.c
-int		get_size_dec(long n);
+int		get_size_dec(long n, int base);
 int		get_size_unsigned_dec(unsigned long n);
 int		get_size_hex_ul(unsigned long n);
 int		get_size_hex_uint(unsigned int n);

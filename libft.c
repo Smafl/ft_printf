@@ -21,13 +21,13 @@ int		ft_atoi(const char *str)
 	return (result);
 }
 
-int		ft_itoa(long n, char *result)
+int		ft_itoa(long n, int base, int flag, char *result)
 {
-	int i;
+	int		i;
 	int		size;
 	long	digit;
 
-	size = get_size_dec(n);
+	size = get_size_dec(n, base);
 	i = size;
 	digit = (long)n;
 	if (n < 0)
@@ -35,8 +35,8 @@ int		ft_itoa(long n, char *result)
 	result[i--] = '\0';
 	while (digit >= 0)
 	{
-		result[i--] = (digit % 10) + '0';
-		digit /= 10;
+		result[i--] = get_hex_digit(digit % base, flag);
+		digit /= base;
 		if (digit == 0)
 			break ;
 	}

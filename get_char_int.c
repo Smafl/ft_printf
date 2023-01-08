@@ -43,7 +43,7 @@ char	get_sign(int nbr, int flag, int *has_sign)
 	return (0);
 }
 
-int		get_zero_space_len(int flag, int len, int width, int precision)
+int		get_zero_len(int flag, int len, int width, int precision)
 {
 	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
 	{
@@ -65,7 +65,7 @@ int		get_zero_space_len(int flag, int len, int width, int precision)
 
 int		get_max(int precision, int len)
 {
-	if (precision >= len)
+	if (precision <= len)
 		return (len);
 	return (precision);
 }

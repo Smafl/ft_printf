@@ -136,7 +136,6 @@ int ft_printf(const char *str, ...)
 						temp_return = print_str("(null)", flag, width, precision);
 					else
 						temp_return = print_str(args_str, flag, width, precision);
-					// temp_return = print_str(va_arg(args, char *), flag, width, precision);
 				}
 				else if (str[-1] == 'c')
 					temp_return = print_c(va_arg(args, int), flag, width);

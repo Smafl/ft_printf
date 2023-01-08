@@ -5,13 +5,9 @@
 
 int checker(void)
 {
-	// printf("ft return %d\n", ft_printf("%7.7s%7.7s", "hello", "world"));
-	// printf("\n");
-	// printf("st return %d\n", printf("%7.7s%7.7s", "hello", "world"));
-	// printf("\n");
-	ft_printf("[%7.7s] [%7.7s]", "hello", "world");
+	ft_printf("%8.5u", 34);
 	printf("\n");
-	printf("[%7.7s] [%7.7s]", "hello", "world");
+	printf("%8.5u", 34);
 
 	return (0);
 }

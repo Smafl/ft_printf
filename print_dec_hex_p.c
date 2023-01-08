@@ -296,177 +296,46 @@ int	print_unsigned_dec(unsigned int nbr, int flag, int width, int precision)
 
 int print_dec_int(int nbr, int flag, int width, int precision)
 {
-	int size;
-	int has_sign;
+	int len;
+	int sign_len;
+	int zero_len;
+	int space_len;
+	int fill_len;
+	int len_with_precision;
 	int printf_len;
 	char sign;
 	char array[16];
 
+	if (flag & HAS_PRECISION)
+		flag &= ~FLAG_ZERO;
 	printf_len = 0;
-	size = ft_itoa(nbr, array);
-	sign = get_sign(nbr, flag, &has_sign);
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	if (nbr == 0 && (flag & HAS_PRECISION) && precision == 0)
+		len = 0;
+	else
+		len = ft_itoa(nbr, array);
+	len_with_precision = get_max(precision, len);
+	sign = get_sign(nbr, flag, &sign_len);
+	fill_len = get_max(width - sign_len - len_with_precision, 0);
+	if (flag & FLAG_ZERO && !(flag & FLAG_MINUS))
 	{
-		if (has_sign)
-		{
-			if (write(1, &sign, 1) == -1)
-				return (-1);
-			else
-				printf_len += 1;
-		}
-		if (print_zero(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-			return (-1);
-		else
-			printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH) && (flag & FLAG_MINUS))
-	{
-		if (precision >= width)
-		{
-			if (has_sign)
-			{
-				if (write(1, &sign, 1) == -1)
-					return (-1);
-				else
-					printf_len += 1;
-			}
-			if (print_zero(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-				return (-1);
-			else
-				printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-			if (write(1, array, size) == -1)
-				return (-1);
-			else
-				printf_len += size;
-		}
-		else
-		{
-			if (has_sign)
-			{
-				if (write(1, &sign, 1) == -1)
-					return (-1);
-				else
-					printf_len += 1;
-			}
-			if (write(1, array, size) == -1)
-				return (-1);
-			else
-				printf_len += size;
-			if (print_space(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-				return (-1);
-			else
-				printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-		}
-	}
-	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
-	{
-		if (has_sign)
-		{
-			if (write(1, &sign, 1) == -1)
-				return (-1);
-			else
-				printf_len += 1;
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-		if (print_space(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-			return (-1);
-		else
-			printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-	}
-	else if ((flag & HAS_PRECISION) && (flag & HAS_WIDTH))
-	{
-		if (precision >= width)
-		{
-			if (has_sign)
-			{
-				if (write(1, &sign, 1) == -1)
-					return (-1);
-				else
-					printf_len += 1;
-			}
-			if (print_zero(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-				return (-1);
-			else
-				printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-		}
-		else
-		{
-			if (print_space(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-				return (-1);
-			else
-				printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-			if (has_sign)
-			{
-				if (write(1, &sign, 1) == -1)
-					return (-1);
-				else
-					printf_len += 1;
-			}
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	else if (flag & HAS_PRECISION)
-	{
-		if (has_sign)
-		{
-			if (write(1, &sign, 1) == -1)
-				return (-1);
-			else
-				printf_len += 1;
-		}
-		if (precision > size)
-		{
-			if (print_zero(precision - size) == -1)
-				return (-1);
-			else
-				printf_len += precision - size;
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	else if (flag & HAS_WIDTH)
-	{
-		if (print_space(get_zero_space_len(flag, (size + has_sign), width, precision)) == -1)
-			return (-1);
-		else
-			printf_len += get_zero_space_len(flag, (size + has_sign), width, precision);
-		if (has_sign)
-		{
-			if (write(1, &sign, 1) == -1)
-				return (-1);
-			else
-				printf_len += 1;
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
+		zero_len = fill_len + (len_with_precision - len);
+		space_len = 0;
 	}
 	else
 	{
-		if (has_sign)
-		{
-			if (write(1, &sign, 1) == -1)
-				return (-1);
-			else
-				printf_len += 1;
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
+		zero_len = len_with_precision - len;
+		space_len = fill_len;
 	}
+	if (!(flag & FLAG_MINUS))
+			printf_len += print_space(space_len); // add return
+	if (write(1, &sign, sign_len) == -1)
+		return (-1);
+	else
+		printf_len += sign_len;
+	printf_len += print_zero(zero_len);
+	printf_len += write(1, array, len);
+	if (flag & FLAG_MINUS)
+		printf_len += print_space(space_len);
+
 	return (printf_len);
 }

@@ -1,7 +1,7 @@
 
 #include "ft_printf.h"
 
-int	ft_atoi(const char *str)
+int		ft_atoi(const char *str)
 {
 	int	sign;
 	int	result;
@@ -21,7 +21,7 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-int ft_itoa(int n, char *result)
+int		ft_itoa(int n, char *result)
 {
 	int i;
 	int		size;
@@ -43,14 +43,24 @@ int ft_itoa(int n, char *result)
 	return (size);
 }
 
-int	ft_strlen(const char *str)
+int		ft_strlen(const char *str)
 {
 	int	i;
 
 	i = 0;
-	if (str == NULL)
-		return (6);
 	while (str[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+int		ft_strnlen(const char *str, int max_len)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0' && i < max_len)
 	{
 		i++;
 	}

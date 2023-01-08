@@ -51,11 +51,12 @@ int 	print_prefix(int flag);
 int		ft_itoa(int n, char *result);
 int		ft_atoi(const char *str);
 int		ft_strlen(const char *str);
+int		ft_strnlen(const char *str, int max_len);
 
 // get_char_int.c
 char	get_hex_digit(int digit, int flag);
 char	get_sign(int nbr, int flag, int *has_sign);
-int		get_zero_space_len(int flag, int len, int width, int precision);
+int		get_zero_len(int flag, int len, int width, int precision);
 int		get_max(int precision, int len);
 
 // get_array_size.c

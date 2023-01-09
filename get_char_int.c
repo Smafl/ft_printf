@@ -64,7 +64,7 @@ unsigned short	get_sign(long nbr, int flag, int base, int *sign_len)
 	return (0);
 }
 
-int		get_max(int precision, int len)
+int	get_max(int precision, int len)
 {
 	if (precision <= len)
 		return (len);

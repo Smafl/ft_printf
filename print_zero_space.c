@@ -36,18 +36,3 @@ int		print_space(int width)
 	}
 	return (printf_len);
 }
-
-int		print_prefix(int flag)
-{
-	if (flag & FLAG_UPPERCASE)
-	{
-		if (write(1, "0X", 2) == -1)
-			return (-1);
-	}
-	else
-	{
-		if (write(1, "0x", 2) == -1)
-			return (-1);
-	}
-	return (2);
-}

@@ -5,60 +5,53 @@ int print_str(const char *str, int flag, int width, int precision)
 {
 	int len;
 	int printf_len;
+	int zero_len;
+	int space_len;
 
 	printf_len = 0;
+	if (flag & FLAG_MINUS)
+		flag &= ~FLAG_ZERO;
 	if (flag & HAS_PRECISION)
 		len = ft_strnlen(str, precision);
 	else
 		len = ft_strlen(str);
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	if ((flag & FLAG_ZERO) && width > len)
 	{
-		if (width > len)
-		{
-			if (print_zero(width - len) == -1)
-				return (-1);
-			else
-				printf_len += width - len;
-		}
-		if (write(1, str, len) == -1)
-			return (-1);
-		else
-			printf_len += len;
+		zero_len = width - len;
+		space_len = 0;
 	}
-	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
+	else if (width > len)
 	{
-		if (write(1, str, len) == -1)
-			return (-1);
-		else
-			printf_len += len;
-		if (width > len)
-		{
-			if (print_space(width - len) == -1)
-				return (-1);
-			else
-				printf_len += width - len;
-		}
-	}
-	else if (flag & HAS_WIDTH)
-	{
-		if (width > len)
-		{
-			if (print_space(width - len) == -1)
-				return (-1);
-			else
-				printf_len += width - len;
-		}
-		if (write(1, str, len) == -1)
-			return (-1);
-		else
-			printf_len += len;
+		zero_len = 0;
+		space_len = width - len;
 	}
 	else
 	{
-		if (write(1, str, len) == -1)
+		zero_len = 0;
+		space_len = 0;
+	}
+	// part below is the same with print_c
+	if (!(flag & FLAG_MINUS))
+	{
+		if (print_space(space_len) == -1)
 			return (-1);
 		else
-			printf_len += len;
+			printf_len += space_len;
+	}
+	if (print_zero(zero_len) == -1)
+		return (-1);
+	else
+		printf_len += zero_len;
+	if (write(1, str, len) == -1)
+		return (-1);
+	else
+		printf_len += len;
+	if (flag & FLAG_MINUS)
+	{
+		if (print_space(space_len) == -1)
+			return (-1);
+		else
+			printf_len += space_len;
 	}
 	return (printf_len);
 }
@@ -66,47 +59,49 @@ int print_str(const char *str, int flag, int width, int precision)
 int print_c(char c, int flag, int width)
 {
 	int printf_len;
+	int zero_len;
+	int space_len;
 
 	printf_len = 0;
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
+	if (flag & FLAG_MINUS)
+		flag &= ~FLAG_ZERO;
+	if ((flag & FLAG_ZERO) && width > 1)
 	{
-		if (print_zero(width - 1) == -1)
-			return (-1);
-		else
-			printf_len += width -1;
-		if (write(1, &c, 1) == -1)
-			return (-1);
-		else
-			printf_len += 1;
+		zero_len = width - 1;
+		space_len = 0;
 	}
-	else if ((flag & FLAG_MINUS) && (flag & HAS_WIDTH))
+	else if (width > 1)
 	{
-		if (write(1, &c, 1) == -1)
-			return (-1);
-		else
-			printf_len += 1;
-		if (print_space(width - 1) == -1)
-			return (-1);
-		else
-			printf_len += width -1;
-	}
-	else if (flag & HAS_WIDTH)
-	{	
-		if (print_space(width - 1) == -1)
-			return (-1);
-		else
-			printf_len += width -1;
-		if (write(1, &c, 1) == -1)
-			return (-1);
-		else
-			printf_len += 1;
+		zero_len = 0;
+		space_len = width - 1;
 	}
 	else
 	{
-		if (write(1, &c, 1) == -1)
+		zero_len = 0;
+		space_len = 0;
+	}
+	// part below is the same with print_str
+	if (!(flag & FLAG_MINUS))
+	{
+		if (print_space(space_len) == -1)
 			return (-1);
 		else
-			printf_len += 1;
+			printf_len += space_len;
+	}
+	if (print_zero(zero_len) == -1)
+		return (-1);
+	else
+		printf_len += zero_len;
+	if (write(1, &c, 1) == -1)
+		return (-1);
+	else
+		printf_len += 1;
+	if (flag & FLAG_MINUS)
+	{
+		if (print_space(space_len) == -1)
+			return (-1);
+		else
+			printf_len += space_len;
 	}
 	return (printf_len);
 }

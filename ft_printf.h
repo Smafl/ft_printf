@@ -40,10 +40,9 @@ int				print_c(char c, int flag, int width);
 // print_dec_hex_p.c
 int				print_dec_int(long nbr, int flag, int width, int precision, int base);
 
-// print_zero_space_prefix.c
+// print_zero_space.c
 int				print_zero(int width);
 int				print_space(int width);
-int 			print_prefix(int flag);
 
 // libft.c
 int				ft_itoa(long n, int base, int flag, char *result);

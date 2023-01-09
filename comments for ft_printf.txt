@@ -21,20 +21,17 @@ format --> undef_precision: dot
 format --> type: types
 format --> text: char (rest)
 
-flag --> format: %
 flag --> flag: flags
 flag --> width: integer != 0
 flag --> undef_precision: dot
 flag --> type: types
 flag --> text: char (rest)
 
-width --> format: %
 width --> undef_precision: dot
 width --> type: types
 width --> text: char (rest)
 width --> width: 0-9
 
-undef_precision --> format: %
 undef_precision --> type: types
 undef_precision --> text: char (rest)
 undef_precision --> precision: '-'
@@ -80,3 +77,6 @@ text: "smafl"
 Part 3.
 I modified my function that now it takes all args and printed it in rigth way.
 And in this part I divided it for difference files for more comfortable work.
+
+Part 4.
+For norminette :(

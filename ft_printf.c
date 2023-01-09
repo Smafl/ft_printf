@@ -144,7 +144,10 @@ int ft_printf(const char *str, ...)
 				else if (str[-1] == 'u')
 					temp_return = print_dec_int(va_arg(args, unsigned int), flag & ~FLAG_PLUS & ~FLAG_SPACE, width, precision, 10);
 				else if (str[-1] == 'x' || str[-1] == 'X')
-					temp_return = print_dec_int((unsigned long)va_arg(args, unsigned int), flag, width, precision, 16);
+				{
+					if (str[-1] == 'X')
+						flag |= FLAG_UPPERCASE;
+					temp_return = print_dec_int((unsigned long)va_arg(args, unsigned int), flag, width, precision, 16);}
 				else if (str[-1] == 'p')
 				{
 					flag |= FLAG_POINTER;

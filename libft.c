@@ -43,6 +43,28 @@ int		ft_itoa(long n, int base, int flag, char *result)
 	return (size);
 }
 
+int		ft_pointer_itoa(unsigned long n, int flag, char *result)
+{
+	int		i;
+	int		size;
+	unsigned long	digit;
+
+	size = get_size_ul(n, 16);
+	i = size;
+	digit = (unsigned long)n;
+	if (n < 0)
+		digit *= -1;
+	result[i--] = '\0';
+	while (digit >= 0)
+	{
+		result[i--] = get_hex_digit(digit % 16, flag);
+		digit /= 16;
+		if (digit == 0)
+			break ;
+	}
+	return (size);
+}
+
 int		ft_strlen(const char *str)
 {
 	int	i;

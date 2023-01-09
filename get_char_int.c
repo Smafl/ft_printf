@@ -44,8 +44,13 @@ unsigned short	get_sign(long nbr, int flag, int base, int *sign_len)
 	}
 	else if (base == 16)
 	{
-		if (nbr == 0)
+		if (nbr == 0 && !(flag & FLAG_POINTER))
 			;
+		else if (flag & FLAG_POINTER)
+		{
+			*sign_len = 2;
+			return ((unsigned short)'x' << 8 | '0');
+		}
 		else if (flag & FLAG_HASH)
 		{
 			*sign_len = 2;

@@ -143,17 +143,12 @@ int ft_printf(const char *str, ...)
 					temp_return = print_dec_int(va_arg(args, int), flag, width, precision, 10);
 				else if (str[-1] == 'u')
 					temp_return = print_dec_int(va_arg(args, unsigned int), flag & ~FLAG_PLUS & ~FLAG_SPACE, width, precision, 10);
-				else if (str[-1] == 'x' || str[-1] == 'X' || str[-1] == 'p')
+				else if (str[-1] == 'x' || str[-1] == 'X')
+					temp_return = print_dec_int((unsigned long)va_arg(args, unsigned int), flag, width, precision, 16);
+				else if (str[-1] == 'p')
 				{
-					if (str[-1] == 'X')
-						flag |= FLAG_UPPERCASE;
-					if (str[-1] == 'x' || str[-1] == 'X')
-						temp_return = print_dec_int((unsigned long)va_arg(args, unsigned int), flag, width, precision, 16);
-					if (str[-1] == 'p')
-					{
-						flag |= FLAG_POINTER;
-						temp_return = print_dec_int((unsigned long)va_arg(args, void *), flag, width, precision, 16);
-					}
+					flag |= FLAG_POINTER;
+					temp_return = print_dec_int((unsigned long)va_arg(args, void *), flag, width, precision, 16);
 				}
 				if (temp_return == -1)
 					return (-1);
@@ -193,8 +188,3 @@ int ft_printf(const char *str, ...)
 	va_end(args);
 	return (printf_len);
 }
-
-/*
-вынести в отдельную ф-ю заполнение массива
-сразу убрать флаг 0, если - и 0
-*/

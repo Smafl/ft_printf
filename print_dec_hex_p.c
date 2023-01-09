@@ -1,157 +1,6 @@
 
 #include "ft_printf.h"
 
-int	print_unsigned_hex(unsigned long nbr, int flag, int width, int precision)
-{
-	int size;
-	char array[16];
-	int i;
-	int digit;
-	int printf_len;
-
-	if (nbr == 0 || (long)nbr == LONG_MIN)
-		flag &= ~FLAG_HASH;
-	printf_len = 0;
-	if (flag & FLAG_POINTER)
-		size = get_size_hex_ul(nbr);
-	else
-		size = get_size_hex_uint((unsigned int)nbr);
-	i = size - 1;
-	while (i != -1)
-	{
-		digit = nbr % 16;
-		nbr = nbr / 16;
-		array[i] = get_hex_digit(digit, flag);
-		i--;
-	}
-	if ((flag & FLAG_ZERO) && (flag & HAS_WIDTH) && !(flag & FLAG_MINUS))
-	{
-		if (flag & FLAG_HASH || flag & FLAG_POINTER)
-		{
-			if (width > (size + 2))
-			{
-				if (print_zero(width - size - 2) == -1)
-					return (-1);
-				else
-					printf_len += width - size - 2;
-			}
-			if (print_prefix(flag) == -1)
-				return (-1);
-			else
-				printf_len += 2;
-		}
-		else
-		{
-			if (width > (size))
-			{
-				if (print_zero(width - size) == -1)
-					return (-1);
-				else
-					printf_len += width - size;
-			}
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	else if ((flag & HAS_WIDTH) && (flag & FLAG_MINUS))
-	{
-		if (flag & FLAG_HASH || flag & FLAG_POINTER)
-		{
-			if (print_prefix(flag) == -1)
-				return (-1);
-			else
-				printf_len += 2;
-			if (write(1, array, size) == -1)
-				return (-1);
-			else
-				printf_len += size;
-			if (width > (size + 2))
-			{
-				if (print_space(width - size - 2) == -1)
-					return (-1);
-				else
-					printf_len += width - size - 2;
-			}
-		}
-		else
-		{
-			if (write(1, array, size) == -1)
-				return (-1);
-			else
-				printf_len += size;
-			if (width > (size))
-			{
-				if (print_space(width - size) == -1)
-					return (-1);
-				else
-					printf_len += width - size;
-			};
-		}
-	}
-	else if (flag & HAS_PRECISION)
-	{
-		if (precision > size)
-		{
-			if (print_zero(precision - size) == -1)
-				return (-1);
-			else
-				printf_len += precision - size;
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	else if (flag & HAS_WIDTH)
-	{
-		if (flag & FLAG_HASH || flag & FLAG_POINTER)
-		{
-			if (width > (size + 2))
-			{
-				if (print_space(width - size - 2) == -1)
-					return (-1);
-				else
-					printf_len += width - size - 2;
-			}
-			if (print_prefix(flag) == -1)
-				return (-1);
-			else
-				printf_len += 2;
-		}
-		else
-		{
-			if (width > (size))
-			{
-				if (print_space(width - size) == -1)
-					return (-1);
-				else
-					printf_len += width - size;
-			}
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	else
-	{
-		if (flag & FLAG_HASH || flag & FLAG_POINTER)
-		{
-			if (print_prefix(flag) == -1)
-				return (-1);
-			else
-				printf_len += 2;
-		}
-		if (write(1, array, size) == -1)
-			return (-1);
-		else
-			printf_len += size;
-	}
-	return (printf_len);
-}
-
 int print_dec_int(long nbr, int flag, int width, int precision, int base)
 {
 	int len;
@@ -164,11 +13,15 @@ int print_dec_int(long nbr, int flag, int width, int precision, int base)
 	unsigned short sign;
 	char array[16];
 
+	if (nbr == LONG_MIN && !(flag & FLAG_POINTER))
+		flag &= ~FLAG_HASH;
 	if (flag & HAS_PRECISION)
 		flag &= ~FLAG_ZERO;
 	printf_len = 0;
 	if (nbr == 0 && (flag & HAS_PRECISION) && precision == 0)
 		len = 0;
+	else if (flag & FLAG_POINTER)
+		len = ft_pointer_itoa((unsigned long)nbr, flag, array);
 	else
 		len = ft_itoa(nbr, base, flag,  array);
 	len_with_precision = get_max(precision, len);

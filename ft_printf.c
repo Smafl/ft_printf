@@ -174,7 +174,11 @@ int ft_printf(const char *str, ...)
 			if (new_state == STATE_PRECISION)
 				precision = ft_atoi(str);
 			if (new_state == STATE_FORMAT)
+			{
 				flag = 0;
+				precision = 0;
+				width = 0;
+			}
 			if (new_state == STATE_TEXT)
 				text_start = str;
 			if (state == STATE_TEXT)

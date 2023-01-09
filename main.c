@@ -5,9 +5,9 @@
 
 int checker(void)
 {
-	ft_printf("%pp%p%p", (void *)LONG_MAX + 423856, (void *)0, (void *)INT_MAX);
+	printf("return %d\n", ft_printf("%p", (void *)-14523));
 	printf("\n");
-	printf("%pp%p%p", (void *)LONG_MAX + 423856, (void *)0, (void *)INT_MAX);
+	printf("return %d\n", printf("%p", (void *)-14523));
 
 	return (0);
 }

@@ -11,7 +11,7 @@ int print_dec_int(long nbr, int flag, int width, int precision, int base)
 	int len_with_precision;
 	int printf_len;
 	unsigned short sign;
-	char array[16];
+	char array[18];
 
 	printf_len = 0;
 	if (nbr == LONG_MIN && !(flag & FLAG_POINTER))

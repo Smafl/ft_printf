@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 23:06:12 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/01/10 23:06:32 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	int	sign;
 	int	result;
@@ -21,7 +32,7 @@ int		ft_atoi(const char *str)
 	return (result);
 }
 
-int		ft_itoa(long n, int base, int flag, char *result)
+int	ft_itoa(long n, int base, int flag, char *result)
 {
 	int		i;
 	int		size;
@@ -43,10 +54,10 @@ int		ft_itoa(long n, int base, int flag, char *result)
 	return (size);
 }
 
-int		ft_pointer_itoa(unsigned long n, int flag, char *result)
+int	ft_pointer_itoa(unsigned long n, int flag, char *result)
 {
-	int		i;
-	int		size;
+	int				i;
+	int				size;
 	unsigned long	digit;
 
 	size = get_size_ul(n, 16);
@@ -65,7 +76,7 @@ int		ft_pointer_itoa(unsigned long n, int flag, char *result)
 	return (size);
 }
 
-int		ft_strlen(const char *str)
+int	ft_strlen(const char *str)
 {
 	int	i;
 
@@ -77,7 +88,7 @@ int		ft_strlen(const char *str)
 	return (i);
 }
 
-int		ft_strnlen(const char *str, int max_len)
+int	ft_strnlen(const char *str, int max_len)
 {
 	int	i;
 

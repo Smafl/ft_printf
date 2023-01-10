@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_zero_space.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 23:05:31 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/01/10 23:06:03 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		print_zero(int width)
+int	print_zero(int width)
 {
-	int printf_len;
+	int	printf_len;
 
 	printf_len = 0;
 	while (width != 0)
@@ -19,9 +30,9 @@ int		print_zero(int width)
 	return (printf_len);
 }
 
-int		print_space(int width)
+int	print_space(int width)
 {
-	int printf_len;
+	int	printf_len;
 
 	printf_len = 0;
 	while (width != 0)

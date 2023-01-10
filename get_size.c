@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_size.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 23:06:52 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/01/10 23:06:54 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		get_size_dec(long n, int base)
+int	get_size_dec(long n, int base)
 {
 	int	size;
 
@@ -16,7 +27,7 @@ int		get_size_dec(long n, int base)
 	return (size);
 }
 
-int		get_size_ul(unsigned long n, int base)
+int	get_size_ul(unsigned long n, int base)
 {
 	int	size;
 

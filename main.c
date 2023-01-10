@@ -5,9 +5,9 @@
 
 int checker(void)
 {
-	printf("return %d\n", ft_printf("[%-010.3s]\n", "hello"));
+	printf("return %d\n", ft_printf("%d\n", 3478));
 	printf("\n");
-	printf("return %d\n", printf("[%-010.3s]\n", "hello"));
+	printf("return %d\n", printf("%d\n", 3478));
 
 	return (0);
 }

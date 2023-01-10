@@ -1,17 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_dec_hex_p.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 23:02:36 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/01/10 23:17:21 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int print_dec_int(long nbr, int flag, int width, int precision, int base)
+int	print_dec_int(long nbr, int flag, int width, int precision, int base)
 {
-	int len;
-	int sign_len;
-	int zero_len;
-	int space_len;
-	int fill_len;
-	int len_with_precision;
-	int printf_len;
-	unsigned short sign;
-	char array[18];
+	int				len;
+	int				sign_len;
+	int				zero_len;
+	int				space_len;
+	int				fill_len;
+	int 			len_with_precision;
+	int 			printf_len;
+	unsigned short	sign;
+	char			array[18];
 
 	printf_len = 0;
 	if (nbr == LONG_MIN && !(flag & FLAG_POINTER))
@@ -23,7 +34,7 @@ int print_dec_int(long nbr, int flag, int width, int precision, int base)
 	else if (base == 16)
 		len = ft_pointer_itoa((unsigned long)nbr, flag, array);
 	else
-		len = ft_itoa(nbr, base, flag,  array);
+		len = ft_itoa(nbr, base, flag, array);
 	len_with_precision = get_max(precision, len);
 	sign = get_sign(nbr, flag, base, &sign_len);
 	fill_len = get_max(width - sign_len - len_with_precision, 0);

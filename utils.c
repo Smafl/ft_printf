@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_char_int.c                                     :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:10:09 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/10 23:27:41 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/11 18:20:23 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ unsigned short	get_sign(long nbr, int flag, int base, int *sign_len)
 
 unsigned short	get_sign_base_10(long nbr, int flag, int *sign_len)
 {
+	*sign_len = 0;
 	if (nbr >= 0)
 	{	
 		if ((flag & FLAG_SPACE) && !(flag & FLAG_PLUS))
@@ -71,10 +72,12 @@ unsigned short	get_sign_base_10(long nbr, int flag, int *sign_len)
 		*sign_len = 1;
 		return ('-');
 	}
+	return (0);
 }
 
 unsigned short	get_sign_base_16(long nbr, int flag, int *sign_len)
 {
+	*sign_len = 0;
 	if (nbr == 0 && !(flag & FLAG_POINTER))
 		;
 	else if (flag & FLAG_POINTER)

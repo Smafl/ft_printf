@@ -5,9 +5,9 @@
 
 int checker(void)
 {
-	printf("return %d\n", ft_printf("%d\n", 3478));
+	printf("return %d\n", ft_printf(" %#x %#x %#x %#x %#x %#x %#x", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42));
 	printf("\n");
-	printf("return %d\n", printf("%d\n", 3478));
+	printf("return %d\n", printf(" %#x %#x %#x %#x %#x %#x %#x", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42));
 
 	return (0);
 }

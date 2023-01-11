@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:02:36 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/10 23:17:21 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/11 18:06:46 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	print_dec_int(long nbr, int flag, int width, int precision, int base)
 		zero_len = len_with_precision - len;
 		space_len = fill_len;
 	}
-	if (!(flag & FLAG_MINUS))
+    	if (!(flag & FLAG_MINUS))
 	{
 		if (print_space(space_len) == -1)
 			return (-1);

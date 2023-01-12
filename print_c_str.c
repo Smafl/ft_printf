@@ -1,12 +1,13 @@
 
 #include "ft_printf.h"
 
-int print_str(const char *str, int flag, int width, int precision)
+int	print_str(const char *str, int flag, int width, int precision)
 {
-	int len;
-	int printf_len;
-	int zero_len;
-	int space_len;
+	int	len;
+	int	printf_len;
+	int	zero_len;
+	int	space_len;
+	int	temp_len;
 
 	printf_len = 0;
 	if (flag & FLAG_MINUS)
@@ -30,7 +31,6 @@ int print_str(const char *str, int flag, int width, int precision)
 		zero_len = 0;
 		space_len = 0;
 	}
-	// part below is the same with print_c
 	if (!(flag & FLAG_MINUS))
 	{
 		if (print_space(space_len) == -1)
@@ -56,11 +56,11 @@ int print_str(const char *str, int flag, int width, int precision)
 	return (printf_len);
 }
 
-int print_c(char c, int flag, int width)
+int	print_c(char c, int flag, int width)
 {
-	int printf_len;
-	int zero_len;
-	int space_len;
+	int	printf_len;
+	int	zero_len;
+	int	space_len;
 
 	printf_len = 0;
 	if (flag & FLAG_MINUS)
@@ -80,7 +80,6 @@ int print_c(char c, int flag, int width)
 		zero_len = 0;
 		space_len = 0;
 	}
-	// part below is the same with print_str
 	if (!(flag & FLAG_MINUS))
 	{
 		if (print_space(space_len) == -1)

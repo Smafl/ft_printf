@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:02:26 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/12 17:37:03 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/12 21:46:28 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,22 @@ int				ft_atoi(const char *str);
 int				ft_strlen(const char *str);
 int				ft_strnlen(const char *str, int max_len);
 
+// new_state.c
+int				is_str(const char *args_str,
+					int flag, int width, int precision);
+int				is_hex(const char *str, unsigned long args,
+					int flag, int width, int precision);
+int				is_pointer(const char *str, unsigned long args,
+					int flag, int width, int precision);
+// void			new_state(int new_state, int *flag, int *width, int *precision);
+
 // print_c_str.c
 int				print_str(const char *str, int flag, int width, int precision);
 int				print_c(char c, int flag, int width);
 
 // print_dec_hex_p.c
-int				print_dec_int(long nbr, int flag, int width, int precision, int base);
+int				print_dec_int
+				(long nbr, int flag, int width, int precision, int base);
 
 // print_zero_space.c norm+
 int				print_zero(int width);

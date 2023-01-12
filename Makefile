@@ -4,6 +4,7 @@ SRC = ft_printf.c\
 get_size.c\
 is_type_flag.c\
 libft.c\
+new_state.c\
 print_c_str.c\
 print_dec_hex_p.c\
 print_zero_space.c\

@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/12 17:36:22 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/12 20:47:02 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_printf(const char *str, ...)
 	int				printf_len;
 	int				temp_return;
 	const char		*text_start;
-	const char		*args_str;
 	va_list			args;
 	enum e_state	state;
 	enum e_state	new_state;
@@ -66,31 +65,23 @@ int	ft_printf(const char *str, ...)
 					temp_return = print_c('%', flag, width);
 				}
 				else if (str[-1] == 's')
-				{
-					args_str = va_arg(args, char *);
-					if (args_str == NULL)
-						temp_return
-							= print_str("(null)", flag, width, precision);
-					else
-						temp_return
-							= print_str(args_str, flag, width, precision);
-				}
+					temp_return
+						= is_str(va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
 					temp_return = print_c(va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')
-					temp_return = print_dec_int(va_arg(args, int), flag, width, precision, 10);
+					temp_return = print_dec_int(
+							va_arg(args, int), flag, width, precision, 10);
 				else if (str[-1] == 'u')
-					temp_return = print_dec_int(va_arg(args, unsigned int), flag & ~FLAG_PLUS & ~FLAG_SPACE, width, precision, 10);
+					temp_return = print_dec_int(va_arg(args, unsigned int),
+							flag & ~FLAG_PLUS & ~FLAG_SPACE,
+							width, precision, 10);
 				else if (str[-1] == 'x' || str[-1] == 'X')
-				{
-					if (str[-1] == 'X')
-						flag |= FLAG_UPPERCASE;
-					temp_return = print_dec_int((unsigned long)va_arg(args, unsigned int), flag, width, precision, 16);}
+					temp_return = is_hex(str, (unsigned long)va_arg
+							(args, unsigned int), flag, width, precision);
 				else if (str[-1] == 'p')
-				{
-					flag |= FLAG_POINTER;
-					temp_return = print_dec_int((unsigned long)va_arg(args, void *), flag, width, precision, 16);
-				}
+					temp_return = is_pointer(str, (unsigned long)va_arg
+							(args, void *), flag, width, precision);
 				if (temp_return == -1)
 					return (-1);
 				else

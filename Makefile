@@ -1,13 +1,15 @@
 CC = cc
 NAME = libftprintf.a
 SRC = ft_printf.c\
-get_char_int.c\
 get_size.c\
 is_type_flag.c\
 libft.c\
 print_c_str.c\
 print_dec_hex_p.c\
-print_zero_space.c
+print_zero_space.c\
+states_enter.c\
+states_exit.c\
+utils.c
 OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 

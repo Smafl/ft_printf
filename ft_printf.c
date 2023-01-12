@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/01/12 17:36:22 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 #include <stdio.h>
@@ -7,120 +18,45 @@
 #include <stdlib.h>
 #include <limits.h>
 
-int ft_printf(const char *str, ...)
+int	ft_printf(const char *str, ...)
 {
-	int flag;
-	int width;
-	int precision;
-	int printf_len;
-	int temp_return;
-	const char *text_start;
-	const char *args_str;
+	int				flag;
+	int				width;
+	int				precision;
+	int				printf_len;
+	int				temp_return;
+	const char		*text_start;
+	const char		*args_str;
+	va_list			args;
+	enum e_state	state;
+	enum e_state	new_state;
 
 	text_start = str;
-	va_list args;
 	va_start(args, str);
-
 	width = 0;
 	precision = 0;
 	printf_len = 0;
 	temp_return = 0;
-	enum e_state state = STATE_TEXT;
-	enum e_state new_state = state;
+	state = STATE_TEXT;
+	new_state = state;
 	while (state != STATE_END)
 	{
-// text
 		if (state == STATE_TEXT)
-		{
-			if (*str == '%')
-				new_state = STATE_FORMAT;
-		}
-
-// format
+			new_state = state_text(str);
 		else if (state == STATE_FORMAT)
-		{
-			if (is_flag(*str))
-			{
-				// assign a new value to int flag
-				flag = get_flag(*str);
-				new_state = STATE_FLAG;
-			}
-			else if (*str >= '1' && *str <= '9')
-				new_state = STATE_WIDTH;
-			else if (*str == '.')
-				new_state = STATE_UNDEF_PRECISION;
-			else if (is_type(*str))
-				new_state = STATE_TYPE;
-			else
-				new_state = STATE_TEXT;
-		}
-
-// flag
+			new_state = state_format(str, &flag);
 		else if (state == STATE_FLAG)
-		{
-			if (is_flag(*str))
-				// add a new flag with bitwise OR operator
-				flag |= get_flag(*str);
-			else if (*str >= '1' && *str <= '9')
-				new_state = STATE_WIDTH;
-			else if (*str == '.')
-				new_state = STATE_UNDEF_PRECISION;
-			else if (is_type(*str))
-				new_state = STATE_TYPE;
-			else
-				new_state = STATE_TEXT;
-		}
-
-// width
+			new_state = state_flag(str, &flag);
 		else if (state == STATE_WIDTH)
-		{
-			if (*str >= '0' && *str <= '9')
-				; // ok
-			else if (*str == '.')
-				new_state = STATE_UNDEF_PRECISION;
-			else if (is_type(*str))
-				new_state = STATE_TYPE;
-			else
-				new_state = STATE_TEXT;
-		}
-
-// undef_precision
+			new_state = state_width(str);
 		else if (state == STATE_UNDEF_PRECISION)
-		{
-			if (*str == '-')
-				new_state = STATE_PRECISION;
-			else if (*str >= '0' && *str <= '9')
-				new_state = STATE_PRECISION;
-			else if (is_type(*str))
-				new_state = STATE_TYPE;
-			else
-				new_state = STATE_TEXT;
-		}
-
-// precision %23%%d
+			new_state = state_undef_precision(str);
 		else if (state == STATE_PRECISION)
-		{
-			if (*str >= '0' && *str <= '9')
-				; // ok
-			else if (is_type(*str))
-				new_state = STATE_TYPE;
-			else
-				new_state = STATE_TEXT;
-		}
-
-// type
+			new_state = state_precision(str);
 		else if (state == STATE_TYPE)
-		{
-			if (*str == '%')
-				new_state = STATE_FORMAT;
-			else
-				new_state = STATE_TEXT;
-		}
-
-// end
+			new_state = state_type(str);
 		if (*str == '\0')
 			new_state = STATE_END;
-// print state
 		if (state != new_state)
 		{
 			if (state == STATE_TYPE)
@@ -133,9 +69,11 @@ int ft_printf(const char *str, ...)
 				{
 					args_str = va_arg(args, char *);
 					if (args_str == NULL)
-						temp_return = print_str("(null)", flag, width, precision);
+						temp_return
+							= print_str("(null)", flag, width, precision);
 					else
-						temp_return = print_str(args_str, flag, width, precision);
+						temp_return
+							= print_str(args_str, flag, width, precision);
 				}
 				else if (str[-1] == 'c')
 					temp_return = print_c(va_arg(args, int), flag, width);

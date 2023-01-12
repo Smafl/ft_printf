@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:02:26 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/11 18:21:57 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/12 17:37:03 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,17 @@ int				print_dec_int(long nbr, int flag, int width, int precision, int base);
 // print_zero_space.c norm+
 int				print_zero(int width);
 int				print_space(int width);
+
+// states_enter.c
+enum e_state	state_text(const char *str);
+enum e_state	state_format(const char *str, int *flag);
+enum e_state	state_flag(const char *str, int *flag);
+enum e_state	state_width(const char *str);
+enum e_state	state_undef_precision(const char *str);
+
+// states_exit.c
+enum e_state	state_precision(const char *str);
+enum e_state	state_type(const char *str);
 
 // utils.c norm+
 int				get_max(int precision, int len);

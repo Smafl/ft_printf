@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:02:26 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 19:19:25 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/13 21:05:19 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int				ft_printf_if_is_hex(
 					int precision);
 int				ft_printf_if_is_pointer(
 					unsigned long args, int flag, int width, int precision);
-// void			new_state(int new_state, int *flag, int *width, int *precision);
 
 // print_c_str.c
 int				ft_printf_str_print(
@@ -63,13 +62,13 @@ int				ft_printf_dec_hex_print(
 int				ft_printf_zero_print(int width);
 int				ft_printf_space_print(int width);
 
-// states_proceed_1.c
+// states_proceed_1.c norm+
 enum e_state	ft_printf_if_state_text(char str);
 enum e_state	ft_printf_if_state_format(char str, int *flag);
 enum e_state	ft_printf_if_state_flag(char str, int *flag);
 enum e_state	ft_printf_if_state_width(char str);
 
-// states_proceed_2.c
+// states_proceed_2.c norm+
 enum e_state	ft_printf_if_state_undef_precision(char str);
 enum e_state	ft_printf_if_state_precision(char str);
 enum e_state	ft_printf_if_state_type(char str);

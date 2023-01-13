@@ -6,13 +6,14 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:39:08 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 19:19:10 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/13 21:05:14 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printf_if_is_str(const char *args_str, int flag, int width, int precision)
+int	ft_printf_if_is_str(
+	const char *args_str, int flag, int width, int precision)
 {
 	int	printf_len;
 
@@ -26,7 +27,8 @@ int	ft_printf_if_is_str(const char *args_str, int flag, int width, int precision
 	return (printf_len);
 }
 
-int	ft_printf_if_is_hex(const char *str, unsigned long args, int flag, int width, int precision)
+int	ft_printf_if_is_hex(
+	const char *str, unsigned long args, int flag, int width, int precision)
 {
 	int	printf_len;
 
@@ -39,7 +41,8 @@ int	ft_printf_if_is_hex(const char *str, unsigned long args, int flag, int width
 	return (printf_len);
 }
 
-int	ft_printf_if_is_pointer(unsigned long args, int flag, int width, int precision)
+int	ft_printf_if_is_pointer(
+	unsigned long args, int flag, int width, int precision)
 {
 	int	printf_len;
 
@@ -50,8 +53,3 @@ int	ft_printf_if_is_pointer(unsigned long args, int flag, int width, int precisi
 		return (-1);
 	return (printf_len);
 }
-
-// void	new_state(int new_state, int *flag, int *width, int *precision)
-// {
-// 	;
-// }

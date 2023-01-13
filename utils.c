@@ -6,27 +6,25 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:10:09 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/11 18:20:23 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/13 16:32:20 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	get_max(int precision, int len)
+int	ft_printf_get_max(int precision, int len)
 {
 	if (precision <= len)
 		return (len);
 	return (precision);
 }
 
-char	get_hex_digit(int digit, int flag)
+char	ft_printf_get_hex_digit(int digit, int flag)
 {
 	char	c;
 
 	if (digit < 10)
-	{
 		c = '0' + digit;
-	}
 	else
 	{
 		if (flag & FLAG_UPPERCASE)
@@ -37,21 +35,17 @@ char	get_hex_digit(int digit, int flag)
 	return (c);
 }
 
-unsigned short	get_sign(long nbr, int flag, int base, int *sign_len)
+unsigned short	ft_printf_get_sign(long nbr, int flag, int *sign_len)
 {
-	if (base == 10)
-	{
-		return (get_sign_base_10(nbr, flag, sign_len));
-	}
-	else if (base == 16)
-	{
-		return (get_sign_base_16(nbr, flag, sign_len));
-	}
+	if (flag & FLAG_BASE_DEC)
+		return (ft_printf_get_sign_base_10(nbr, flag, sign_len));
+	else
+		return (ft_printf_get_sign_base_16(nbr, flag, sign_len));
 	*sign_len = 0;
 	return (0);
 }
 
-unsigned short	get_sign_base_10(long nbr, int flag, int *sign_len)
+unsigned short	ft_printf_get_sign_base_10(long nbr, int flag, int *sign_len)
 {
 	*sign_len = 0;
 	if (nbr >= 0)
@@ -75,7 +69,7 @@ unsigned short	get_sign_base_10(long nbr, int flag, int *sign_len)
 	return (0);
 }
 
-unsigned short	get_sign_base_16(long nbr, int flag, int *sign_len)
+unsigned short	ft_printf_get_sign_base_16(long nbr, int flag, int *sign_len)
 {
 	*sign_len = 0;
 	if (nbr == 0 && !(flag & FLAG_POINTER))

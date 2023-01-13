@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/12 20:47:02 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/13 19:20:09 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,19 @@ int	ft_printf(const char *str, ...)
 	while (state != STATE_END)
 	{
 		if (state == STATE_TEXT)
-			new_state = state_text(str);
+			new_state = ft_printf_if_state_text(*str);
 		else if (state == STATE_FORMAT)
-			new_state = state_format(str, &flag);
+			new_state = ft_printf_if_state_format(*str, &flag);
 		else if (state == STATE_FLAG)
-			new_state = state_flag(str, &flag);
+			new_state = ft_printf_if_state_flag(*str, &flag);
 		else if (state == STATE_WIDTH)
-			new_state = state_width(str);
+			new_state = ft_printf_if_state_width(*str);
 		else if (state == STATE_UNDEF_PRECISION)
-			new_state = state_undef_precision(str);
+			new_state = ft_printf_if_state_undef_precision(*str);
 		else if (state == STATE_PRECISION)
-			new_state = state_precision(str);
+			new_state = ft_printf_if_state_precision(*str);
 		else if (state == STATE_TYPE)
-			new_state = state_type(str);
+			new_state = ft_printf_if_state_type(*str);
 		if (*str == '\0')
 			new_state = STATE_END;
 		if (state != new_state)
@@ -62,26 +62,37 @@ int	ft_printf(const char *str, ...)
 			{
 				if (str[-1] == '%')
 				{
-					temp_return = print_c('%', flag, width);
+					temp_return = ft_printf_c_print('%', flag, width);
 				}
 				else if (str[-1] == 's')
 					temp_return
-						= is_str(va_arg(args, char *), flag, width, precision);
+						= ft_printf_if_is_str(
+							va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
-					temp_return = print_c(va_arg(args, int), flag, width);
+					temp_return = ft_printf_c_print(
+							va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')
-					temp_return = print_dec_int(
-							va_arg(args, int), flag, width, precision, 10);
+				{
+					flag |= FLAG_BASE_DEC;
+					temp_return = ft_printf_dec_hex_print(
+							va_arg(args, int), flag, width, precision);
+				}
 				else if (str[-1] == 'u')
-					temp_return = print_dec_int(va_arg(args, unsigned int),
+				{
+					flag |= FLAG_BASE_DEC;
+					temp_return = ft_printf_dec_hex_print(
+							va_arg(args, unsigned int),
 							flag & ~FLAG_PLUS & ~FLAG_SPACE,
-							width, precision, 10);
+							width, precision);
+				}
 				else if (str[-1] == 'x' || str[-1] == 'X')
-					temp_return = is_hex(str, (unsigned long)va_arg
+					temp_return = ft_printf_if_is_hex(
+							str, (unsigned long)va_arg
 							(args, unsigned int), flag, width, precision);
 				else if (str[-1] == 'p')
-					temp_return = is_pointer(str, (unsigned long)va_arg
-							(args, void *), flag, width, precision);
+					temp_return = ft_printf_if_is_pointer(
+							(unsigned long)va_arg(args, void *),
+							flag, width, precision);
 				if (temp_return == -1)
 					return (-1);
 				else
@@ -90,18 +101,25 @@ int	ft_printf(const char *str, ...)
 					temp_return = 0;
 				}
 			}
+			if (state == STATE_TEXT)
+			{
+				if (write(1, text_start, str - text_start) == -1)
+					return (-1);
+				else
+					printf_len += str - text_start;
+			}
 			if (new_state == STATE_WIDTH)
 			{
-				width = ft_atoi(str);
-				flag |= HAS_WIDTH;
+				width = ft_printf_atoi(str);
+				flag |= FLAG_WIDTH;
 			}
 			if (new_state == STATE_UNDEF_PRECISION)
 			{
 				precision = 0;
-				flag |= HAS_PRECISION;
+				flag |= FLAG_PRECISION;
 			}
 			if (new_state == STATE_PRECISION)
-				precision = ft_atoi(str);
+				precision = ft_printf_atoi(str);
 			if (new_state == STATE_FORMAT)
 			{
 				flag = 0;
@@ -110,13 +128,6 @@ int	ft_printf(const char *str, ...)
 			}
 			if (new_state == STATE_TEXT)
 				text_start = str;
-			if (state == STATE_TEXT)
-			{
-				if (write(1, text_start, str - text_start) == -1)
-					return (-1);
-				else
-					printf_len += str - text_start;
-			}
 			state = new_state;
 		}
 		str++;

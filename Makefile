@@ -3,13 +3,13 @@ NAME = libftprintf.a
 SRC = ft_printf.c\
 get_size.c\
 is_type_flag.c\
-libft.c\
+libft_ft_printf.c\
 new_state.c\
 print_c_str.c\
 print_dec_hex_p.c\
 print_zero_space.c\
-states_enter.c\
-states_exit.c\
+states_proceed_1.c\
+states_proceed_2.c\
 utils.c
 OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror

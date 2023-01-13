@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.c                                            :+:      :+:    :+:   */
+/*   libft_ft_printf.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:06:12 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/10 23:06:32 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/13 16:44:24 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_atoi(const char *str)
+int	ft_printf_atoi(const char *str)
 {
 	int	sign;
 	int	result;
@@ -32,13 +32,13 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-int	ft_itoa(long n, int base, int flag, char *result)
+int	ft_printf_dec_itoa(long n, int flag, char *result)
 {
 	int		i;
 	int		size;
 	long	digit;
 
-	size = get_size_dec(n, base);
+	size = ft_printf_get_size_dec(n);
 	i = size;
 	digit = (long)n;
 	if (n < 0)
@@ -46,29 +46,27 @@ int	ft_itoa(long n, int base, int flag, char *result)
 	result[i--] = '\0';
 	while (digit >= 0)
 	{
-		result[i--] = get_hex_digit(digit % base, flag);
-		digit /= base;
+		result[i--] = ft_printf_get_hex_digit(digit % 10, flag);
+		digit /= 10;
 		if (digit == 0)
 			break ;
 	}
 	return (size);
 }
 
-int	ft_pointer_itoa(unsigned long n, int flag, char *result)
+int	ft_printf_hex_itoa(unsigned long n, int flag, char *result)
 {
 	int				i;
 	int				size;
 	unsigned long	digit;
 
-	size = get_size_ul(n, 16);
+	size = ft_printf_get_size_ul(n);
 	i = size;
 	digit = (unsigned long)n;
-	if (n < 0)
-		digit *= -1;
 	result[i--] = '\0';
 	while (digit >= 0)
 	{
-		result[i--] = get_hex_digit(digit % 16, flag);
+		result[i--] = ft_printf_get_hex_digit(digit % 16, flag);
 		digit /= 16;
 		if (digit == 0)
 			break ;
@@ -76,7 +74,7 @@ int	ft_pointer_itoa(unsigned long n, int flag, char *result)
 	return (size);
 }
 
-int	ft_strlen(const char *str)
+int	ft_printf_strlen(const char *str)
 {
 	int	i;
 
@@ -88,7 +86,7 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
-int	ft_strnlen(const char *str, int max_len)
+int	ft_printf_strnlen(const char *str, int max_len)
 {
 	int	i;
 

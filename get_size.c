@@ -6,13 +6,13 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:06:52 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/10 23:06:54 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/13 16:19:45 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	get_size_dec(long n, int base)
+int	ft_printf_get_size_dec(long n)
 {
 	int	size;
 
@@ -21,13 +21,13 @@ int	get_size_dec(long n, int base)
 		size = 1;
 	while (n)
 	{
-		n /= base;
+		n /= 10;
 		size++;
 	}
 	return (size);
 }
 
-int	get_size_ul(unsigned long n, int base)
+int	ft_printf_get_size_ul(unsigned long n)
 {
 	int	size;
 
@@ -36,7 +36,7 @@ int	get_size_ul(unsigned long n, int base)
 		size = 1;
 	while (n)
 	{
-		n /= base;
+		n /= 16;
 		size++;
 	}
 	return (size);

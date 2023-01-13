@@ -3,3 +3,4 @@ test/
 test_return.c
 a.out.dSYM/
 .vscode/
+.DS_Store

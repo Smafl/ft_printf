@@ -1,5 +1,6 @@
 
 #include "ft_printf.h"
+#include "private.h"
 #include <stdio.h>
 #include <limits.h>
 

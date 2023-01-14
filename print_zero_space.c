@@ -6,13 +6,13 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:05:31 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 19:32:33 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:31:29 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
-int	ft_printf_zero_print(int width)
+int	ft_printf_zero(int width)
 {
 	int	printf_len;
 
@@ -22,11 +22,12 @@ int	ft_printf_zero_print(int width)
 		if (write(1, "0", 1) == -1)
 			return (-1);
 		width--;
+		printf_len++;
 	}
 	return (printf_len);
 }
 
-int	ft_printf_space_print(int width)
+int	ft_printf_space(int width)
 {
 	int	printf_len;
 
@@ -35,7 +36,8 @@ int	ft_printf_space_print(int width)
 	{
 		if (write(1, " ", 1) == -1)
 			return (-1);
-			width--;
+		width--;
+		printf_len++;
 	}
 	return (printf_len);
 }

@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:39:08 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 21:05:14 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:18:00 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
 int	ft_printf_if_is_str(
 	const char *args_str, int flag, int width, int precision)
@@ -19,9 +19,9 @@ int	ft_printf_if_is_str(
 
 	printf_len = 0;
 	if (args_str == NULL)
-		printf_len = ft_printf_str_print("(null)", flag, width, precision);
+		printf_len = ft_printf_str("(null)", flag, width, precision);
 	else
-		printf_len = ft_printf_str_print(args_str, flag, width, precision);
+		printf_len = ft_printf_str(args_str, flag, width, precision);
 	if (printf_len == -1)
 		return (-1);
 	return (printf_len);
@@ -35,7 +35,7 @@ int	ft_printf_if_is_hex(
 	printf_len = 0;
 	if (str[-1] == 'X')
 		flag |= FLAG_UPPERCASE;
-	printf_len = ft_printf_dec_hex_print(args, flag, width, precision);
+	printf_len = ft_printf_diuxp(args, flag, width, precision);
 	if (printf_len == -1)
 		return (-1);
 	return (printf_len);
@@ -48,7 +48,7 @@ int	ft_printf_if_is_pointer(
 
 	printf_len = 0;
 	flag |= FLAG_POINTER;
-	printf_len = ft_printf_dec_hex_print(args, flag, width, precision);
+	printf_len = ft_printf_diuxp(args, flag, width, precision);
 	if (printf_len == -1)
 		return (-1);
 	return (printf_len);

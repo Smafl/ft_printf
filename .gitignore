@@ -1,6 +1,6 @@
 a.out
 test/
 test_return.c
-a.out.dSYM/
+*.dSYM/
 .vscode/
 .DS_Store

@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:10:09 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 16:32:20 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:18:13 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
 int	ft_printf_get_max(int precision, int len)
 {

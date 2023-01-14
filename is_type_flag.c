@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 18:21:05 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 14:13:23 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:18:51 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
 bool	ft_printf_is_type(char c)
 {

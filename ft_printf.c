@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 20:05:33 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:17:52 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
@@ -62,25 +62,25 @@ int	ft_printf(const char *str, ...)
 			{
 				if (str[-1] == '%')
 				{
-					temp_return = ft_printf_c_print('%', flag, width);
+					temp_return = ft_printf_c('%', flag, width);
 				}
 				else if (str[-1] == 's')
 					temp_return
 						= ft_printf_if_is_str(
 							va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
-					temp_return = ft_printf_c_print(
+					temp_return = ft_printf_c(
 							va_arg(args, int), flag, width);
 				else if (str[-1] == 'd' || str[-1] == 'i')
 				{
 					flag |= FLAG_BASE_DEC;
-					temp_return = ft_printf_dec_hex_print(
+					temp_return = ft_printf_diuxp(
 							va_arg(args, int), flag, width, precision);
 				}
 				else if (str[-1] == 'u')
 				{
 					flag |= FLAG_BASE_DEC;
-					temp_return = ft_printf_dec_hex_print(
+					temp_return = ft_printf_diuxp(
 							va_arg(args, unsigned int),
 							flag & ~FLAG_PLUS & ~FLAG_SPACE,
 							width, precision);

@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:06:52 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 16:19:45 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:28:12 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
 int	ft_printf_get_size_dec(long n)
 {
@@ -27,7 +27,7 @@ int	ft_printf_get_size_dec(long n)
 	return (size);
 }
 
-int	ft_printf_get_size_ul(unsigned long n)
+int	ft_printf_get_size_hex(unsigned long n)
 {
 	int	size;
 

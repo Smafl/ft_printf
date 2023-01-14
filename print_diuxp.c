@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_dec_hex_p.c                                  :+:      :+:    :+:   */
+/*   print_diuxp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:02:36 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 19:31:38 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:17:45 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
-int	ft_printf_dec_hex_print(long nbr, int flag, int width, int precision)
+int	ft_printf_diuxp(long nbr, int flag, int width, int precision)
 {
 	int				len;
 	int				sign_len;
@@ -46,7 +46,7 @@ int	ft_printf_dec_hex_print(long nbr, int flag, int width, int precision)
 	}
 	if (!(flag & FLAG_MINUS))
 	{
-		if (ft_printf_space_print(space_len) == -1)
+		if (ft_printf_space(space_len) == -1)
 			return (-1);
 		else
 			printf_len += space_len;
@@ -55,7 +55,7 @@ int	ft_printf_dec_hex_print(long nbr, int flag, int width, int precision)
 		return (-1);
 	else
 		printf_len += sign_len;
-	if (ft_printf_zero_print(zero_len) == -1)
+	if (ft_printf_zero(zero_len) == -1)
 		return (-1);
 	else
 		printf_len += zero_len;
@@ -65,7 +65,7 @@ int	ft_printf_dec_hex_print(long nbr, int flag, int width, int precision)
 		printf_len += len;
 	if (flag & FLAG_MINUS)
 	{
-		if (ft_printf_space_print(space_len) == -1)
+		if (ft_printf_space(space_len) == -1)
 			return (-1);
 		else
 			printf_len += space_len;

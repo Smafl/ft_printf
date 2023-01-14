@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:26:29 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 16:43:29 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:18:17 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
 enum e_state	ft_printf_if_state_undef_precision(char str)
 {

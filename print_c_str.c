@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_c_str.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/14 16:18:30 by ekulichk          #+#    #+#             */
+/*   Updated: 2023/01/14 16:18:34 by ekulichk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
-int	ft_printf_str_print(const char *str, int flag, int width, int precision)
+int	ft_printf_str(const char *str, int flag, int width, int precision)
 {
 	int	len;
 	int	printf_len;
@@ -23,12 +34,12 @@ int	ft_printf_str_print(const char *str, int flag, int width, int precision)
 		space_len = width - len;
 	if (!(flag & FLAG_MINUS))
 	{
-		if (ft_printf_space_print(space_len) == -1)
+		if (ft_printf_space(space_len) == -1)
 			return (-1);
 		else
 			printf_len += space_len;
 	}
-	if (ft_printf_zero_print(zero_len) == -1)
+	if (ft_printf_zero(zero_len) == -1)
 		return (-1);
 	else
 		printf_len += zero_len;
@@ -38,7 +49,7 @@ int	ft_printf_str_print(const char *str, int flag, int width, int precision)
 		printf_len += len;
 	if (flag & FLAG_MINUS)
 	{
-		if (ft_printf_space_print(space_len) == -1)
+		if (ft_printf_space(space_len) == -1)
 			return (-1);
 		else
 			printf_len += space_len;
@@ -46,7 +57,7 @@ int	ft_printf_str_print(const char *str, int flag, int width, int precision)
 	return (printf_len);
 }
 
-int	ft_printf_c_print(char c, int flag, int width)
+int	ft_printf_c(char c, int flag, int width)
 {
 	int	printf_len;
 	int	zero_len;
@@ -63,12 +74,12 @@ int	ft_printf_c_print(char c, int flag, int width)
 		space_len = width - 1;
 	if (!(flag & FLAG_MINUS))
 	{
-		if (ft_printf_space_print(space_len) == -1)
+		if (ft_printf_space(space_len) == -1)
 			return (-1);
 		else
 			printf_len += space_len;
 	}
-	if (ft_printf_zero_print(zero_len) == -1)
+	if (ft_printf_zero(zero_len) == -1)
 		return (-1);
 	else
 		printf_len += zero_len;
@@ -78,7 +89,7 @@ int	ft_printf_c_print(char c, int flag, int width)
 		printf_len += 1;
 	if (flag & FLAG_MINUS)
 	{
-		if (ft_printf_space_print(space_len) == -1)
+		if (ft_printf_space(space_len) == -1)
 			return (-1);
 		else
 			printf_len += space_len;

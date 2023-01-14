@@ -6,11 +6,11 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:06:12 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/13 16:44:24 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:28:33 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "private.h"
 
 int	ft_printf_atoi(const char *str)
 {
@@ -60,7 +60,7 @@ int	ft_printf_hex_itoa(unsigned long n, int flag, char *result)
 	int				size;
 	unsigned long	digit;
 
-	size = ft_printf_get_size_ul(n);
+	size = ft_printf_get_size_hex(n);
 	i = size;
 	digit = (unsigned long)n;
 	result[i--] = '\0';

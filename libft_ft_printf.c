@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:06:12 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/14 16:28:33 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:41:43 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,17 @@ int	ft_printf_dec_itoa(long n, int flag, char *result)
 {
 	int		i;
 	int		size;
-	long	digit;
 
 	size = ft_printf_get_size_dec(n);
 	i = size;
-	digit = (long)n;
 	if (n < 0)
-		digit *= -1;
+		n *= -1;
 	result[i--] = '\0';
-	while (digit >= 0)
+	while (n >= 0)
 	{
-		result[i--] = ft_printf_get_hex_digit(digit % 10, flag);
-		digit /= 10;
-		if (digit == 0)
+		result[i--] = ft_printf_get_hex_digit(n % 10, flag);
+		n /= 10;
+		if (n == 0)
 			break ;
 	}
 	return (size);
@@ -58,17 +56,15 @@ int	ft_printf_hex_itoa(unsigned long n, int flag, char *result)
 {
 	int				i;
 	int				size;
-	unsigned long	digit;
 
 	size = ft_printf_get_size_hex(n);
 	i = size;
-	digit = (unsigned long)n;
 	result[i--] = '\0';
-	while (digit >= 0)
+	while (n >= 0)
 	{
-		result[i--] = ft_printf_get_hex_digit(digit % 16, flag);
-		digit /= 16;
-		if (digit == 0)
+		result[i--] = ft_printf_get_hex_digit(n % 16, flag);
+		n /= 16;
+		if (n == 0)
 			break ;
 	}
 	return (size);

@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/14 16:17:52 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/17 19:37:20 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,25 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <limits.h>
+
+enum e_state	get_new_state(enum e_state state, char c, int *flag)
+{
+	if (state == STATE_TEXT)
+		return (ft_printf_if_state_text(c));
+	if (state == STATE_FORMAT)
+		return (ft_printf_if_state_format(c, flag));
+	if (state == STATE_FLAG)
+		return (ft_printf_if_state_flag(c, flag));
+	if (state == STATE_WIDTH)
+		return (ft_printf_if_state_width(c));
+	if (state == STATE_UNDEF_PRECISION)
+		return (ft_printf_if_state_undef_precision(c));
+	if (state == STATE_PRECISION)
+		return (ft_printf_if_state_precision(c));
+	if (state == STATE_TYPE)
+		return (ft_printf_if_state_type(c));
+	return (state);
+}
 
 int	ft_printf(const char *str, ...)
 {
@@ -37,23 +56,9 @@ int	ft_printf(const char *str, ...)
 	printf_len = 0;
 	temp_return = 0;
 	state = STATE_TEXT;
-	new_state = state;
 	while (state != STATE_END)
 	{
-		if (state == STATE_TEXT)
-			new_state = ft_printf_if_state_text(*str);
-		else if (state == STATE_FORMAT)
-			new_state = ft_printf_if_state_format(*str, &flag);
-		else if (state == STATE_FLAG)
-			new_state = ft_printf_if_state_flag(*str, &flag);
-		else if (state == STATE_WIDTH)
-			new_state = ft_printf_if_state_width(*str);
-		else if (state == STATE_UNDEF_PRECISION)
-			new_state = ft_printf_if_state_undef_precision(*str);
-		else if (state == STATE_PRECISION)
-			new_state = ft_printf_if_state_precision(*str);
-		else if (state == STATE_TYPE)
-			new_state = ft_printf_if_state_type(*str);
+		new_state = get_new_state(state, *str, &flag);
 		if (*str == '\0')
 			new_state = STATE_END;
 		if (state != new_state)
@@ -61,12 +66,9 @@ int	ft_printf(const char *str, ...)
 			if (state == STATE_TYPE)
 			{
 				if (str[-1] == '%')
-				{
 					temp_return = ft_printf_c('%', flag, width);
-				}
 				else if (str[-1] == 's')
-					temp_return
-						= ft_printf_if_is_str(
+					temp_return = ft_printf_if_is_str(
 							va_arg(args, char *), flag, width, precision);
 				else if (str[-1] == 'c')
 					temp_return = ft_printf_c(

@@ -12,31 +12,31 @@
 
 #include "private.h"
 
-int	ft_printf_zero(t_parameters *parameters)
+int	ft_printf_zero(int width)
 {
 	int	printf_len;
 
 	printf_len = 0;
-	while (parameters->width != 0)
+	while (width != 0)
 	{
 		if (write(1, "0", 1) == -1)
 			return (-1);
-		parameters->width--;
+		width--;
 		printf_len++;
 	}
 	return (printf_len);
 }
 
-int	ft_printf_space(t_parameters *parameters)
+int	ft_printf_space(int width)
 {
 	int	printf_len;
 
 	printf_len = 0;
-	while (parameters->width != 0)
+	while (width != 0)
 	{
 		if (write(1, " ", 1) == -1)
 			return (-1);
-		parameters->width--;
+		width--;
 		printf_len++;
 	}
 	return (printf_len);

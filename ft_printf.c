@@ -18,45 +18,23 @@
 #include <stdlib.h>
 #include <limits.h>
 
-enum e_state	get_new_state(enum e_state state, char c, int *flag)
-{
-	if (state == STATE_TEXT)
-		return (ft_printf_if_state_text(c));
-	if (state == STATE_FORMAT)
-		return (ft_printf_if_state_format(c, flag));
-	if (state == STATE_FLAG)
-		return (ft_printf_if_state_flag(c, flag));
-	if (state == STATE_WIDTH)
-		return (ft_printf_if_state_width(c));
-	if (state == STATE_UNDEF_PRECISION)
-		return (ft_printf_if_state_undef_precision(c));
-	if (state == STATE_PRECISION)
-		return (ft_printf_if_state_precision(c));
-	if (state == STATE_TYPE)
-		return (ft_printf_if_state_type(c));
-	return (state);
-}
-
 int	ft_printf(const char *str, ...)
 {
-	int				flag;
-	int				temp_return;
-	const char		*text_start;
 	va_list			args;
-	enum e_state	state;
-	enum e_state	new_state;
+	t_state			state;
+	t_state			new_state;
 	t_parameters	parameters;
 
-	text_start = str;
 	va_start(args, str);
 	parameters.width = 0;
 	parameters.precision = 0;
 	parameters.printf_len = 0;
-	temp_return = 0;
+	parameters.temp_return = 0;
+	parameters.text_start = str;
 	state = STATE_TEXT;
 	while (state != STATE_END)
 	{
-		new_state = get_new_state(state, *str, &flag);
+		new_state = get_new_state(state, *str, &parameters);
 		if (*str == '\0')
 			new_state = STATE_END;
 		if (state != new_state)
@@ -64,70 +42,70 @@ int	ft_printf(const char *str, ...)
 			if (state == STATE_TYPE)
 			{
 				if (str[-1] == '%')
-					temp_return = ft_printf_c('%', flag, &parameters);
+					parameters.temp_return = ft_printf_c('%', &parameters);
 				else if (str[-1] == 's')
-					temp_return = ft_printf_if_is_str(
-							va_arg(args, char *), flag, &parameters);
+					parameters.temp_return = ft_printf_if_is_str(
+							va_arg(args, char *), &parameters);
 				else if (str[-1] == 'c')
-					temp_return = ft_printf_c(
-							va_arg(args, int), flag, &parameters);
+					parameters.temp_return = ft_printf_c(
+							va_arg(args, int), &parameters);
 				else if (str[-1] == 'd' || str[-1] == 'i')
 				{
-					flag |= FLAG_BASE_DEC;
-					temp_return = ft_printf_diuxp(
-							va_arg(args, int), flag, &parameters);
+					parameters.flag |= FLAG_BASE_DEC;
+					parameters.temp_return = ft_printf_diuxp(
+							va_arg(args, int), &parameters);
 				}
 				else if (str[-1] == 'u')
 				{
-					flag |= FLAG_BASE_DEC;
-					temp_return = ft_printf_diuxp(
-							va_arg(args, unsigned int),
-							flag & ~FLAG_PLUS & ~FLAG_SPACE,
-							&parameters);
+					parameters.flag |= FLAG_BASE_DEC;
+					parameters.flag &= ~FLAG_PLUS;
+					parameters.flag &= ~FLAG_SPACE;
+					parameters.temp_return = ft_printf_diuxp(
+							va_arg(args, unsigned int), &parameters);
 				}
 				else if (str[-1] == 'x' || str[-1] == 'X')
-					temp_return = ft_printf_if_is_hex(
+					parameters.temp_return = ft_printf_if_is_hex(
 							str, (unsigned long)va_arg
-							(args, unsigned int), flag, &parameters);
+							(args, unsigned int), &parameters);
 				else if (str[-1] == 'p')
-					temp_return = ft_printf_if_is_pointer(
-							(unsigned long)va_arg(args, void *),
-							flag, &parameters);
-				if (temp_return == -1)
+					parameters.temp_return = ft_printf_if_is_pointer(
+							(unsigned long)va_arg(args, void *), &parameters);
+				if (parameters.temp_return == -1)
 					return (-1);
 				else
 				{
-					parameters.printf_len += temp_return;
-					temp_return = 0;
+					parameters.printf_len += parameters.temp_return;
+					parameters.temp_return = 0;
 				}
 			}
 			if (state == STATE_TEXT)
 			{
-				if (write(1, text_start, str - text_start) == -1)
+				if (write(1, parameters.text_start,
+						str - parameters.text_start) == -1)
 					return (-1);
 				else
-					parameters.printf_len += str - text_start;
+					parameters.printf_len += str - parameters.text_start;
 			}
 			if (new_state == STATE_WIDTH)
 			{
 				parameters.width = ft_printf_atoi(str);
-				flag |= FLAG_WIDTH;
+				parameters.flag |= FLAG_WIDTH;
 			}
 			if (new_state == STATE_UNDEF_PRECISION)
 			{
 				parameters.precision = 0;
-				flag |= FLAG_PRECISION;
+				parameters.flag |= FLAG_PRECISION;
 			}
 			if (new_state == STATE_PRECISION)
 				parameters.precision = ft_printf_atoi(str);
 			if (new_state == STATE_FORMAT)
 			{
-				flag = 0;
+				parameters.flag = 0;
 				parameters.precision = 0;
 				parameters.width = 0;
 			}
 			if (new_state == STATE_TEXT)
-				text_start = str;
+				parameters.text_start = str;
 			state = new_state;
 		}
 		str++;

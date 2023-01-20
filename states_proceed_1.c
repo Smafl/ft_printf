@@ -19,11 +19,11 @@ enum e_state	ft_printf_if_state_text(char c)
 	return (STATE_TEXT);
 }
 
-enum e_state	ft_printf_if_state_format(char c, int *flag)
+enum e_state	ft_printf_if_state_format(char c, t_parameters *parameters)
 {
 	if (ft_printf_is_flag(c))
 	{
-		*flag = ft_printf_get_flag(c);
+		parameters->flag = ft_printf_get_flag(c);
 		return (STATE_FLAG);
 	}
 	else if (c >= '1' && c <= '9')
@@ -37,10 +37,10 @@ enum e_state	ft_printf_if_state_format(char c, int *flag)
 	return (STATE_FORMAT);
 }
 
-enum e_state	ft_printf_if_state_flag(char c, int *flag)
+enum e_state	ft_printf_if_state_flag(char c, t_parameters *parameters)
 {
 	if (ft_printf_is_flag(c))
-		*flag |= ft_printf_get_flag(c);
+		parameters->flag |= ft_printf_get_flag(c);
 	else if (c >= '1' && c <= '9')
 		return (STATE_WIDTH);
 	else if (c == '.')

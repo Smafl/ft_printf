@@ -32,14 +32,7 @@
 # define FLAG_POINTER 	0b0100000000
 # define FLAG_BASE_DEC	0b1000000000
 
-typedef struct s_parameters
-{
-	int	width;
-	int	precision;
-	int	printf_len;
-}	t_parameters;
-
-enum e_state
+typedef enum e_state
 {
 	STATE_TEXT,
 	STATE_FORMAT,
@@ -49,7 +42,17 @@ enum e_state
 	STATE_PRECISION,
 	STATE_TYPE,
 	STATE_END
-};
+}	t_state;
+
+typedef struct s_parameters
+{
+	int				flag;
+	int				width;
+	int				precision;
+	int				printf_len;
+	int				temp_return;
+	const char		*text_start;
+}	t_parameters;
 
 // get_size.c norm+
 int				ft_printf_get_size_dec(long n);
@@ -67,31 +70,33 @@ int				ft_printf_hex_itoa(unsigned long n, int flag, char *result);
 int				ft_printf_strlen(const char *str);
 int				ft_printf_strnlen(const char *str, int max_len);
 
-// new_state.c
+// new_state.c norm+
+enum e_state	get_new_state(
+					enum e_state state, char c, t_parameters *parameters);
 int				ft_printf_if_is_str(
-					const char *args_str, int flag, t_parameters *parameters);
+					const char *args_str, t_parameters *parameters);
 int				ft_printf_if_is_hex(
-					const char *str, unsigned long args, int flag,
+					const char *str, unsigned long args,
 					t_parameters *parameters);
 int				ft_printf_if_is_pointer(
-					unsigned long args, int flag, t_parameters *parameters);
+					unsigned long args, t_parameters *parameters);
 
 // print_c_str.c
 int				ft_printf_str(
-					const char *str, int flag, t_parameters *parameters);
-int				ft_printf_c(char c, int flag, t_parameters *parameters);
+					const char *str, t_parameters *parameters);
+int				ft_printf_c(char c, t_parameters *parameters);
 
 // print_dec_hex_p.c
-int				ft_printf_diuxp(long nbr, int flag, t_parameters *parameters);
+int				ft_printf_diuxp(long nbr, t_parameters *parameters);
 
 // print_zero_space.c norm+
-int				ft_printf_zero(t_parameters *parameters);
-int				ft_printf_space(t_parameters *parameters);
+int				ft_printf_zero(int width);
+int				ft_printf_space(int width);
 
 // states_proceed_1.c norm+
 enum e_state	ft_printf_if_state_text(char str);
-enum e_state	ft_printf_if_state_format(char str, int *flag);
-enum e_state	ft_printf_if_state_flag(char str, int *flag);
+enum e_state	ft_printf_if_state_format(char c, t_parameters *parameters);
+enum e_state	ft_printf_if_state_flag(char str, t_parameters *parameters);
 enum e_state	ft_printf_if_state_width(char str);
 
 // states_proceed_2.c norm+

@@ -12,7 +12,7 @@
 
 #include "private.h"
 
-int	ft_printf_str(const char *str, int flag, t_parameters *parameters)
+int	ft_printf_str(const char *str, t_parameters *parameters)
 {
 	int	len;
 	int	printf_len;
@@ -22,17 +22,17 @@ int	ft_printf_str(const char *str, int flag, t_parameters *parameters)
 	printf_len = 0;
 	zero_len = 0;
 	space_len = 0;
-	if (flag & FLAG_MINUS)
-		flag &= ~FLAG_ZERO;
-	if (flag & FLAG_PRECISION)
+	if (parameters->flag & FLAG_MINUS)
+		parameters->flag &= ~FLAG_ZERO;
+	if (parameters->flag & FLAG_PRECISION)
 		len = ft_printf_strnlen(str, parameters->precision);
 	else
 		len = ft_printf_strlen(str);
-	if ((flag & FLAG_ZERO) && parameters->precision > len)
+	if ((parameters->flag & FLAG_ZERO) && parameters->precision > len)
 		zero_len = parameters->width - len;
 	else if (parameters->width > len)
 		space_len = parameters->width - len;
-	if (!(flag & FLAG_MINUS))
+	if (!(parameters->flag & FLAG_MINUS))
 	{
 		if (ft_printf_space(space_len) == -1)
 			return (-1);
@@ -44,7 +44,7 @@ int	ft_printf_str(const char *str, int flag, t_parameters *parameters)
 	if (write(1, str, len) == -1)
 		return (-1);
 	printf_len += len;
-	if (flag & FLAG_MINUS)
+	if (parameters->flag & FLAG_MINUS)
 	{
 		if (ft_printf_space(space_len) == -1)
 			return (-1);
@@ -53,7 +53,7 @@ int	ft_printf_str(const char *str, int flag, t_parameters *parameters)
 	return (printf_len);
 }
 
-int	ft_printf_c(char c, int flag, t_parameters *parameters)
+int	ft_printf_c(char c, t_parameters *parameters)
 {
 	int	printf_len;
 	int	zero_len;
@@ -62,13 +62,13 @@ int	ft_printf_c(char c, int flag, t_parameters *parameters)
 	printf_len = 0;
 	zero_len = 0;
 	space_len = 0;
-	if (flag & FLAG_MINUS)
-		flag &= ~FLAG_ZERO;
-	if ((flag & FLAG_ZERO) && parameters->width > 1)
+	if (parameters->flag & FLAG_MINUS)
+		parameters->flag &= ~FLAG_ZERO;
+	if ((parameters->flag & FLAG_ZERO) && parameters->width > 1)
 		zero_len = parameters->width - 1;
 	else if (parameters->width > 1)
 		space_len = parameters->width - 1;
-	if (!(flag & FLAG_MINUS))
+	if (!(parameters->flag & FLAG_MINUS))
 	{
 		if (ft_printf_space(space_len) == -1)
 			return (-1);
@@ -80,7 +80,7 @@ int	ft_printf_c(char c, int flag, t_parameters *parameters)
 	if (write(1, &c, 1) == -1)
 		return (-1);
 	printf_len += 1;
-	if (flag & FLAG_MINUS)
+	if (parameters->flag & FLAG_MINUS)
 	{
 		if (ft_printf_space(space_len) == -1)
 			return (-1);

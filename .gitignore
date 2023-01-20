@@ -4,3 +4,4 @@ test_return.c
 *.dSYM/
 .vscode/
 .DS_Store
+*.o

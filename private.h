@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 12:57:52 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/16 14:43:34 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/20 20:35:37 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@
 # define FLAG_UPPERCASE 0b0010000000
 # define FLAG_POINTER 	0b0100000000
 # define FLAG_BASE_DEC	0b1000000000
+
+typedef struct s_parameters
+{
+	int	width;
+	int	precision;
+	int	printf_len;
+}	t_parameters;
 
 enum e_state
 {
@@ -62,25 +69,24 @@ int				ft_printf_strnlen(const char *str, int max_len);
 
 // new_state.c
 int				ft_printf_if_is_str(
-					const char *args_str, int flag, int width, int precision);
+					const char *args_str, int flag, t_parameters *parameters);
 int				ft_printf_if_is_hex(
-					const char *str, unsigned long args, int flag, int width,
-					int precision);
+					const char *str, unsigned long args, int flag,
+					t_parameters *parameters);
 int				ft_printf_if_is_pointer(
-					unsigned long args, int flag, int width, int precision);
+					unsigned long args, int flag, t_parameters *parameters);
 
 // print_c_str.c
 int				ft_printf_str(
-					const char *str, int flag, int width, int precision);
-int				ft_printf_c(char c, int flag, int width);
+					const char *str, int flag, t_parameters *parameters);
+int				ft_printf_c(char c, int flag, t_parameters *parameters);
 
 // print_dec_hex_p.c
-int				ft_printf_diuxp(
-					long nbr, int flag, int width, int precision);
+int				ft_printf_diuxp(long nbr, int flag, t_parameters *parameters);
 
 // print_zero_space.c norm+
-int				ft_printf_zero(int width);
-int				ft_printf_space(int width);
+int				ft_printf_zero(t_parameters *parameters);
+int				ft_printf_space(t_parameters *parameters);
 
 // states_proceed_1.c norm+
 enum e_state	ft_printf_if_state_text(char str);

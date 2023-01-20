@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/17 19:37:20 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/20 20:37:19 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,18 @@ enum e_state	get_new_state(enum e_state state, char c, int *flag)
 int	ft_printf(const char *str, ...)
 {
 	int				flag;
-	int				width;
-	int				precision;
-	int				printf_len;
 	int				temp_return;
 	const char		*text_start;
 	va_list			args;
 	enum e_state	state;
 	enum e_state	new_state;
+	t_parameters	parameters;
 
 	text_start = str;
 	va_start(args, str);
-	width = 0;
-	precision = 0;
-	printf_len = 0;
+	parameters.width = 0;
+	parameters.precision = 0;
+	parameters.printf_len = 0;
 	temp_return = 0;
 	state = STATE_TEXT;
 	while (state != STATE_END)
@@ -66,18 +64,18 @@ int	ft_printf(const char *str, ...)
 			if (state == STATE_TYPE)
 			{
 				if (str[-1] == '%')
-					temp_return = ft_printf_c('%', flag, width);
+					temp_return = ft_printf_c('%', flag, &parameters);
 				else if (str[-1] == 's')
 					temp_return = ft_printf_if_is_str(
-							va_arg(args, char *), flag, width, precision);
+							va_arg(args, char *), flag, &parameters);
 				else if (str[-1] == 'c')
 					temp_return = ft_printf_c(
-							va_arg(args, int), flag, width);
+							va_arg(args, int), flag, &parameters);
 				else if (str[-1] == 'd' || str[-1] == 'i')
 				{
 					flag |= FLAG_BASE_DEC;
 					temp_return = ft_printf_diuxp(
-							va_arg(args, int), flag, width, precision);
+							va_arg(args, int), flag, &parameters);
 				}
 				else if (str[-1] == 'u')
 				{
@@ -85,21 +83,21 @@ int	ft_printf(const char *str, ...)
 					temp_return = ft_printf_diuxp(
 							va_arg(args, unsigned int),
 							flag & ~FLAG_PLUS & ~FLAG_SPACE,
-							width, precision);
+							&parameters);
 				}
 				else if (str[-1] == 'x' || str[-1] == 'X')
 					temp_return = ft_printf_if_is_hex(
 							str, (unsigned long)va_arg
-							(args, unsigned int), flag, width, precision);
+							(args, unsigned int), flag, &parameters);
 				else if (str[-1] == 'p')
 					temp_return = ft_printf_if_is_pointer(
 							(unsigned long)va_arg(args, void *),
-							flag, width, precision);
+							flag, &parameters);
 				if (temp_return == -1)
 					return (-1);
 				else
 				{
-					printf_len += temp_return;
+					parameters.printf_len += temp_return;
 					temp_return = 0;
 				}
 			}
@@ -108,25 +106,25 @@ int	ft_printf(const char *str, ...)
 				if (write(1, text_start, str - text_start) == -1)
 					return (-1);
 				else
-					printf_len += str - text_start;
+					parameters.printf_len += str - text_start;
 			}
 			if (new_state == STATE_WIDTH)
 			{
-				width = ft_printf_atoi(str);
+				parameters.width = ft_printf_atoi(str);
 				flag |= FLAG_WIDTH;
 			}
 			if (new_state == STATE_UNDEF_PRECISION)
 			{
-				precision = 0;
+				parameters.precision = 0;
 				flag |= FLAG_PRECISION;
 			}
 			if (new_state == STATE_PRECISION)
-				precision = ft_printf_atoi(str);
+				parameters.precision = ft_printf_atoi(str);
 			if (new_state == STATE_FORMAT)
 			{
 				flag = 0;
-				precision = 0;
-				width = 0;
+				parameters.precision = 0;
+				parameters.width = 0;
 			}
 			if (new_state == STATE_TEXT)
 				text_start = str;
@@ -135,5 +133,5 @@ int	ft_printf(const char *str, ...)
 		str++;
 	}
 	va_end(args);
-	return (printf_len);
+	return (parameters.printf_len);
 }

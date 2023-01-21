@@ -6,69 +6,79 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 23:02:36 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/20 19:42:35 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 14:15:52 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 
-int	ft_printf_diuxp(long nbr, t_parameters *parameters)
+void	ft_printf_diuxp_param_count(long nbr, t_parameters *param)
 {
-	int				len;
-	int				sign_len;
-	int				zero_len;
-	int				space_len;
-	int				fill_len;
-	int 			len_with_precision;
-	int 			printf_len;
-	unsigned short	sign;
-	char			array[18];
+	param->zero_len = 0;
+	param->space_len = 0;
+	if (param->flag & FLAG_PRECISION)
+		param->flag &= ~FLAG_ZERO;
+	if (nbr == 0 && (param->flag & FLAG_PRECISION) && param->precision == 0)
+		param->len = 0;
+	else if (param->flag & FLAG_BASE_DEC)
+		param->len = ft_printf_dec_itoa(nbr, param->flag, param->array);
+	else
+		param->len = ft_printf_hex_itoa(
+				(unsigned long)nbr, param->flag, param->array);
+	param->len_with_precision = ft_printf_get_max(param->precision, param->len);
+	param->sign = ft_printf_get_sign(nbr, param->flag, &param->sign_len);
+	param->fill_len = ft_printf_get_max(
+			param->width - param->sign_len - param->len_with_precision, 0);
+	if (param->flag & FLAG_ZERO && !(param->flag & FLAG_MINUS))
+		param->zero_len = param->fill_len + (
+				param->len_with_precision - param->len);
+	else
+	{
+		param->zero_len = param->len_with_precision - param->len;
+		param->space_len = param->fill_len;
+	}
+}
+
+int	ft_printf_write_diuxp(t_parameters *parameters, int sign_len, int len)
+{
+	int	printf_len;
 
 	printf_len = 0;
-	space_len = 0;
-	if (parameters->flag & FLAG_PRECISION)
-		parameters->flag &= ~FLAG_ZERO;
-	if (nbr == 0 && (parameters->flag & FLAG_PRECISION) && parameters->precision == 0)
-		len = 0;
-	else if (parameters->flag & FLAG_BASE_DEC)
-		len = ft_printf_dec_itoa(nbr, parameters->flag, array);
-	else
-		len = ft_printf_hex_itoa((unsigned long)nbr, parameters->flag, array);
-	len_with_precision = ft_printf_get_max(parameters->precision, len);
-	sign = ft_printf_get_sign(nbr, parameters->flag, &sign_len);
-	fill_len = ft_printf_get_max(parameters->width - sign_len - len_with_precision, 0);
-	if (parameters->flag & FLAG_ZERO && !(parameters->flag & FLAG_MINUS))
-		zero_len = fill_len + (len_with_precision - len);
-	else
-	{
-		zero_len = len_with_precision - len;
-		space_len = fill_len;
-	}
 	if (!(parameters->flag & FLAG_MINUS))
 	{
-		if (ft_printf_space(space_len) == -1)
+		if (ft_printf_space(parameters->space_len) == -1)
 			return (-1);
-		else
-			printf_len += space_len;
+		printf_len += parameters->space_len;
 	}
-	if (write(1, &sign, sign_len) == -1)
+	if (write(1, &parameters->sign, sign_len) == -1)
 		return (-1);
-	else
-		printf_len += sign_len;
-	if (ft_printf_zero(zero_len) == -1)
+	printf_len += sign_len;
+	if (ft_printf_zero(parameters->zero_len) == -1)
 		return (-1);
-	else
-		printf_len += zero_len;
-	if (write(1, array, len) == -1)
+	printf_len += parameters->zero_len;
+	if (write(1, parameters-> array, len) == -1)
 		return (-1);
-	else
-		printf_len += len;
+	printf_len += len;
 	if (parameters->flag & FLAG_MINUS)
 	{
-		if (ft_printf_space(space_len) == -1)
+		if (ft_printf_space(parameters->space_len) == -1)
 			return (-1);
-		else
-			printf_len += space_len;
+		printf_len += parameters->space_len;
 	}
 	return (printf_len);
+}
+
+int	ft_printf_diuxp(long nbr, t_parameters *parameters)
+{
+	int	printf_len;
+	int	temp_return;
+
+	printf_len = 0;
+	temp_return = 0;
+	ft_printf_diuxp_param_count(nbr, parameters);
+	temp_return = ft_printf_write_diuxp(
+			parameters, parameters->sign_len, parameters->len);
+	if (temp_return == -1)
+		return (-1);
+	return (printf_len += temp_return);
 }

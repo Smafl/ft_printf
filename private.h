@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 12:57:52 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/21 13:22:48 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 16:07:24 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,29 +51,36 @@ typedef struct s_parameters
 	int				precision;
 	int				zero_len;
 	int				space_len;
-	int				temp_return;
+	int				len;
+	int				sign_len;
+	int				fill_len;
+	int				len_with_precision;
+	char			array[18];
 	const char		*text_start;
+	unsigned short	sign;
 	t_state			state;
 	t_state			new_state;
 }	t_parameters;
 
-// get_size.c norm+
+// get_size.c
 int				ft_printf_get_size_dec(long n);
 int				ft_printf_get_size_hex(unsigned long n);
 
-// is_type_flag.c norm+
+// is_type_flag.c
 bool			ft_printf_is_type(char c);
 bool			ft_printf_is_flag(char c);
 int				ft_printf_get_flag(char c);
 
-// libft_ft_printf.c norm+
+// libft_ft_printf.c
 int				ft_printf_atoi(const char *str);
 int				ft_printf_dec_itoa(long n, int flag, char *result);
 int				ft_printf_hex_itoa(unsigned long n, int flag, char *result);
 int				ft_printf_strlen(const char *str);
 int				ft_printf_strnlen(const char *str, int max_len);
 
-// new_state.c norm+
+// new_state.c
+int				ft_printf_param_set(
+					const char *str, t_parameters *param);
 enum e_state	get_new_state(char c, t_parameters *parameters);
 int				ft_printf_if_is_str(
 					const char *args_str, t_parameters *parameters);
@@ -83,7 +90,7 @@ int				ft_printf_if_is_hex(
 int				ft_printf_if_is_pointer(
 					unsigned long args, t_parameters *parameters);
 
-// print_c_str.c norm+
+// print_c_str.c
 int				ft_printf_write_c_str(
 					const char *str, t_parameters *parameters, int len);
 int				ft_printf_str(
@@ -91,24 +98,27 @@ int				ft_printf_str(
 int				ft_printf_c(char c, t_parameters *parameters);
 
 // print_dec_hex_p.c
+void			ft_printf_diuxp_param_count(long nbr, t_parameters *param);
+int				ft_printf_write_diuxp(
+					t_parameters *parameters, int sign_len, int len);
 int				ft_printf_diuxp(long nbr, t_parameters *parameters);
 
-// print_zero_space.c norm+
+// print_zero_space.c
 int				ft_printf_zero(int width);
 int				ft_printf_space(int width);
 
-// states_proceed_1.c norm+
+// states_proceed_1.c
 enum e_state	ft_printf_if_state_text(char str);
 enum e_state	ft_printf_if_state_format(char c, t_parameters *parameters);
 enum e_state	ft_printf_if_state_flag(char str, t_parameters *parameters);
 enum e_state	ft_printf_if_state_width(char str);
 
-// states_proceed_2.c norm+
+// states_proceed_2.c
 enum e_state	ft_printf_if_state_undef_precision(char str);
 enum e_state	ft_printf_if_state_precision(char str);
 enum e_state	ft_printf_if_state_type(char str);
 
-// utils.c norm+
+// utils.c
 int				ft_printf_get_max(int precision, int len);
 char			ft_printf_get_hex_digit(int digit, int flag);
 unsigned short	ft_printf_get_sign(long nbr, int flag, int *has_sign);

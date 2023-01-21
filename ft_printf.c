@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:43:18 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/21 12:26:53 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 16:13:18 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,34 +78,10 @@ int	ft_printf(const char *str, ...)
 					temp_return = 0;
 				}
 			}
-			if (parameters.state == STATE_TEXT)
-			{
-				if (write(1, parameters.text_start,
-						str - parameters.text_start) == -1)
-					return (-1);
-				else
-					printf_len += str - parameters.text_start;
-			}
-			if (parameters.new_state == STATE_WIDTH)
-			{
-				parameters.width = ft_printf_atoi(str);
-				parameters.flag |= FLAG_WIDTH;
-			}
-			if (parameters.new_state == STATE_UNDEF_PRECISION)
-			{
-				parameters.precision = 0;
-				parameters.flag |= FLAG_PRECISION;
-			}
-			if (parameters.new_state == STATE_PRECISION)
-				parameters.precision = ft_printf_atoi(str);
-			if (parameters.new_state == STATE_FORMAT)
-			{
-				parameters.flag = 0;
-				parameters.precision = 0;
-				parameters.width = 0;
-			}
-			if (parameters.new_state == STATE_TEXT)
-				parameters.text_start = str;
+			temp_return = ft_printf_param_set(str, &parameters);
+			if (temp_return == -1)
+				return (-1);
+			printf_len += temp_return;
 			parameters.state = parameters.new_state;
 		}
 		str++;

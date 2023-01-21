@@ -6,11 +6,46 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:39:08 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/21 12:37:09 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 16:07:49 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
+
+int	ft_printf_param_set(
+	const char *str, t_parameters *param)
+{
+	int	printf_len;
+
+	printf_len = 0;
+	if (param->state == STATE_TEXT)
+	{
+		if (write(1, param->text_start, str - param->text_start) == -1)
+			return (-1);
+		printf_len += str - param->text_start;
+	}
+	if (param->new_state == STATE_WIDTH)
+	{
+		param->width = ft_printf_atoi(str);
+		param->flag |= FLAG_WIDTH;
+	}
+	if (param->new_state == STATE_UNDEF_PRECISION)
+	{
+		param->precision = 0;
+		param->flag |= FLAG_PRECISION;
+	}
+	if (param->new_state == STATE_PRECISION)
+		param->precision = ft_printf_atoi(str);
+	if (param->new_state == STATE_FORMAT)
+	{
+		param->flag = 0;
+		param->precision = 0;
+		param->width = 0;
+	}
+	if (param->new_state == STATE_TEXT)
+		param->text_start = str;
+	return (printf_len);
+}
 
 enum e_state	get_new_state(char c, t_parameters *parameters)
 {

@@ -6,9 +6,9 @@
 
 int checker(void)
 {
-	printf("return %d\n", ft_printf(" %s ", "-"));
+	printf("return %d\n", ft_printf(" %-1c %-2c %-3c ", '1', '2', '3'));
 	printf("\n");
-	printf("return %d\n", printf(" %s ", "-"));
+	printf("return %d\n", printf(" %-1c %-2c %-3c ", '1', '2', '3'));
 
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 12:57:52 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/21 12:25:14 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 13:22:48 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_parameters
 	int				flag;
 	int				width;
 	int				precision;
+	int				zero_len;
+	int				space_len;
 	int				temp_return;
 	const char		*text_start;
 	t_state			state;
@@ -81,7 +83,9 @@ int				ft_printf_if_is_hex(
 int				ft_printf_if_is_pointer(
 					unsigned long args, t_parameters *parameters);
 
-// print_c_str.c
+// print_c_str.c norm+
+int				ft_printf_write_c_str(
+					const char *str, t_parameters *parameters, int len);
 int				ft_printf_str(
 					const char *str, t_parameters *parameters);
 int				ft_printf_c(char c, t_parameters *parameters);

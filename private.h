@@ -6,7 +6,7 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 12:57:52 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/20 20:35:37 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 12:25:14 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,10 @@ typedef struct s_parameters
 	int				flag;
 	int				width;
 	int				precision;
-	int				printf_len;
 	int				temp_return;
 	const char		*text_start;
+	t_state			state;
+	t_state			new_state;
 }	t_parameters;
 
 // get_size.c norm+
@@ -71,8 +72,7 @@ int				ft_printf_strlen(const char *str);
 int				ft_printf_strnlen(const char *str, int max_len);
 
 // new_state.c norm+
-enum e_state	get_new_state(
-					enum e_state state, char c, t_parameters *parameters);
+enum e_state	get_new_state(char c, t_parameters *parameters);
 int				ft_printf_if_is_str(
 					const char *args_str, t_parameters *parameters);
 int				ft_printf_if_is_hex(

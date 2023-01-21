@@ -6,34 +6,32 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:39:08 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/20 19:40:38 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 12:33:53 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 
-enum e_state	get_new_state(
-	enum e_state state, char c, t_parameters *parameters)
+enum e_state	get_new_state(char c, t_parameters *parameters)
 {
-	if (state == STATE_TEXT)
+	if (parameters->state == STATE_TEXT)
 		return (ft_printf_if_state_text(c));
-	if (state == STATE_FORMAT)
+	if (parameters->state == STATE_FORMAT)
 		return (ft_printf_if_state_format(c, parameters));
-	if (state == STATE_FLAG)
+	if (parameters->state == STATE_FLAG)
 		return (ft_printf_if_state_flag(c, parameters));
-	if (state == STATE_WIDTH)
+	if (parameters->state == STATE_WIDTH)
 		return (ft_printf_if_state_width(c));
-	if (state == STATE_UNDEF_PRECISION)
+	if (parameters->state == STATE_UNDEF_PRECISION)
 		return (ft_printf_if_state_undef_precision(c));
-	if (state == STATE_PRECISION)
+	if (parameters->state == STATE_PRECISION)
 		return (ft_printf_if_state_precision(c));
-	if (state == STATE_TYPE)
+	if (parameters->state == STATE_TYPE)
 		return (ft_printf_if_state_type(c));
-	return (state);
+	return (parameters->state);
 }
 
-int	ft_printf_if_is_str(
-	const char *args_str, t_parameters *parameters)
+int	ft_printf_if_is_str(const char *args_str, t_parameters *parameters)
 {
 	int	printf_len;
 
@@ -44,7 +42,7 @@ int	ft_printf_if_is_str(
 		printf_len = ft_printf_str(args_str, parameters);
 	if (printf_len == -1)
 		return (-1);
-	return (parameters->printf_len += printf_len);
+	return (printf_len);
 }
 
 int	ft_printf_if_is_hex(
@@ -61,8 +59,7 @@ int	ft_printf_if_is_hex(
 	return (printf_len);
 }
 
-int	ft_printf_if_is_pointer(
-	unsigned long args, t_parameters *parameters)
+int	ft_printf_if_is_pointer(unsigned long args, t_parameters *parameters)
 {
 	int	printf_len;
 

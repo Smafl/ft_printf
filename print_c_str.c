@@ -6,39 +6,39 @@
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 16:18:30 by ekulichk          #+#    #+#             */
-/*   Updated: 2023/01/21 14:16:31 by ekulichk         ###   ########.fr       */
+/*   Updated: 2023/01/21 21:07:12 by ekulichk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "private.h"
 
-int	ft_printf_write_c_str(const char *str, t_parameters *parameters, int len)
+int	ftp_write_c_str(const char *str, t_params *params, int len)
 {
 	int	printf_len;
 
 	printf_len = 0;
-	if (!(parameters->flag & FLAG_MINUS))
+	if (!(params->flag & FLAG_MINUS))
 	{
-		if (ft_printf_space(parameters->space_len) == -1)
+		if (ftp_space(params->space_len) == -1)
 			return (-1);
-		printf_len += parameters->space_len;
+		printf_len += params->space_len;
 	}
-	if (ft_printf_zero(parameters->zero_len) == -1)
+	if (ftp_zero(params->zero_len) == -1)
 		return (-1);
-	printf_len += parameters->zero_len;
+	printf_len += params->zero_len;
 	if (write(1, str, len) == -1)
 		return (-1);
 	printf_len += len;
-	if (parameters->flag & FLAG_MINUS)
+	if (params->flag & FLAG_MINUS)
 	{
-		if (ft_printf_space(parameters->space_len) == -1)
+		if (ftp_space(params->space_len) == -1)
 			return (-1);
-		printf_len += parameters->space_len;
+		printf_len += params->space_len;
 	}
 	return (printf_len);
 }
 
-int	ft_printf_str(const char *str, t_parameters *parameters)
+int	ftp_str(const char *str, t_params *params)
 {
 	int	len;
 	int	printf_len;
@@ -46,40 +46,40 @@ int	ft_printf_str(const char *str, t_parameters *parameters)
 
 	printf_len = 0;
 	temp_return = 0;
-	parameters->zero_len = 0;
-	parameters->space_len = 0;
-	if (parameters->flag & FLAG_MINUS)
-		parameters->flag &= ~FLAG_ZERO;
-	if (parameters->flag & FLAG_PRECISION)
-		len = ft_printf_strnlen(str, parameters->precision);
+	params->zero_len = 0;
+	params->space_len = 0;
+	if (params->flag & FLAG_MINUS)
+		params->flag &= ~FLAG_ZERO;
+	if (params->flag & FLAG_PRECISION)
+		len = ftp_strnlen(str, params->precision);
 	else
-		len = ft_printf_strlen(str);
-	if ((parameters->flag & FLAG_ZERO) && parameters->precision > len)
-		parameters->zero_len = parameters->width - len;
-	else if (parameters->width > len)
-		parameters->space_len = parameters->width - len;
-	temp_return = ft_printf_write_c_str(str, parameters, len);
+		len = ftp_strlen(str);
+	if ((params->flag & FLAG_ZERO) && params->precision > len)
+		params->zero_len = params->width - len;
+	else if (params->width > len)
+		params->space_len = params->width - len;
+	temp_return = ftp_write_c_str(str, params, len);
 	if (temp_return == -1)
 		return (-1);
 	return (printf_len += temp_return);
 }
 
-int	ft_printf_c(char c, t_parameters *parameters)
+int	ftp_c(char c, t_params *params)
 {
 	int	printf_len;
 	int	temp_return;
 
 	printf_len = 0;
 	temp_return = 0;
-	parameters->zero_len = 0;
-	parameters->space_len = 0;
-	if (parameters->flag & FLAG_MINUS)
-		parameters->flag &= ~FLAG_ZERO;
-	if ((parameters->flag & FLAG_ZERO) && parameters->width > 1)
-		parameters->zero_len = parameters->width - 1;
-	else if (parameters->width > 1)
-		parameters->space_len = parameters->width - 1;
-	temp_return = ft_printf_write_c_str(&c, parameters, 1);
+	params->zero_len = 0;
+	params->space_len = 0;
+	if (params->flag & FLAG_MINUS)
+		params->flag &= ~FLAG_ZERO;
+	if ((params->flag & FLAG_ZERO) && params->width > 1)
+		params->zero_len = params->width - 1;
+	else if (params->width > 1)
+		params->space_len = params->width - 1;
+	temp_return = ftp_write_c_str(&c, params, 1);
 	if (temp_return == -1)
 		return (-1);
 	return (printf_len += temp_return);

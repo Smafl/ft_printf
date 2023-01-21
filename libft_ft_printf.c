@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_ft_printf.c                                  :+:      :+:    :+:   */
+/*   libft_ftp.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekulichk <ekulichk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "private.h"
 
-int	ft_printf_atoi(const char *str)
+int	ftp_atoi(const char *str)
 {
 	int	sign;
 	int	result;
@@ -32,19 +32,19 @@ int	ft_printf_atoi(const char *str)
 	return (result);
 }
 
-int	ft_printf_dec_itoa(long n, int flag, char *result)
+int	ftp_dec_itoa(long n, int flag, char *result)
 {
 	int		i;
 	int		size;
 
-	size = ft_printf_get_size_dec(n);
+	size = ftp_get_size_dec(n);
 	i = size;
 	if (n < 0)
 		n *= -1;
 	result[i--] = '\0';
 	while (n >= 0)
 	{
-		result[i--] = ft_printf_get_hex_digit(n % 10, flag);
+		result[i--] = ftp_get_hex_digit(n % 10, flag);
 		n /= 10;
 		if (n == 0)
 			break ;
@@ -52,17 +52,17 @@ int	ft_printf_dec_itoa(long n, int flag, char *result)
 	return (size);
 }
 
-int	ft_printf_hex_itoa(unsigned long n, int flag, char *result)
+int	ftp_hex_itoa(unsigned long n, int flag, char *result)
 {
 	int				i;
 	int				size;
 
-	size = ft_printf_get_size_hex(n);
+	size = ftp_get_size_hex(n);
 	i = size;
 	result[i--] = '\0';
 	while (n >= 0)
 	{
-		result[i--] = ft_printf_get_hex_digit(n % 16, flag);
+		result[i--] = ftp_get_hex_digit(n % 16, flag);
 		n /= 16;
 		if (n == 0)
 			break ;
@@ -70,7 +70,7 @@ int	ft_printf_hex_itoa(unsigned long n, int flag, char *result)
 	return (size);
 }
 
-int	ft_printf_strlen(const char *str)
+int	ftp_strlen(const char *str)
 {
 	int	i;
 
@@ -82,7 +82,7 @@ int	ft_printf_strlen(const char *str)
 	return (i);
 }
 
-int	ft_printf_strnlen(const char *str, int max_len)
+int	ftp_strnlen(const char *str, int max_len)
 {
 	int	i;
 

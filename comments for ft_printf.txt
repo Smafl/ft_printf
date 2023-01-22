@@ -80,3 +80,50 @@ And in this part I divided it for difference files for more comfortable work.
 
 Part 4.
 For norminette :(
+
+
+A 		B 		!A 		A & B 		A | B 		A ^ B
+0 		0 		1 		  0 		  0 		  0
+0 		1 		1 		  0 		  1 		  1
+1 		0 		0 		  0 		  1 		  1
+1 		1 		0 		  1 		  1 		  0
+
+^ -- XOR is exlusive OR (if one is true)
+
+Bitwise shifts:
+13 is 1101
+(13 << 2) is 110100 and it's 52
+Shifting to the left by k multiply number to 2 in power k. (x << k) == x * 2 in pow k
+
+13 is 1101
+(13 >> 2)  is 0011 and it's 3
+Then (x >> k) == x / 2 in pow k
+
+for i in 1..30
+	if (x & (1 << i)) != 0
+		print(1)
+	else
+		print(0)
+
+Bitwise NOT operator is ~
+~5
+0101
+1010 it's 10
+
+Unsigned short int is 16 bits or 2 bytes.
+
+(Associativity of operators)
+return ((unsigned short) 'X' << 8 | '0');
+return ((unsigned short) 'x' << 8 | '0');
+
+			0				X 				x
+dec			48				88				120
+binary		0011 0000		0101 1000		0111 1000
+
+(Big and little endian byte ordering)
+0000 0000 0000 0000
+0101 1000 0011 0000
+It's 22576 or 0X
+
+0111 1000 0011 0000
+It's 30768 or 0x

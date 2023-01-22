@@ -6,10 +6,22 @@
 
 int checker(void)
 {
-	printf("return %d\n", ft_printf("%x\n", 873634));
-	printf("\n");
-	printf("return %d\n", printf("%x\n", 873634));
+	// printf("return %d\n", ft_printf("%x\n"));
+	// printf("\n");
+	// printf("return %d\n", printf("%x\n"));
+	// printf("\n");
+	// printf("return %d\n", ft_printf("%x\n", "hi"));
+	// printf("\n");
+	// printf("return %d\n", printf("%x\n", "hi"));
+	// printf("\n");
+	// printf("return %d\n", ft_printf("%s\n", 0));
+	// printf("\n");
+	// printf("return %d\n", printf("%s\n", 0));
 
+	unsigned short nbr = 0;
+
+	nbr = (unsigned short) 'X' << 8 | '0';
+	printf("%d\n", nbr);
 	return (0);
 }
 
